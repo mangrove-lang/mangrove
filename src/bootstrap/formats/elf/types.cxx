@@ -102,3 +102,73 @@ uint64_t elfHeader_t::shdrOffset() const
 			{ throw std::logic_error{"Header must be initialised before calling this"}; }
 	}, _header);
 }
+
+uint32_t elfHeader_t::flags() const
+{
+	return std::visit(overloaded_t
+	{
+		[](const auto &header) { return header.flags(); },
+		[](std::monostate) -> uint32_t
+			{ throw std::logic_error{"Header must be initialised before calling this"}; }
+	}, _header);
+}
+
+uint16_t elfHeader_t::headerSize() const
+{
+	return std::visit(overloaded_t
+	{
+		[](const auto &header) { return header.headerSize(); },
+		[](std::monostate) -> uint16_t
+			{ throw std::logic_error{"Header must be initialised before calling this"}; }
+	}, _header);
+}
+
+uint16_t elfHeader_t::programHeaderSize() const
+{
+	return std::visit(overloaded_t
+	{
+		[](const auto &header) { return header.programHeaderSize(); },
+		[](std::monostate) -> uint16_t
+			{ throw std::logic_error{"Header must be initialised before calling this"}; }
+	}, _header);
+}
+
+uint16_t elfHeader_t::programHeaderCount() const
+{
+	return std::visit(overloaded_t
+	{
+		[](const auto &header) { return header.programHeaderCount(); },
+		[](std::monostate) -> uint16_t
+			{ throw std::logic_error{"Header must be initialised before calling this"}; }
+	}, _header);
+}
+
+uint16_t elfHeader_t::sectionHeaderSize() const
+{
+	return std::visit(overloaded_t
+	{
+		[](const auto &header) { return header.sectionHeaderSize(); },
+		[](std::monostate) -> uint16_t
+			{ throw std::logic_error{"Header must be initialised before calling this"}; }
+	}, _header);
+}
+
+uint16_t elfHeader_t::sectionHeaderCount() const
+{
+	return std::visit(overloaded_t
+	{
+		[](const auto &header) { return header.sectionHeaderCount(); },
+		[](std::monostate) -> uint16_t
+			{ throw std::logic_error{"Header must be initialised before calling this"}; }
+	}, _header);
+}
+
+uint16_t elfHeader_t::sectionNamesIndex() const
+{
+	return std::visit(overloaded_t
+	{
+		[](const auto &header) { return header.sectionNamesIndex(); },
+		[](std::monostate) -> uint16_t
+			{ throw std::logic_error{"Header must be initialised before calling this"}; }
+	}, _header);
+}

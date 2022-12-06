@@ -34,13 +34,13 @@ namespace mangrove::elf::types
 		uint64_t entryPoint() const;
 		uint64_t phdrOffset() const;
 		uint64_t shdrOffset() const;
-		// auto flags() const noexcept { return _storage.read<uint32_t>(48, _endian); }
-		// auto headerSize() const noexcept { return _storage.read<uint16_t>(52, _endian); }
-		// auto programHeaderSize() const noexcept { return _storage.read<uint16_t>(54, _endian); }
-		// auto programHeaderCount() const noexcept { return _storage.read<uint16_t>(56, _endian); }
-		// auto sectionHeaderSize() const noexcept { return _storage.read<uint16_t>(58, _endian); }
-		// auto sectionHeaderCount() const noexcept { return _storage.read<uint16_t>(60, _endian); }
-		// auto sectionNamesIndex() const noexcept { return _storage.read<uint16_t>(62, _endian); }
+		uint32_t flags() const;
+		uint16_t headerSize() const;
+		uint16_t programHeaderSize() const;
+		uint16_t programHeaderCount() const;
+		uint16_t sectionHeaderSize() const;
+		uint16_t sectionHeaderCount() const;
+		uint16_t sectionNamesIndex() const;
 	};
 } // namespace mangrove::elf::types
 
