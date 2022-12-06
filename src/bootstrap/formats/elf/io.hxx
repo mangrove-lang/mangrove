@@ -17,6 +17,10 @@ namespace mangrove::elf::io
 	{
 		using mangrove::elf::enums::endian_t;
 
+		/**
+		 * A light-weight IO container that understands how to read and write
+		 * to a span in an endian-aware manner
+		 */
 		struct container_t
 		{
 			span<uint8_t> _data;
@@ -113,6 +117,13 @@ namespace mangrove::elf::io
 			}
 		};
 
+		/**
+		 * ELF reading orchestration type - this deals with creating
+		 * a suitable small subspan from the input span, and provides
+		 * value-generating read functions to retreive typed data
+		 * from the span.
+		 * This includes doing endian dispatch to retrieve the data.
+		 */
 		template<typename T> struct reader_t
 		{
 			container_t _data;
@@ -148,6 +159,7 @@ namespace mangrove::elf::io
 			}
 		};
 
+		/** This works similarly to the base reader type, but on std::array<>'s */
 		template<typename T, size_t N> struct reader_t<std::array<T, N>>
 		{
 			container_t _data;
@@ -162,6 +174,10 @@ namespace mangrove::elf::io
 		};
 	} // namespace internal
 
+	/**
+	 * Representation of a block of memory that can be read or written to in
+	 * an endian-aware manner, allowing interaction with the blocks of an ELF file
+	 */
 	struct memory_t final
 	{
 	private:
@@ -179,6 +195,7 @@ namespace mangrove::elf::io
 			{ return reader_t<T>{_data.subspan(offset)}.read(endian); }
 	};
 
+	/** Helper type for std::visit(), allowing match block semantics for interaction with std::variant<>s */
 	template<typename... Ts> struct overloaded_t : Ts... { using Ts::operator()...; };
 	template<typename... Ts> overloaded_t(Ts...) -> overloaded_t<Ts...>;
 } // namespace mangrove:::elf::io
