@@ -14,6 +14,7 @@ mangroveSrc = [
 	'mangrove.cxx'
 ]
 
+subdir('parser')
 subdir('formats')
 
 executable(
