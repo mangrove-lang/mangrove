@@ -9,13 +9,13 @@
 #include "elf32Types.hxx"
 #include "elf64Types.hxx"
 
+/**
+ * @file types.hxx
+ * @brief High-level types representing the header structures and data in ELF files
+ */
+
 namespace mangrove::elf::types
 {
-	inline namespace internal
-	{
-		using mangrove::elf::io::overloaded_t;
-	} // namespace internal
-
 	struct elfHeader_t
 	{
 	private:

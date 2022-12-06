@@ -2,6 +2,7 @@
 #include "types.hxx"
 
 using namespace mangrove::elf::types;
+using mangrove::elf::io::overloaded_t;
 
 std::array<uint8_t, 4> elfHeader_t::magic() const noexcept
 	{ return std::visit([](const auto &header) { return header.magic(); }, _header); }

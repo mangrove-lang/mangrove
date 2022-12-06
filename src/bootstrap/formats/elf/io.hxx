@@ -9,6 +9,11 @@
 #include <substrate/span>
 #include "enums.hxx"
 
+/**
+ * @file io.hxx
+ * @brief Types and functions for performing IO on ELF files
+ */
+
 namespace mangrove::elf::io
 {
 	using substrate::span;

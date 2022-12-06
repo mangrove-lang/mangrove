@@ -4,6 +4,11 @@
 
 #include <cstdint>
 
+/**
+ * @file enums.hxx
+ * @brief Enumerations for information in ELF files
+ */
+
 namespace mangrove::elf::enums
 {
 	enum class class_t : uint8_t
