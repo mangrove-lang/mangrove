@@ -24,23 +24,23 @@ namespace mangrove::elf::types
 	public:
 		template<typename T> elfHeader_t(T header) noexcept : _header{header} { }
 
-		std::array<uint8_t, 4> magic() const;
-		class_t elfClass() const;
-		endian_t endian() const;
-		abi_t abi() const;
-		elfType_t type() const;
-		machine_t machine() const;
-		version_t version() const;
-		uint64_t entryPoint() const;
-		uint64_t phdrOffset() const;
-		uint64_t shdrOffset() const;
-		uint32_t flags() const;
-		uint16_t headerSize() const;
-		uint16_t programHeaderSize() const;
-		uint16_t programHeaderCount() const;
-		uint16_t sectionHeaderSize() const;
-		uint16_t sectionHeaderCount() const;
-		uint16_t sectionNamesIndex() const;
+		std::array<uint8_t, 4> magic() const noexcept;
+		class_t elfClass() const noexcept;
+		endian_t endian() const noexcept;
+		abi_t abi() const noexcept;
+		elfType_t type() const noexcept;
+		machine_t machine() const noexcept;
+		version_t version() const noexcept;
+		uint64_t entryPoint() const noexcept;
+		uint64_t phdrOffset() const noexcept;
+		uint64_t shdrOffset() const noexcept;
+		uint32_t flags() const noexcept;
+		uint16_t headerSize() const noexcept;
+		uint16_t programHeaderSize() const noexcept;
+		uint16_t programHeaderCount() const noexcept;
+		uint16_t sectionHeaderSize() const noexcept;
+		uint16_t sectionHeaderCount() const noexcept;
+		uint16_t sectionNamesIndex() const noexcept;
 	};
 } // namespace mangrove::elf::types
 
