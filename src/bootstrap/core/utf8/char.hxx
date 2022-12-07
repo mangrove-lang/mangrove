@@ -103,16 +103,16 @@ namespace mangrove::core::utf8
 			{
 				const auto byteB{readByte(file)};
 				// If the high bit of this byte is not set, it cannot be a continuation byte so step back one
-				if (!(byteB & 0x80))
-					file.seekRel(-1);
+				if (!(byteB & 0x80) && !file.seekRel(-1))
+					return invalidCodePoint; // fast-return if the seek fails
 				if ((byteA & 0x60U) == 0x40U && (byteB & 0xc0U) == 0x80U)
 					return encode((uint32_t(byteA & 0x1fU) << 6U) | uint32_t(byteB & 0x3fU), 2);
 				if ((byteB & 0xc0U) == 0x80U)
 				{
 					const auto byteC{readByte(file)};
 					// Similary to byteC, check for continuation and step back if not
-					if (!(byteC & 0x80))
-						file.seekRel(-1);
+					if (!(byteC & 0x80) && !file.seekRel(-1))
+						return invalidCodePoint; // fast-return if the seek fails
 					if ((byteA & 0x70U) == 0x60U && (byteC & 0xc0U) == 0x80U)
 						return encode((uint32_t(byteA & 0x0fU) << 12U) | (uint32_t(byteB & 0x3fU) << 6U) | (byteC & 0x3fU), 3U);
 					if ((byteA & 0x78U) == 0x70U && (byteC & 0xc0U) == 0x80U)
@@ -123,7 +123,8 @@ namespace mangrove::core::utf8
 								(uint32_t(byteA & 0x07U) << 18U) | (uint32_t(byteB & 0x3fU) << 12U) | (uint32_t(byteC & 0x3fU) << 6U) | (byteD & 0x3fU), 4U
 							);
 						// If byte D was not a continuation byte, step back one
-						file.seekRel(-1);
+						if (!file.seekRel(-1))
+							return invalidCodePoint; // fast-return if the seek fails
 					}
 				}
 				// Either we read a guf character, or one that was truncated.. either way..
