@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <string_view>
 #include <utility>
+#include <substrate/fd>
 
 namespace mangrove::core::utf8
 {
@@ -31,28 +32,42 @@ namespace mangrove::core::utf8
 
 		constexpr static uint32_t encode(const std::string_view &data) noexcept
 		{
+			// To encode a UTF-8 character as a code point, start by reading a byte
 			const auto byteA{safeIndex(data, 0)};
+			// If the high bit is set, it should be a multi-byte sequence
 			if (byteA & 0x80U)
 			{
+				// Read the next byte
 				const auto byteB{safeIndex(data, 1)};
+				// If the bits are in the pattern 0bx10xxxxx and 0b10xxxxxx, it's a 2-byte character
 				if ((byteA & 0x60U) == 0x40U && (byteB & 0xc0U) == 0x80U)
 					return encode((uint32_t(byteA & 0x1fU) << 6U) | uint32_t(byteB & 0x3fU), 2);
+				// If the second byte read at least has 0b10xxxxxx as the pattern, it should be valid
 				if ((byteB & 0xc0U) == 0x80U)
 				{
+					// Read the next byte
 					const auto byteC{safeIndex(data, 2)};
+					// If the bits of bytes 1 and 3 are in the pattern 0bx110xxxx and 0b10xxxxxx, it's a 3-byte character
 					if ((byteA & 0x70U) == 0x60U && (byteC & 0xc0U) == 0x80U)
-						return encode((uint32_t(byteA & 0x0fU) << 12U) | (uint32_t(byteB & 0x3fU) << 6U) | (byteC & 0x3fU), 3U);
+						return encode(
+							(uint32_t(byteA & 0x0fU) << 12U) | (uint32_t(byteB & 0x3fU) << 6U) | (byteC & 0x3fU), 3U
+						);
+					// If the bits are instead in the pattern 0bx1110xxx and 0b10xxxxxx, we should have a 4-byte character
 					if ((byteA & 0x78U) == 0x70U && (byteC & 0xc0U) == 0x80U)
 					{
+						// Read the final byte
 						const auto byteD{safeIndex(data, 3)};
+						// Validate it has the pattern 0b10xxxxxx
 						if ((byteD & 0xc0) == 0x80U)
 							return  encode(
 								(uint32_t(byteA & 0x07U) << 18U) | (uint32_t(byteB & 0x3fU) << 12U) | (uint32_t(byteC & 0x3fU) << 6U) | (byteD & 0x3fU), 4U
 							);
 					}
 				}
+				// If any of the previous checks failed, we read a guf character
 				return invalidCodePoint;
 			}
+			// We got a single byte character
 			return encode(byteA, 1);
 		}
 
@@ -69,6 +84,54 @@ namespace mangrove::core::utf8
 			return invalidCodePoint;
 		}
 
+		static uint32_t fromFile(const substrate::fd_t &file) noexcept
+		{
+			const auto readByte
+			{
+				[](const substrate::fd_t &file) noexcept
+				{
+					uint8_t value{};
+					const auto result{file.read(value)};
+					if (result)
+						return value;
+					return UINT8_MAX;
+				}
+			};
+			// This works the same as encode() above for std::string_view, the comments only cover the differnces.
+			const auto byteA{readByte(file)};
+			if (byteA & 0x80U)
+			{
+				const auto byteB{readByte(file)};
+				// If the high bit of this byte is not set, it cannot be a continuation byte so step back one
+				if (!(byteB & 0x80))
+					file.seekRel(-1);
+				if ((byteA & 0x60U) == 0x40U && (byteB & 0xc0U) == 0x80U)
+					return encode((uint32_t(byteA & 0x1fU) << 6U) | uint32_t(byteB & 0x3fU), 2);
+				if ((byteB & 0xc0U) == 0x80U)
+				{
+					const auto byteC{readByte(file)};
+					// Similary to byteC, check for continuation and step back if not
+					if (!(byteC & 0x80))
+						file.seekRel(-1);
+					if ((byteA & 0x70U) == 0x60U && (byteC & 0xc0U) == 0x80U)
+						return encode((uint32_t(byteA & 0x0fU) << 12U) | (uint32_t(byteB & 0x3fU) << 6U) | (byteC & 0x3fU), 3U);
+					if ((byteA & 0x78U) == 0x70U && (byteC & 0xc0U) == 0x80U)
+					{
+						const auto byteD{safeIndex(data, 3)};
+						if ((byteD & 0xc0) == 0x80U)
+							return  encode(
+								(uint32_t(byteA & 0x07U) << 18U) | (uint32_t(byteB & 0x3fU) << 12U) | (uint32_t(byteC & 0x3fU) << 6U) | (byteD & 0x3fU), 4U
+							);
+						// If byte D was not a continuation byte, step back one
+						file.seekRel(-1);
+					}
+				}
+				// Either we read a guf character, or one that was truncated.. either way..
+				return invalidCodePoint;
+			}
+			return encode(byteA, 1);
+		}
+
 	public:
 		constexpr static uint32_t invalidCodePoint{UINT32_MAX};
 
@@ -76,6 +139,8 @@ namespace mangrove::core::utf8
 		constexpr Char(const char c) noexcept : _codePoint{encode(c)} { }
 		constexpr Char(const uint32_t codePoint) noexcept : _codePoint{encode(codePoint)} { }
 		constexpr Char(const std::string_view &value) noexcept : _codePoint{encode(value)} { }
+
+		Char(const substrate::fd_t &file) noexcept : _codePoint{fromFile(file)} { }
 
 		constexpr Char &operator =(const Char &chr) noexcept
 		{
