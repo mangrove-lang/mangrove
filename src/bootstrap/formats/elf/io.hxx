@@ -20,13 +20,13 @@ namespace mangrove::elf::io
 
 	inline namespace internal
 	{
-		using mangrove::elf::enums::endian_t;
+		using mangrove::elf::enums::Endian;
 
 		/**
 		 * A light-weight IO container that understands how to read and write
 		 * to a span in an endian-aware manner
 		 */
-		struct container_t
+		struct Container
 		{
 			span<uint8_t> _data;
 
@@ -129,10 +129,10 @@ namespace mangrove::elf::io
 		 * from the span.
 		 * This includes doing endian dispatch to retrieve the data.
 		 */
-		template<typename T> struct reader_t
+		template<typename T> struct Reader
 		{
-			container_t _data;
-			reader_t(const span<uint8_t> &data) noexcept : _data{data.subspan(0, sizeof(T))} { }
+			Container _data;
+			Reader(const span<uint8_t> &data) noexcept : _data{data.subspan(0, sizeof(T))} { }
 
 			auto read() const noexcept
 			{
@@ -141,9 +141,9 @@ namespace mangrove::elf::io
 				return value;
 			}
 
-			auto read(const endian_t endian) const noexcept
+			auto read(const Endian endian) const noexcept
 			{
-				if (endian == endian_t::little)
+				if (endian == Endian::little)
 					return readLE();
 				else
 					return readBE();
@@ -165,10 +165,10 @@ namespace mangrove::elf::io
 		};
 
 		/** This works similarly to the base reader type, but on std::array<>'s */
-		template<typename T, size_t N> struct reader_t<std::array<T, N>>
+		template<typename T, size_t N> struct Reader<std::array<T, N>>
 		{
-			container_t _data;
-			reader_t(const span<uint8_t> &data) noexcept : _data{data.subspan(0, sizeof(T) * N)} { }
+			Container _data;
+			Reader(const span<uint8_t> &data) noexcept : _data{data.subspan(0, sizeof(T) * N)} { }
 
 			auto read() const noexcept
 			{
@@ -183,26 +183,26 @@ namespace mangrove::elf::io
 	 * Representation of a block of memory that can be read or written to in
 	 * an endian-aware manner, allowing interaction with the blocks of an ELF file
 	 */
-	struct memory_t final
+	struct Memory final
 	{
 	private:
 		span<uint8_t> _data;
 
 	public:
-		memory_t(span<uint8_t> storage) : _data{storage} { }
+		Memory(span<uint8_t> storage) : _data{storage} { }
 
 		[[nodiscard]] size_t length() const noexcept { return _data.size(); }
 
 		template<typename T> [[nodiscard]] auto read(const size_t offset) const noexcept
-			{ return reader_t<T>{_data.subspan(offset)}.read(); }
+			{ return Reader<T>{_data.subspan(offset)}.read(); }
 
-		template<typename T> [[nodiscard]] auto read(const size_t offset, const endian_t endian) const noexcept
-			{ return reader_t<T>{_data.subspan(offset)}.read(endian); }
+		template<typename T> [[nodiscard]] auto read(const size_t offset, const Endian endian) const noexcept
+			{ return Reader<T>{_data.subspan(offset)}.read(endian); }
 	};
 
 	/** Helper type for std::visit(), allowing match block semantics for interaction with std::variant<>s */
-	template<typename... Ts> struct overloaded_t : Ts... { using Ts::operator()...; };
-	template<typename... Ts> overloaded_t(Ts...) -> overloaded_t<Ts...>;
+	template<typename... Ts> struct Match : Ts... { using Ts::operator()...; };
+	template<typename... Ts> Match(Ts...) -> Match<Ts...>;
 } // namespace mangrove:::elf::io
 
 #endif /*FORMATS_ELF_IO_HXX*/

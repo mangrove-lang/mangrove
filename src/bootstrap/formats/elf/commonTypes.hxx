@@ -9,27 +9,27 @@ namespace mangrove::elf::types
 {
 	inline namespace internal
 	{
-		using mangrove::elf::io::memory_t;
+		using mangrove::elf::io::Memory;
 		using namespace mangrove::elf::enums;
 	} // namespace internal
 
 	// This represents the magic number \x7f ELF
 	constexpr static inline std::array<uint8_t, 4> elfMagic{{0x7fU, 0x45U, 0x4cU, 0x46U}};
 
-	struct elfIdent_t
+	struct ELFIdent
 	{
 	protected:
-		memory_t _storage;
-		endian_t _endian;
+		Memory _storage;
+		Endian _endian;
 
 	public:
-		elfIdent_t(const memory_t &storage) : _storage{storage}, _endian{_storage.read<endian_t>(5)} {}
+		ELFIdent(const Memory &storage) : _storage{storage}, _endian{_storage.read<Endian>(5)} {}
 
 		auto magic() const noexcept { return _storage.read<std::array<uint8_t, 4>>(0); }
-		auto elfClass() const noexcept { return _storage.read<class_t>(4); }
+		auto elfClass() const noexcept { return _storage.read<Class>(4); }
 		auto endian() const noexcept { return _endian; }
-		auto version() const noexcept { return _storage.read<identVersion_t>(6); }
-		auto abi() const noexcept { return _storage.read<abi_t>(7); }
+		auto version() const noexcept { return _storage.read<IdentVersion>(6); }
+		auto abi() const noexcept { return _storage.read<ABI>(7); }
 		auto padding() const noexcept { return _storage.read<std::array<uint8_t, 8>>(8); }
 
 		constexpr static size_t size() noexcept { return 16U; }

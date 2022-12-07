@@ -6,7 +6,7 @@
 
 namespace mangrove::parser::types
 {
-	enum class tokenType_t : uint16_t
+	enum class TokenType : uint16_t
 	{
 		invalid,
 		eof,

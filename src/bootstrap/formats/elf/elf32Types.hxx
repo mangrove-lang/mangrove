@@ -8,13 +8,13 @@
 
 namespace mangrove::elf::types::elf32
 {
-	struct elfHeader_t final : elfIdent_t
+	struct ELFHeader final : ELFIdent
 	{
-		elfHeader_t(const memory_t &storage) : elfIdent_t{storage} { }
+		ELFHeader(const Memory &storage) : ELFIdent{storage} { }
 
-		auto type() const noexcept { return _storage.read<elfType_t>(16, _endian); }
-		auto machine() const noexcept { return _storage.read<machine_t>(18, _endian); }
-		auto version() const noexcept { return _storage.read<version_t>(20, _endian); }
+		auto type() const noexcept { return _storage.read<Type>(16, _endian); }
+		auto machine() const noexcept { return _storage.read<Machine>(18, _endian); }
+		auto version() const noexcept { return _storage.read<Version>(20, _endian); }
 		auto entryPoint() const noexcept { return _storage.read<uint32_t>(24, _endian); }
 		auto phdrOffset() const noexcept { return _storage.read<uint32_t>(28, _endian); }
 		auto shdrOffset() const noexcept { return _storage.read<uint32_t>(32, _endian); }
@@ -30,12 +30,12 @@ namespace mangrove::elf::types::elf32
 		{
 			return
 				magic() == elfMagic &&
-				elfIdent_t::version() == identVersion_t::current &&
-				version() == version_t::current &&
+				ELFIdent::version() == IdentVersion::current &&
+				version() == Version::current &&
 				headerSize() == size();
 		}
 
-		constexpr static size_t size() noexcept { return elfIdent_t::size() + 36; }
+		constexpr static size_t size() noexcept { return ELFIdent::size() + 36; }
 	};
 } // namespace mangrove::elf::types::elf32
 

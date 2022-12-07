@@ -18,48 +18,48 @@ namespace mangrove::elf
 		using namespace types;
 
 		using substrate::mmap_t;
-		using fragmentStorage_t = std::vector<std::unique_ptr<uint8_t []>>;
+		using FragmentStorage = std::vector<std::unique_ptr<uint8_t []>>;
 
 		static inline span<uint8_t> toSpan(mmap_t &map) noexcept
 			{ return {map.address<uint8_t>(), map.length()}; }
 	} // namespace internal
 
-	struct elf_t
+	struct ELF
 	{
 	private:
-		std::variant<mmap_t, fragmentStorage_t> _backingStorage;
-		elfHeader_t _header;
+		std::variant<mmap_t, FragmentStorage> _backingStorage;
+		ELFHeader _header;
 
 		template<typename T> T allocate()
 		{
-			auto &storage{std::get<fragmentStorage_t>(_backingStorage)};
+			auto &storage{std::get<FragmentStorage>(_backingStorage)};
 			const auto size{T::size()};
 			const auto &allocation{storage.emplace_back(std::make_unique<uint8_t []>(size))};
 			return {span{allocation.get(), size}};
 		}
 
 	public:
-		elf_t(const int32_t fd) : _backingStorage{mmap_t{fd, 0, PROT_READ}}, _header{
-			[this]() -> elfHeader_t
+		ELF(const int32_t fd) : _backingStorage{mmap_t{fd, 0, PROT_READ}}, _header{
+			[this]() -> ELFHeader
 			{
 				auto &map{std::get<mmap_t>(_backingStorage)};
 				const auto data{toSpan(map)};
-				elfIdent_t ident{data};
+				ELFIdent ident{data};
 				// TODO: Check the validity of ident
-				if (ident.elfClass() == class_t::elf32Bit)
-					return elf32::elfHeader_t{data};
+				if (ident.elfClass() == Class::elf32Bit)
+					return elf32::ELFHeader{data};
 				else
-					return elf64::elfHeader_t{data};
+					return elf64::ELFHeader{data};
 			}()
 		} { }
 
-		elf_t(const class_t elfClass) : _backingStorage{fragmentStorage_t{}}, _header{
-			[this](const class_t elfClass) -> elfHeader_t
+		ELF(const Class elfClass) : _backingStorage{FragmentStorage{}}, _header{
+			[this](const Class elfClass) -> ELFHeader
 			{
-				if (elfClass == class_t::elf32Bit)
-					return allocate<elf32::elfHeader_t>();
+				if (elfClass == Class::elf32Bit)
+					return allocate<elf32::ELFHeader>();
 				else
-					return allocate<elf64::elfHeader_t>();
+					return allocate<elf64::ELFHeader>();
 			}(elfClass)
 		} { }
 

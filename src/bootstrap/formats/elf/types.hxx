@@ -16,21 +16,21 @@
 
 namespace mangrove::elf::types
 {
-	struct elfHeader_t
+	struct ELFHeader
 	{
 	private:
-		std::variant<elf32::elfHeader_t, elf64::elfHeader_t> _header;
+		std::variant<elf32::ELFHeader, elf64::ELFHeader> _header;
 
 	public:
-		template<typename T> elfHeader_t(T header) noexcept : _header{header} { }
+		template<typename T> ELFHeader(T header) noexcept : _header{header} { }
 
 		std::array<uint8_t, 4> magic() const noexcept;
-		class_t elfClass() const noexcept;
-		endian_t endian() const noexcept;
-		abi_t abi() const noexcept;
-		elfType_t type() const noexcept;
-		machine_t machine() const noexcept;
-		version_t version() const noexcept;
+		Class elfClass() const noexcept;
+		Endian endian() const noexcept;
+		ABI abi() const noexcept;
+		Type type() const noexcept;
+		Machine machine() const noexcept;
+		Version version() const noexcept;
 		uint64_t entryPoint() const noexcept;
 		uint64_t phdrOffset() const noexcept;
 		uint64_t shdrOffset() const noexcept;

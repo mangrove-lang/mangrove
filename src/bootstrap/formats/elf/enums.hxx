@@ -11,24 +11,24 @@
 
 namespace mangrove::elf::enums
 {
-	enum class class_t : uint8_t
+	enum class Class : uint8_t
 	{
 		elf32Bit = 1,
 		elf64Bit = 2
 	};
 
-	enum class identVersion_t : uint8_t
+	enum class IdentVersion : uint8_t
 	{
 		current = 1
 	};
 
-	enum class endian_t : uint8_t
+	enum class Endian : uint8_t
 	{
 		little = 1,
 		big = 2
 	};
 
-	enum class abi_t : uint8_t
+	enum class ABI : uint8_t
 	{
 		systemV = 0x00,
 		hpUX = 0x01,
@@ -51,7 +51,7 @@ namespace mangrove::elf::enums
 		pic = 0x82
 	};
 
-	enum class elfType_t : uint16_t
+	enum class Type : uint16_t
 	{
 		unknown = 0,
 		relocatable = 1,
@@ -60,7 +60,7 @@ namespace mangrove::elf::enums
 		core = 4
 	};
 
-	enum class machine_t : uint16_t
+	enum class Machine : uint16_t
 	{
 		nonSpecific = 0x0000,
 		sparc = 0x0002,
@@ -77,12 +77,12 @@ namespace mangrove::elf::enums
 		riscV = 0x00F3
 	};
 
-	enum class version_t : uint32_t
+	enum class Version : uint32_t
 	{
 		current = 1
 	};
 
-	enum class progType_t : uint32_t
+	enum class ProgramHeaderType : uint32_t
 	{
 		empty = 0x00000000, // PT_NULL
 		load = 0x00000001, // PT_LOAD
@@ -99,7 +99,7 @@ namespace mangrove::elf::enums
 #endif
 	};
 
-	enum class sectType_t : uint32_t
+	enum class SectionHeaderType : uint32_t
 	{
 		empty = 0x00000000, // SHT_NULL
 		program = 0x00000001, // SHT_PROGBITS
@@ -121,7 +121,7 @@ namespace mangrove::elf::enums
 		numberOfTypes = 0x00000013 // SHT_NUM
 	};
 
-	enum class sectFlag_t : uint64_t
+	enum class SectionFlag : uint64_t
 	{
 		writeable = 0x00000001, // SHF_WRITE
 		allocate = 0x00000002, // SHF_ALLOC
@@ -140,21 +140,21 @@ namespace mangrove::elf::enums
 	};
 
 /*
-	struct sectFlags_t final
+	struct SectionFlags final
 	{
 	private:
 		uint64_t flags_;
 
 	public:
-		constexpr sectFlags_t() noexcept : flags_{0} { }
-		constexpr sectFlags_t(const uint64_t flags) noexcept : flags_{flags} { }
-		constexpr sectFlags_t(const sectFlag_t flag) noexcept : flags_{uint64_t(flag)} { }
-		void operator =(const sectFlags_t flags) noexcept { flags_ = flags; }
-		void operator |=(const sectFlag_t flag) noexcept { flags_ |= uint64_t(flag); }
-		constexpr sectFlags_t operator |(const sectFlag_t flag) const noexcept { return flags_ | uint64_t(flag); }
-		constexpr uint64_t operator &(const sectFlag_t flag) const noexcept { return flags_ & uint64_t(flag); }
+		constexpr SectionFlags() noexcept : flags_{0} { }
+		constexpr SectionFlags(const uint64_t flags) noexcept : flags_{flags} { }
+		constexpr SectionFlags(const SectionFlag flag) noexcept : flags_{uint64_t(flag)} { }
+		void operator =(const SectionFlags flags) noexcept { flags_ = flags; }
+		void operator |=(const SectionFlag flag) noexcept { flags_ |= uint64_t(flag); }
+		constexpr SectionFlags operator |(const SectionFlag flag) const noexcept { return flags_ | uint64_t(flag); }
+		constexpr uint64_t operator &(const SectionFlag flag) const noexcept { return flags_ & uint64_t(flag); }
 		constexpr operator uint64_t() const noexcept { return flags_; }
-		constexpr bool has(const sectFlag_t flag) noexcept { return *this & flag; }
+		constexpr bool has(const SectionFlag flag) noexcept { return *this & flag; }
 	};
 
 	struct types32_t { using offset_t = uint32_t; };
