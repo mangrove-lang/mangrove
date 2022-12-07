@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: BSD-3-Clause
-#ifndef CORE_UTF8_HXX
-#define CORE_UTF8_HXX
+#ifndef CORE_UTF8_CHAR_HXX
+#define CORE_UTF8_CHAR_HXX
 
 #include <cstdint>
 #include <cstddef>
@@ -88,7 +88,7 @@ namespace mangrove::core::utf8
 		{
 			const auto readByte
 			{
-				[](const substrate::fd_t &file) noexcept
+				[](const substrate::fd_t &file) noexcept -> uint8_t
 				{
 					uint8_t value{};
 					const auto result{file.read(value)};
@@ -117,7 +117,7 @@ namespace mangrove::core::utf8
 						return encode((uint32_t(byteA & 0x0fU) << 12U) | (uint32_t(byteB & 0x3fU) << 6U) | (byteC & 0x3fU), 3U);
 					if ((byteA & 0x78U) == 0x70U && (byteC & 0xc0U) == 0x80U)
 					{
-						const auto byteD{safeIndex(data, 3)};
+						const auto byteD{readByte(file)};
 						if ((byteD & 0xc0) == 0x80U)
 							return  encode(
 								(uint32_t(byteA & 0x07U) << 18U) | (uint32_t(byteB & 0x3fU) << 12U) | (uint32_t(byteC & 0x3fU) << 6U) | (byteD & 0x3fU), 4U
@@ -136,6 +136,8 @@ namespace mangrove::core::utf8
 		constexpr static uint32_t invalidCodePoint{UINT32_MAX};
 
 		constexpr Char() noexcept = default;
+		constexpr Char(const Char &chr) noexcept : _codePoint{chr._codePoint} { }
+		Char(Char &&chr) noexcept : Char{} { swap(chr); }
 		constexpr Char(const char c) noexcept : _codePoint{encode(c)} { }
 		constexpr Char(const uint32_t codePoint) noexcept : _codePoint{encode(codePoint)} { }
 		constexpr Char(const std::string_view &value) noexcept : _codePoint{encode(value)} { }
@@ -214,4 +216,4 @@ namespace mangrove::core::utf8
 	} // namespace literals
 } // namespace mangrove::core::utf8
 
-#endif /*CORE_UTF8_HXX*/
+#endif /*CORE_UTF8_CHAR_HXX*/
