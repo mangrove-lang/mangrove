@@ -1,0 +1,188 @@
+// SPDX-License-Identifier: BSD-3-Clause
+#ifndef CORE_UTF8_STRING_HXX
+#define CORE_UTF8_STRING_HXX
+
+#include "char.hxx"
+
+namespace mangrove::core::utf8
+{
+	inline namespace internal
+	{
+		constexpr static inline uint8_t safeIndex(std::string_view str, const size_t index) noexcept
+		{
+			if (index > str.size())
+				return UINT8_MAX;
+			return uint8_t(str[index]);
+		}
+
+		inline bool isMultiValid() noexcept { return true; }
+		template<typename... values_t> inline bool isMultiValid(const uint8_t c, values_t ...values) noexcept
+			{ return (c & 0xc0U) == 0x80U && isMultiValid(values...); }
+
+		static inline size_t countUnits(const std::string_view &str) noexcept
+		{
+			size_t count{};
+			for (size_t i = 0; i < str.size(); ++i)
+			{
+				const auto byteA{safeIndex(str, i)};
+				// Multiple code unit encoded character?
+				if (byteA & 0x80U)
+				{
+					const auto byteB{safeIndex(str, ++i)};
+					if ((byteA & 0x60U) == 0x40U)
+					{
+						// 2 code units.. check that the second unit is valid and return 0 if not.
+						if (!isMultiValid(byteB))
+							return 0;
+					}
+					else if ((byteA & 0x70U) == 0x60U)
+					{
+						// 3 code units.. check that the second and third units are valid and return 0 if not
+						if (!isMultiValid(byteB, safeIndex(str, ++i)))
+							return 0;
+						// Also check that the code point is valid (not D800-DFFF)
+						else if ((byteA & 0x0F) == 0x0D && (byteB & 0x20))
+							return 0;
+					}
+					else if ((byteA & 0x78U) == 0x70U)
+					{
+						// 4 code units.. check that the second, third and fourth unit is valid
+						if (!isMultiValid(byteB, safeIndex(str, i + 1), safeIndex(str, i + 2)))
+							return 0;
+						i += 2;
+						++count;
+					}
+					else
+						return 0;
+				}
+				++count;
+			}
+			return count;
+		}
+
+		struct StartAtEnd final  { };
+
+		// Please note, this is ONLY valid on strings that are entirely valid UTF-8.
+		struct StringIterator final
+		{
+		private:
+			const char *_data;
+			// length and offset are in bytes for simplicity..
+			size_t _length;
+			size_t _offset{};
+
+		public:
+			constexpr StringIterator(const char *data, size_t length) : _data{data}, _length{length} { }
+			constexpr StringIterator(const std::string_view &str) : _data{str.data()}, _length{str.length()} { }
+			constexpr StringIterator(const char *data, size_t length, StartAtEnd) :
+				_data{data}, _length{length}, _offset{_length} { }
+			constexpr StringIterator(const std::string_view &str, StartAtEnd) :
+				_data{str.data()}, _length{str.length()}, _offset{_length} { }
+
+			constexpr Char operator *() const noexcept
+				{ return {std::string_view{_data + _offset, _length}}; }
+
+			constexpr StringIterator &operator ++() noexcept
+			{
+				if (_offset == _length)
+					return *this;
+				const auto chr{**this};
+				_offset += chr.length();
+				return *this;
+			}
+
+			constexpr StringIterator &operator --() noexcept
+			{
+				if (!_offset)
+					return *this;
+				auto offset{_offset - 1U};
+				while (offset > 0 && (_data[offset] & 0xc0U) == 0x80U)
+					--offset;
+				_offset = offset;
+				return *this;
+			}
+
+			[[nodiscard]] constexpr inline bool operator ==(const StringIterator &other) noexcept
+				{  return _data == other._data && _length == other._length && _offset == other._offset; }
+			[[nodiscard]] constexpr inline bool operator !=(const StringIterator &other) noexcept
+				{  return _data != other._data || _length != other._length || _offset != other._offset; }
+
+			using difference_type = ptrdiff_t;
+			using value_type = Char;
+			using pointer = void;
+			using reference = Char;
+			using iterator_category = std::bidirectional_iterator_tag;
+		};
+	} // namespace internal
+
+	struct String
+	{
+	private:
+		std::string _data{};
+		size_t _length{};
+
+		void copyChar(const Char &chr, const size_t offset) noexcept
+		{
+			const size_t length{chr.length()};
+			const uint32_t codePoint{chr.toCodePoint()};
+			if (length == 1)
+				_data[offset] = codePoint;
+			else if (length == 2)
+			{
+				_data[offset] = (codePoint >> 6U) | 0xc0U;
+				_data[offset + 1] = (codePoint & 0x3fU) | 0x80U;
+			}
+			else if (length == 3)
+			{
+				_data[offset] = (codePoint >> 12U) | 0xe0U;
+				_data[offset + 1] = ((codePoint >> 6U) & 0x3fU) | 0x80U;
+				_data[offset + 2] = (codePoint & 0x3fU) | 0x80U;
+			}
+			else
+			{
+				_data[offset] = (codePoint >> 18U) | 0xf0U;
+				_data[offset + 1] = ((codePoint >> 12U) & 0x3fU) | 0x80U;
+				_data[offset + 2] = ((codePoint >> 6U) & 0x3fU) | 0x80U;
+				_data[offset + 3] = (codePoint & 0x3fU) | 0x80U;
+			}
+		}
+
+	public:
+		constexpr String() noexcept = default;
+		String(const std::string_view &string) : _data{string}, _length{countUnits(_data)} { }
+
+		auto data() noexcept { return _data.data(); }
+		const auto *data() const noexcept { return _data.data(); }
+		auto length() const noexcept { return _length; }
+		auto size() const noexcept { return _length; }
+		auto byteLength() const noexcept { return _data.size(); }
+
+		auto begin() noexcept { return StringIterator{_data}; }
+		const auto begin() const noexcept { return StringIterator{_data}; }
+		auto end() noexcept { return StringIterator{_data, StartAtEnd{}}; }
+		const auto end() const noexcept { return StringIterator{_data, StartAtEnd{}}; }
+
+		auto rbegin() noexcept { return std::reverse_iterator{end()}; }
+		const auto rbegin() const noexcept { return std::reverse_iterator{end()}; }
+		auto rend() noexcept { return std::reverse_iterator{begin()}; }
+		const auto rend() const noexcept { return std::reverse_iterator{begin()}; }
+
+		String &operator +=(const Char &chr) noexcept
+		{
+			const auto offset{_data.length()};
+			_data.resize(offset + chr.length());
+			copyChar(chr, offset);
+			++_length;
+			return *this;
+		}
+
+		String &operator +=(const String &str) noexcept
+		{
+			_data += str._data;
+			_length += str._length;
+			return *this;
+		}
+	};
+} // namespace mangrove::core::utf8
+
+#endif /*CORE_UTF8_STRING_HXX*/
