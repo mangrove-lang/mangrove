@@ -92,6 +92,11 @@ namespace mangrove::core::utf8
 		bool startsWith(const StringView &str) const noexcept
 			{ return beginsWith(str); }
 
+		bool operator ==(const StringView &str) const noexcept
+			{ return _length == str._length && _data == str._data; }
+		bool operator !=(const StringView &str) const noexcept
+			{ return _length != str._length || _data != str._data; }
+
 		constexpr static size_t npos{SIZE_MAX};
 	};
 } // namespace mangrove::core::utf8
