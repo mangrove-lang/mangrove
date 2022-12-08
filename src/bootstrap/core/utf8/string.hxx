@@ -105,22 +105,22 @@ namespace mangrove::core::utf8
 			std::string_view str{_data};
 			size_t begin{};
 			// If the starting point is less than the number of characters in the string
-			if (offset < length())
+			if (offset < _length)
 			{
 				// Figure out the offset for the first character requested
-				for (size_t i = 0; begin < byteLength() && i < offset; ++i)
+				for (size_t i = 0; i < offset; ++i)
 					begin += Char{str.substr(begin)}.length();
 			}
 			else
 			{
 				// Otherwise it's just the end of this string
-				offset = length();
-				begin = byteLength();
+				offset = _length;
+				begin = str.length();
 			}
 
 			// Bring count into range
-			if (count > length() - offset)
-				count = length() - offset;
+			if (count > _length - offset)
+				count = _length - offset;
 
 			auto end{begin};
 			// Now we have [begin, ) but need to figure out the end offset - so go forward count characters
