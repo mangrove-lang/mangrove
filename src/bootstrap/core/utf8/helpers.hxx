@@ -39,10 +39,9 @@ namespace mangrove::core::utf8::helpers
 				else if ((byteA & 0x70U) == 0x60U)
 				{
 					// 3 code units.. check that the second and third units are valid and return 0 if not
-					if (!isMultiValid(byteB, safeIndex(str, ++i)))
-						return 0;
 					// Also check that the code point is valid (not D800-DFFF)
-					else if ((byteA & 0x0F) == 0x0D && (byteB & 0x20))
+					if (!isMultiValid(byteB, safeIndex(str, ++i)) ||
+						((byteA & 0x0fU) == 0x0dU && (byteB & 0x20U)))
 						return 0;
 				}
 				else if ((byteA & 0x78U) == 0x70U)
