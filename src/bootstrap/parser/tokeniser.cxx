@@ -122,6 +122,16 @@ void Tokeniser::readLineComment() noexcept
 	finaliseToken(TokenType::comment, std::move(comment));
 }
 
+void Tokeniser::readHexToken() noexcept
+{
+	String literal{};
+	_token.set(TokenType::hexLit);
+	nextChar();
+	while (isHex(currentChar))
+		literal += nextChar();
+	_token.set(TokenType::hexLit, std::move(literal));
+}
+
 Char Tokeniser::readUnicode(const Char &normalQuote, const Char &escapedQuote) noexcept
 {
 	Char result{};
@@ -158,7 +168,7 @@ Char Tokeniser::readUnicode(const Char &normalQuote, const Char &escapedQuote) n
 				break;
 			case 'u':
 			case 'U':
-				//readHexToken();
+				readHexToken();
 				//return {toInt_t{_token.value.data(), _token.value.byteLength()}.fromHex()};
 				return {};
 		}
