@@ -259,7 +259,7 @@ void Tokeniser::readCharToken() noexcept
 
 void Tokeniser::readDivToken() noexcept
 {
-	_token.set(TokenType::mulOp, currentChar);
+	finaliseToken(TokenType::mulOp, currentChar);
 	String token{nextChar()};
 	if (isEquals(currentChar))
 	{
