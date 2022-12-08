@@ -211,8 +211,8 @@ namespace mangrove::core::utf8
 
 	inline namespace literals
 	{
-		constexpr inline Char operator ""_u8c(const char c) noexcept { return {c}; }
-		constexpr inline Char operator ""_c(const char *const value, const size_t length) noexcept
+		constexpr static inline Char operator ""_u8c(const char c) noexcept { return {c}; }
+		constexpr static inline Char operator ""_c(const char *const value, const size_t length) noexcept
 			{ return Char{std::string_view{value, length}}; }
 	} // namespace literals
 } // namespace mangrove::core::utf8
