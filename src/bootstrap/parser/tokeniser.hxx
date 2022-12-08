@@ -33,6 +33,7 @@ namespace mangrove::parser
 		[[nodiscard]] Char readUnicode(const Char &normalQuote, const Char &escapedQuote) noexcept;
 		void readStringToken() noexcept;
 		void readCharToken() noexcept;
+		void readDivToken() noexcept;
 
 	public:
 		Tokeniser(fd_t &&file) noexcept;

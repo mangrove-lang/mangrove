@@ -115,6 +115,9 @@ void Tokeniser::readToken() noexcept
 		case '~':
 			_token.set(TokenType::invert);
 			break;
+		case '/':
+			readDivToken();
+			return;
 	}
 	finaliseToken();
 	nextChar();
@@ -240,4 +243,27 @@ void Tokeniser::readCharToken() noexcept
 		return;
 	}
 	_token.value(literal);
+}
+
+void Tokeniser::readDivToken() noexcept
+{
+	_token.set(TokenType::mulOp);
+	String token{nextChar()};
+	if (isEquals(currentChar))
+	{
+		token += nextChar();
+		finaliseToken(TokenType::assignOp, std::move(token));
+	}
+	else if (currentChar == '*')
+	{
+		nextChar();
+		readPartComment();
+	}
+	else if (currentChar == '/')
+	{
+		nextChar();
+		readLineComment();
+	}
+	else
+		finaliseToken(TokenType::mulOp, std::move(token))
 }
