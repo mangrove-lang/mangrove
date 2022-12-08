@@ -1,7 +1,7 @@
 ---
 Checks: 'bugprone-*,cert-*,clang-analyzer-*,misc-*,modernize-*,portability-*,performance-*,readability-*,-readability-magic-numbers,-readability-braces-around-statements,-modernize-use-trailing-return-type,-readability-named-parameter'
 FormatStyle: 'none'
-HeaderFilterRegex: '(src|upgrade)/.+'
+HeaderFilterRegex: '(src)/.+'
 AnalyzeTemporaryDtors: false
 CheckOptions:
   - key:   cert-dcl16-c.NewSuffixes
