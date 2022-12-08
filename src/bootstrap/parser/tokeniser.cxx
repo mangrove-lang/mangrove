@@ -118,6 +118,14 @@ void Tokeniser::readToken() noexcept
 		case '/':
 			readDivToken();
 			return;
+		case '*':
+		case '%':
+			readMulToken();
+			return;
+		case '+':
+		case '-':
+			readAddToken();
+			return;
 	}
 	finaliseToken();
 	nextChar();
@@ -265,4 +273,34 @@ void Tokeniser::readDivToken() noexcept
 		nextChar();
 		readLineComment();
 	}
+}
+
+void Tokeniser::readMulToken() noexcept
+{
+	finaliseToken(TokenType::mulOp, currentChar);
+	String token{nextChar()};
+	if (isEquals(currentChar))
+	{
+		token += currentChar;
+		finaliseToken(TokenType::assignOp, std::move(token));
+		nextChar();
+	}
+}
+
+void Tokeniser::readAddToken() noexcept
+{
+	finaliseToken(TokenType::addOp, currentChar);
+	String token{nextChar()};
+	if (isEquals(currentChar))
+	{
+		token += currentChar;
+		finaliseToken(TokenType::assignOp, std::move(token));
+	}
+	else if (token == u8"-"_sv && currentChar == '>'_u8c)
+		finaliseToken(TokenType::arrow);
+	else if (currentChar == token[0])
+		finaliseToken(TokenType::incOp, currentChar);
+	else
+		return;
+	nextChar();
 }
