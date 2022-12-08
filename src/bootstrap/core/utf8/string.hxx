@@ -43,7 +43,12 @@ namespace mangrove::core::utf8
 
 	public:
 		constexpr String() noexcept = default;
-		String(const std::string_view &string) : _data{string}, _length{helpers::countUnits(_data)} { }
+		String(const std::string_view &string) noexcept : _data{string}, _length{helpers::countUnits(_data)} { }
+		String(const StringView &string) noexcept :
+			_data{string.data(), string.byteLength()}, _length{string.length()} { }
+
+		operator StringView() const noexcept
+			{ return {_data, _length}; }
 
 		auto data() noexcept { return _data.data(); }
 		const auto *data() const noexcept { return _data.data(); }
