@@ -85,8 +85,8 @@ namespace mangrove::parser::types
 
 	struct FileSegment final
 	{
-		Position begin{{SIZE_MAX}, {SIZE_MAX}};
-		Position end{{SIZE_MAX}, {SIZE_MAX}};
+		Position begin{SIZE_MAX, SIZE_MAX};
+		Position end{SIZE_MAX, SIZE_MAX};
 	};
 
 	struct Token final
