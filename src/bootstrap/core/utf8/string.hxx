@@ -113,6 +113,33 @@ namespace mangrove::core::utf8
 		String &operator +=(const String &str) noexcept
 			{ return append(str); }
 
+		bool beginsWith(const StringView &str) const noexcept
+		{
+			// Start by making sure the string to compare is not longer than this one
+			if (str.length() > length() || str.byteLength() > byteLength())
+				return false;
+			// Then extract the raw data begin/end
+			const auto *const begin{str.data()};
+			const auto *const end{begin + str.byteLength()};
+			// And bytewise compare for equality
+			return std::equal(begin, end, _data.cbegin());
+		}
+
+		bool endsWith(const StringView &str) const noexcept
+		{
+			// Start by making sure the string to compare is not longer than this one
+			if (str.length() > length() || str.byteLength() > byteLength())
+				return false;
+			// Then extract the raw data begin/end
+			const auto *const begin{str.data()};
+			const auto *const end{begin + str.byteLength()};
+			// And bytewise compare for equality, rewinding from the end of this string
+			return std::equal(begin, end, _data.cend() - str.byteLength());
+		}
+
+		bool startsWith(const StringView &str) const noexcept
+			{ return beginsWith(str); }
+
 		bool operator ==(const String &str) const noexcept
 			{ return _length == str._length && _data == str._data; }
 		bool operator !=(const String &str) const noexcept
