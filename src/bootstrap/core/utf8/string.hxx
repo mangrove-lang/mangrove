@@ -2,6 +2,7 @@
 #ifndef CORE_UTF8_STRING_HXX
 #define CORE_UTF8_STRING_HXX
 
+#include <stdexcept>
 #include "char.hxx"
 #include "iterator.hxx"
 #include "helpers.hxx"
@@ -87,6 +88,17 @@ namespace mangrove::core::utf8
 			{ return append(chr); }
 		String &operator +=(const String &str) noexcept
 			{ return append(str); }
+
+		[[nodiscard]] Char operator [](const size_t index) const
+		{
+			if (index >= _length)
+				throw std::out_of_range{"String index is out of range"};
+			std::string_view str{_data};
+			size_t offset{};
+			for (size_t i = 0; i < index; ++i)
+				offset += Char{str.substr(offset)}.length();
+			return {str.substr(offset)};
+		}
 
 		[[nodiscard]] StringView substr(size_t offset, size_t count = npos) const noexcept
 		{
