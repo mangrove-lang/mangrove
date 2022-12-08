@@ -137,9 +137,9 @@ namespace mangrove::core::utf8
 		constexpr static uint32_t invalidCodePoint{UINT32_MAX};
 
 		constexpr Char() noexcept = default;
-		constexpr Char(const Char &chr) noexcept : _codePoint{chr._codePoint} { }
+		constexpr Char(const Char &chr) noexcept = default;
 		Char(Char &&chr) noexcept : Char{} { swap(chr); }
-		constexpr Char(const char c) noexcept : _codePoint{encode(c)} { }
+		constexpr Char(const char c) noexcept : _codePoint{encode(uint32_t(c))} { }
 		constexpr Char(const uint32_t codePoint) noexcept : _codePoint{encode(codePoint)} { }
 		constexpr Char(const std::string_view &value) noexcept : _codePoint{encode(value)} { }
 

@@ -1,5 +1,5 @@
 ---
-Checks: 'bugprone-*,cert-*,clang-analyzer-*,misc-*,modernize-*,portability-*,performance-*,readability-*,-readability-magic-numbers,-readability-braces-around-statements,-modernize-use-trailing-return-type,-readability-named-parameter'
+Checks: 'bugprone-*,cert-*,clang-analyzer-*,misc-*,modernize-*,portability-*,performance-*,readability-*,-readability-magic-numbers,-readability-braces-around-statements,-modernize-use-trailing-return-type,-readability-named-parameter,-readability-implicit-bool-conversion'
 FormatStyle: 'none'
 HeaderFilterRegex: '(src)/.+'
 AnalyzeTemporaryDtors: false
