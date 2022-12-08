@@ -24,7 +24,7 @@ extended_warnings = [
 	'-Warith-conversion',
 	'-Wvla-parameter',
 	'-Wduplicated-branches',
-	# '-Wshadow=local',
+	'-Wshadow=local',
 	'-Wunsafe-loop-optimizations',
 	'-Wbad-function-cast',
 	'-Wcast-qual',

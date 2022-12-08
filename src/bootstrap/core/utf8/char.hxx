@@ -88,10 +88,10 @@ namespace mangrove::core::utf8
 		{
 			const auto readByte
 			{
-				[](const substrate::fd_t &file) noexcept -> uint8_t
+				[](const substrate::fd_t &fd) noexcept -> uint8_t
 				{
 					uint8_t value{};
-					const auto result{file.read(value)};
+					const auto result{fd.read(value)};
 					if (result)
 						return value;
 					return UINT8_MAX;

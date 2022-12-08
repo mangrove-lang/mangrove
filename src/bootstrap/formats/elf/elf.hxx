@@ -55,9 +55,9 @@ namespace mangrove::elf
 		} { }
 
 		ELF(const Class elfClass) : _backingStorage{FragmentStorage{}}, _header{
-			[this](const Class elfClass) -> ELFHeader
+			[this](const Class fileClass) -> ELFHeader
 			{
-				if (elfClass == Class::elf32Bit)
+				if (fileClass == Class::elf32Bit)
 					return allocate<elf32::ELFHeader>();
 				return allocate<elf64::ELFHeader>();
 			}(elfClass)
