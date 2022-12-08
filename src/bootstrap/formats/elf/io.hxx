@@ -41,7 +41,7 @@ namespace mangrove::elf::io
 			{
 				std::array<uint8_t, 2> data{};
 				fromBytes(data.data());
-				value = (uint16_t(data[1]) << 8U) | data[0];
+				value = uint16_t((uint16_t(data[1]) << 8U) | data[0]);
 			}
 
 			void fromBytesLE(uint32_t &value) const noexcept

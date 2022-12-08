@@ -30,7 +30,7 @@ extended_warnings = [
 	'-Wcast-qual',
 	'-Wcast-align=strict',
 	'-Wcast-function-type',
-	# '-Wconversion',
+	'-Wconversion',
 	'-Wdangling-else',
 	# '-Wsign-conversion',
 	'-Wfloat-conversion',
@@ -68,6 +68,7 @@ subdir('formats')
 executable(
 	'mangrove',
 	mangroveSrc,
+	cpp_args: ['-D_FORTIFY_SOURCE=2'],
 	dependencies:[substrate],
 	gnu_symbol_visibility: 'inlineshidden',
 )

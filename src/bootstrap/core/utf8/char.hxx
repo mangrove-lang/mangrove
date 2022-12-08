@@ -21,7 +21,7 @@ namespace mangrove::core::utf8
 		constexpr static size_t lengthShift{30U};
 
 		[[nodiscard]] constexpr static uint32_t encode(const uint32_t codePoint, const size_t length)
-			{ return (codePoint & codePointMask) | ((length - 1U) << lengthShift); }
+			{ return (codePoint & codePointMask) | (uint32_t(length - 1U) << lengthShift); }
 
 		[[nodiscard]] constexpr static inline uint8_t safeIndex(std::string_view str, const size_t index) noexcept
 		{

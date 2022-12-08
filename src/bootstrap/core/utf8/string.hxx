@@ -21,24 +21,24 @@ namespace mangrove::core::utf8
 			const size_t length{chr.length()};
 			const uint32_t codePoint{chr.toCodePoint()};
 			if (length == 1)
-				_data[offset] = codePoint;
+				_data[offset] = static_cast<char>(codePoint);
 			else if (length == 2)
 			{
-				_data[offset] = (codePoint >> 6U) | 0xc0U;
-				_data[offset + 1] = (codePoint & 0x3fU) | 0x80U;
+				_data[offset] = static_cast<char>((codePoint >> 6U) | 0xc0U);
+				_data[offset + 1] = static_cast<char>((codePoint & 0x3fU) | 0x80U);
 			}
 			else if (length == 3)
 			{
-				_data[offset] = (codePoint >> 12U) | 0xe0U;
-				_data[offset + 1] = ((codePoint >> 6U) & 0x3fU) | 0x80U;
-				_data[offset + 2] = (codePoint & 0x3fU) | 0x80U;
+				_data[offset] = static_cast<char>((codePoint >> 12U) | 0xe0U);
+				_data[offset + 1] = static_cast<char>(((codePoint >> 6U) & 0x3fU) | 0x80U);
+				_data[offset + 2] = static_cast<char>((codePoint & 0x3fU) | 0x80U);
 			}
 			else
 			{
-				_data[offset] = (codePoint >> 18U) | 0xf0U;
-				_data[offset + 1] = ((codePoint >> 12U) & 0x3fU) | 0x80U;
-				_data[offset + 2] = ((codePoint >> 6U) & 0x3fU) | 0x80U;
-				_data[offset + 3] = (codePoint & 0x3fU) | 0x80U;
+				_data[offset] = static_cast<char>((codePoint >> 18U) | 0xf0U);
+				_data[offset + 1] = static_cast<char>(((codePoint >> 12U) & 0x3fU) | 0x80U);
+				_data[offset + 2] = static_cast<char>(((codePoint >> 6U) & 0x3fU) | 0x80U);
+				_data[offset + 3] = static_cast<char>((codePoint & 0x3fU) | 0x80U);
 			}
 		}
 
