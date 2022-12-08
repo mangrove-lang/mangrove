@@ -2,6 +2,7 @@
 #ifndef PARSER_TOKENISER_HXX
 #define PARSER_TOKENISER_HXX
 
+#include <optional>
 #include <utility>
 #include <substrate/fd>
 #include "recogniser.hxx"
@@ -23,6 +24,7 @@ namespace mangrove::parser
 		types::Token _token{};
 
 		Char nextChar() noexcept;
+		void finaliseToken(std::optional<types::TokenType> type = {}, String &&value = {}) noexcept;
 		void readToken() noexcept;
 
 	public:

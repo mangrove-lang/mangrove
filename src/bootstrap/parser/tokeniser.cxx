@@ -53,6 +53,14 @@ Char Tokeniser::nextChar() noexcept
 	return value;
 }
 
+void Tokeniser::finaliseToken(const std::optional<TokenType> type, String &&value) noexcept
+{
+	if (type)
+		_token.set(*type, std::move(value));
+	_token.endsAt(position);
+	//_token.calcLength();
+}
+
 void Tokeniser::readToken() noexcept
 {
 }
