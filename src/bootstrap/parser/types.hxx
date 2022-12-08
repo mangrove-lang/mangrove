@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include <cstddef>
+#include <utility>
 #include "../core/utf8/string.hxx"
 
 namespace mangrove::parser::types
@@ -82,11 +83,18 @@ namespace mangrove::parser::types
 		size_t character{};
 	};
 
+	struct FileSegment final
+	{
+		Position begin{{SIZE_MAX}, {SIZE_MAX}};
+		Position end{{SIZE_MAX}, {SIZE_MAX}};
+	};
+
 	struct Token final
 	{
 	private:
 		TokenType _type{TokenType::invalid};
 		String _value{};
+		FileSegment _location{};
 
 	public:
 		Token() noexcept = default;
@@ -95,8 +103,9 @@ namespace mangrove::parser::types
 
 		[[nodiscard]] auto type() const noexcept { return _type; }
 		[[nodiscard]] StringView value() const noexcept { return _value; }
-		void value(String &&value) { _value = std::move(value); }
-		void value(const StringView &value) { _value = value; }
+		void value(String &&value) noexcept { _value = std::move(value); }
+		void value(const StringView &value) noexcept { _value = value; }
+		[[nodiscard]] auto location() const noexcept { return _location; }
 		[[nodiscard]] bool valid() const noexcept { return _type != TokenType::invalid; }
 
 		void set(const TokenType type, String &&value = String{})
@@ -109,7 +118,13 @@ namespace mangrove::parser::types
 		{
 			_type = TokenType::invalid;
 			_value = {};
+			_location.begin = _location.end;
 		}
+
+		void beginsAt(const Position position)
+			{ _location.begin = position; }
+		void endsAt(const Position position)
+			{ _location.end = position; }
 
 		void swap(Token &token) noexcept;
 	};
