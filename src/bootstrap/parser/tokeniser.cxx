@@ -106,7 +106,12 @@ void Tokeniser::readToken() noexcept
 		case ':':
 			_token.set(TokenType::colon);
 			break;
-
+		case '"':
+			readStringToken();
+			break;
+		case '\'':
+			readCharToken();
+			break;
 		case '~':
 			_token.set(TokenType::invert);
 			break;
@@ -131,7 +136,7 @@ void Tokeniser::readHexToken() noexcept
 	nextChar();
 	while (isHex(currentChar))
 		literal += nextChar();
-	_token.set(TokenType::hexLit, std::move(literal));
+	_token.value(std::move(literal));
 }
 
 Char Tokeniser::readUnicode(const Char &normalQuote, const Char &escapedQuote) noexcept
@@ -182,3 +187,33 @@ Char Tokeniser::readUnicode(const Char &normalQuote, const Char &escapedQuote) n
 	return result;
 }
 
+void Tokeniser::readStringToken() noexcept
+{
+	_token.set(TokenType::stringLit);
+	nextChar();
+	String literal{};
+	while (!isDoubleQuote(currentChar))
+	{
+		const auto value{readUnicode('\''_u8c, '"'_u8c)};
+		if (!value.valid())
+		{
+			_token.set(TokenType::invalid);
+			return;
+		}
+		literal += value;
+	}
+	_token.value(std::move(literal));
+}
+
+void Tokeniser::readCharToken() noexcept
+{
+	_token.set(TokenType::charLit);
+	nextChar();
+	const auto literal{readUnicode('"'_u8c, '\''_u8c)};
+	if (!literal.valid() || !isSingleQuote(currentChar))
+	{
+		_token.set(TokenType::invalid);
+		return;
+	}
+	_token.value(literal);
+}
