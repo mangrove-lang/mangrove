@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: BSD-3-Clause
+#include <substrate/conversions>
 #include "tokeniser.hxx"
 
 using namespace mangrove::parser;
 using namespace mangrove::parser::types;
 using namespace mangrove::parser::recognisers;
+using substrate::toInt_t;
 
 Tokeniser::Tokeniser(fd_t &&file) noexcept : _file{std::move(file)}
 {
@@ -169,8 +171,9 @@ Char Tokeniser::readUnicode(const Char &normalQuote, const Char &escapedQuote) n
 			case 'u':
 			case 'U':
 				readHexToken();
-				//return {toInt_t{_token.value.data(), _token.value.byteLength()}.fromHex()};
-				return {};
+				// We get to abuse the StringView abstraction here as we're guaranteed ASCII-only
+				// values being present in _token.value() by readHexToken(), so this is safe.
+				return {toInt_t<uint32_t>{_token.value().data(), _token.value().byteLength()}.fromHex()};
 		}
 		if (currentChar == escapedQuote)
 			result = escapedQuote;
