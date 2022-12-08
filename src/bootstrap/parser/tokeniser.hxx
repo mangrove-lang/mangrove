@@ -27,7 +27,7 @@ namespace mangrove::parser
 	public:
 		Tokeniser(fd_t &&file) : _file{std::move(file)} { }
 
-		auto token() const noexcept { return _token; }
+		[[nodiscard]] auto token() const noexcept { return _token; }
 
 		types::Token &next() noexcept;
 	};

@@ -93,11 +93,11 @@ namespace mangrove::parser::types
 		Token(const Token &token) noexcept;
 		Token(Token &&token) noexcept : Token{} { swap(token); }
 
-		auto type() const noexcept { return _type; }
-		StringView value() const noexcept { return _value; }
+		[[nodiscard]] auto type() const noexcept { return _type; }
+		[[nodiscard]] StringView value() const noexcept { return _value; }
 		void value(String &&value) { _value = std::move(value); }
 		void value(const StringView &value) { _value = value; }
-		bool valid() const noexcept { return _type != TokenType::invalid; }
+		[[nodiscard]] bool valid() const noexcept { return _type != TokenType::invalid; }
 
 		void set(const TokenType type, String &&value = String{})
 		{
