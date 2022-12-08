@@ -13,21 +13,21 @@ namespace mangrove::elf::types::elf64
 	public:
 		ELFHeader(const Memory &storage) : ELFIdent{storage} { }
 
-		auto type() const noexcept { return _storage.read<Type>(16, _endian); }
-		auto machine() const noexcept { return _storage.read<Machine>(18, _endian); }
-		auto version() const noexcept { return _storage.read<Version>(20, _endian); }
-		auto entryPoint() const noexcept { return _storage.read<uint64_t>(24, _endian); }
-		auto phdrOffset() const noexcept { return _storage.read<uint64_t>(32, _endian); }
-		auto shdrOffset() const noexcept { return _storage.read<uint64_t>(40, _endian); }
-		auto flags() const noexcept { return _storage.read<uint32_t>(48, _endian); }
-		auto headerSize() const noexcept { return _storage.read<uint16_t>(52, _endian); }
-		auto programHeaderSize() const noexcept { return _storage.read<uint16_t>(54, _endian); }
-		auto programHeaderCount() const noexcept { return _storage.read<uint16_t>(56, _endian); }
-		auto sectionHeaderSize() const noexcept { return _storage.read<uint16_t>(58, _endian); }
-		auto sectionHeaderCount() const noexcept { return _storage.read<uint16_t>(60, _endian); }
-		auto sectionNamesIndex() const noexcept { return _storage.read<uint16_t>(62, _endian); }
+		[[nodiscard]] auto type() const noexcept { return _storage.read<Type>(16, _endian); }
+		[[nodiscard]] auto machine() const noexcept { return _storage.read<Machine>(18, _endian); }
+		[[nodiscard]] auto version() const noexcept { return _storage.read<Version>(20, _endian); }
+		[[nodiscard]] auto entryPoint() const noexcept { return _storage.read<uint64_t>(24, _endian); }
+		[[nodiscard]] auto phdrOffset() const noexcept { return _storage.read<uint64_t>(32, _endian); }
+		[[nodiscard]] auto shdrOffset() const noexcept { return _storage.read<uint64_t>(40, _endian); }
+		[[nodiscard]] auto flags() const noexcept { return _storage.read<uint32_t>(48, _endian); }
+		[[nodiscard]] auto headerSize() const noexcept { return _storage.read<uint16_t>(52, _endian); }
+		[[nodiscard]] auto programHeaderSize() const noexcept { return _storage.read<uint16_t>(54, _endian); }
+		[[nodiscard]] auto programHeaderCount() const noexcept { return _storage.read<uint16_t>(56, _endian); }
+		[[nodiscard]] auto sectionHeaderSize() const noexcept { return _storage.read<uint16_t>(58, _endian); }
+		[[nodiscard]] auto sectionHeaderCount() const noexcept { return _storage.read<uint16_t>(60, _endian); }
+		[[nodiscard]] auto sectionNamesIndex() const noexcept { return _storage.read<uint16_t>(62, _endian); }
 
-		bool valid() const noexcept
+		[[nodiscard]] bool valid() const noexcept
 		{
 			return
 				magic() == elfMagic &&
@@ -35,7 +35,7 @@ namespace mangrove::elf::types::elf64
 				version() == Version::current &&
 				headerSize() == size();
 		}
-		constexpr static size_t size() noexcept { return ELFIdent::size() + 48; }
+		[[nodiscard]] constexpr static size_t size() noexcept { return ELFIdent::size() + 48; }
 	};
 } // namespace mangrove::elf::types::elf64
 

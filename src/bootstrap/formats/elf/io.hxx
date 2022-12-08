@@ -26,7 +26,7 @@ namespace mangrove::elf::io
 		 * A light-weight IO container that understands how to read and write
 		 * to a span in an endian-aware manner
 		 */
-		struct Container
+		struct Container final
 		{
 			span<uint8_t> _data;
 
@@ -134,29 +134,28 @@ namespace mangrove::elf::io
 			Container _data;
 			Reader(const span<uint8_t> &data) noexcept : _data{data.subspan(0, sizeof(T))} { }
 
-			auto read() const noexcept
+			[[nodiscard]] auto read() const noexcept
 			{
 				T value{};
 				_data.fromBytes(&value);
 				return value;
 			}
 
-			auto read(const Endian endian) const noexcept
+			[[nodiscard]] auto read(const Endian endian) const noexcept
 			{
 				if (endian == Endian::little)
 					return readLE();
-				else
-					return readBE();
+				return readBE();
 			}
 
-			auto readLE() const noexcept
+			[[nodiscard]] auto readLE() const noexcept
 			{
 				T value{};
 				_data.fromBytesLE(value);
 				return value;
 			}
 
-			auto readBE() const noexcept
+			[[nodiscard]] auto readBE() const noexcept
 			{
 				T value{};
 				_data.fromBytesBE(value);
@@ -170,7 +169,7 @@ namespace mangrove::elf::io
 			Container _data;
 			Reader(const span<uint8_t> &data) noexcept : _data{data.subspan(0, sizeof(T) * N)} { }
 
-			auto read() const noexcept
+			[[nodiscard]] auto read() const noexcept
 			{
 				std::array<T, N> value{};
 				_data.fromBytes(value.data());

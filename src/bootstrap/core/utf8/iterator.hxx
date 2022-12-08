@@ -25,7 +25,7 @@ namespace mangrove::core::utf8::iterator
 		constexpr StringIterator(const std::string_view &str, StartAtEnd) :
 			_data{str.data()}, _length{str.length()}, _offset{_length} { }
 
-		constexpr Char operator *() const noexcept
+		[[nodiscard]] constexpr Char operator *() const noexcept
 			{ return {std::string_view{_data + _offset, _length}}; }
 
 		constexpr StringIterator &operator ++() noexcept

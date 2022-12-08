@@ -19,23 +19,23 @@ namespace mangrove::core::utf8
 		constexpr StringView(const std::string_view &data, const size_t codeUnits) noexcept :
 			_data{data}, _length{codeUnits} { }
 
-		constexpr auto data() noexcept { return _data.data(); }
-		constexpr const auto *data() const noexcept { return _data.data(); }
-		constexpr auto length() const noexcept { return _length; }
-		constexpr auto size() const noexcept { return _length; }
-		constexpr auto byteLength() const noexcept { return _data.size(); }
+		[[nodiscard]] constexpr auto data() noexcept { return _data.data(); }
+		[[nodiscard]] constexpr const auto *data() const noexcept { return _data.data(); }
+		[[nodiscard]] constexpr auto length() const noexcept { return _length; }
+		[[nodiscard]] constexpr auto size() const noexcept { return _length; }
+		[[nodiscard]] constexpr auto byteLength() const noexcept { return _data.size(); }
 
-		constexpr auto begin() noexcept { return iterator::StringIterator{_data}; }
-		constexpr auto begin() const noexcept { return iterator::StringIterator{_data}; }
-		constexpr auto end() noexcept { return iterator::StringIterator{_data, iterator::StartAtEnd{}}; }
-		constexpr auto end() const noexcept { return iterator::StringIterator{_data, iterator::StartAtEnd{}}; }
+		[[nodiscard]] constexpr auto begin() noexcept { return iterator::StringIterator{_data}; }
+		[[nodiscard]] constexpr auto begin() const noexcept { return iterator::StringIterator{_data}; }
+		[[nodiscard]] constexpr auto end() noexcept { return iterator::StringIterator{_data, iterator::StartAtEnd{}}; }
+		[[nodiscard]] constexpr auto end() const noexcept { return iterator::StringIterator{_data, iterator::StartAtEnd{}}; }
 
-		constexpr auto rbegin() noexcept { return std::reverse_iterator{end()}; }
-		constexpr auto rbegin() const noexcept { return std::reverse_iterator{end()}; }
-		constexpr auto rend() noexcept { return std::reverse_iterator{begin()}; }
-		constexpr auto rend() const noexcept { return std::reverse_iterator{begin()}; }
+		[[nodiscard]] constexpr auto rbegin() noexcept { return std::reverse_iterator{end()}; }
+		[[nodiscard]] constexpr auto rbegin() const noexcept { return std::reverse_iterator{end()}; }
+		[[nodiscard]] constexpr auto rend() noexcept { return std::reverse_iterator{begin()}; }
+		[[nodiscard]] constexpr auto rend() const noexcept { return std::reverse_iterator{begin()}; }
 
-		StringView substr(size_t offset, size_t count = npos) const noexcept
+		[[nodiscard]] StringView substr(size_t offset, size_t count = npos) const noexcept
 		{
 			size_t begin{};
 			// If the starting point is less than the number of characters in the string
@@ -65,7 +65,7 @@ namespace mangrove::core::utf8
 			return {_data.substr(begin, end), count};
 		}
 
-		bool beginsWith(const StringView &str) const noexcept
+		[[nodiscard]] bool beginsWith(const StringView &str) const noexcept
 		{
 			// Start by making sure the string to compare is not longer than this one
 			if (str.length() > length() || str.byteLength() > byteLength())
@@ -77,7 +77,7 @@ namespace mangrove::core::utf8
 			return std::equal(begin, end, _data.cbegin());
 		}
 
-		bool endsWith(const StringView &str) const noexcept
+		[[nodiscard]] bool endsWith(const StringView &str) const noexcept
 		{
 			// Start by making sure the string to compare is not longer than this one
 			if (str.length() > length() || str.byteLength() > byteLength())
@@ -89,7 +89,7 @@ namespace mangrove::core::utf8
 			return std::equal(begin, end, _data.cend() - str.byteLength());
 		}
 
-		bool startsWith(const StringView &str) const noexcept
+		[[nodiscard]] bool startsWith(const StringView &str) const noexcept
 			{ return beginsWith(str); }
 
 		bool operator ==(const StringView &str) const noexcept

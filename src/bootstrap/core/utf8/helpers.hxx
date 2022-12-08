@@ -8,18 +8,19 @@
 
 namespace mangrove::core::utf8::helpers
 {
-	constexpr static inline uint8_t safeIndex(std::string_view str, const size_t index) noexcept
+	[[nodiscard]] constexpr static inline uint8_t safeIndex(std::string_view str, const size_t index) noexcept
 	{
 		if (index > str.size())
 			return UINT8_MAX;
 		return uint8_t(str[index]);
 	}
 
-	constexpr inline bool isMultiValid() noexcept { return true; }
-	template<typename... values_t> constexpr inline bool isMultiValid(const uint8_t c, values_t ...values) noexcept
+	[[nodiscard]] constexpr inline bool isMultiValid() noexcept { return true; }
+	template<typename... values_t> [[nodiscard]] constexpr inline bool isMultiValid(
+			const uint8_t c, values_t ...values) noexcept
 		{ return (c & 0xc0U) == 0x80U && isMultiValid(values...); }
 
-	constexpr static inline size_t countUnits(const std::string_view &str) noexcept
+	[[nodiscard]] constexpr static inline size_t countUnits(const std::string_view &str) noexcept
 	{
 		size_t count{};
 		for (size_t i = 0; i < str.size(); ++i)

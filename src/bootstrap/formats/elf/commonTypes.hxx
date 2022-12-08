@@ -19,20 +19,22 @@ namespace mangrove::elf::types
 	struct ELFIdent
 	{
 	protected:
+		// NOLINTNEXTLINE(misc-non-private-member-variables-in-classes)
 		Memory _storage;
+		// NOLINTNEXTLINE(misc-non-private-member-variables-in-classes)
 		Endian _endian;
 
 	public:
 		ELFIdent(const Memory &storage) : _storage{storage}, _endian{_storage.read<Endian>(5)} {}
 
-		auto magic() const noexcept { return _storage.read<std::array<uint8_t, 4>>(0); }
-		auto elfClass() const noexcept { return _storage.read<Class>(4); }
-		auto endian() const noexcept { return _endian; }
-		auto version() const noexcept { return _storage.read<IdentVersion>(6); }
-		auto abi() const noexcept { return _storage.read<ABI>(7); }
-		auto padding() const noexcept { return _storage.read<std::array<uint8_t, 8>>(8); }
+		[[nodiscard]] auto magic() const noexcept { return _storage.read<std::array<uint8_t, 4>>(0); }
+		[[nodiscard]] auto elfClass() const noexcept { return _storage.read<Class>(4); }
+		[[nodiscard]] auto endian() const noexcept { return _endian; }
+		[[nodiscard]] auto version() const noexcept { return _storage.read<IdentVersion>(6); }
+		[[nodiscard]] auto abi() const noexcept { return _storage.read<ABI>(7); }
+		[[nodiscard]] auto padding() const noexcept { return _storage.read<std::array<uint8_t, 8>>(8); }
 
-		constexpr static size_t size() noexcept { return 16U; }
+		[[nodiscard]] constexpr static size_t size() noexcept { return 16U; }
 	};
 } // namespace mangrove::elf::types
 

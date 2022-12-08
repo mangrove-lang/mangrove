@@ -20,7 +20,7 @@ namespace mangrove::elf
 		using substrate::mmap_t;
 		using FragmentStorage = std::vector<std::unique_ptr<uint8_t []>>;
 
-		static inline span<uint8_t> toSpan(mmap_t &map) noexcept
+		[[nodiscard]] static inline span<uint8_t> toSpan(mmap_t &map) noexcept
 			{ return {map.address<uint8_t>(), map.length()}; }
 	} // namespace internal
 
@@ -63,8 +63,8 @@ namespace mangrove::elf
 			}(elfClass)
 		} { }
 
-		auto &header() noexcept { return _header; }
-		const auto &header() const noexcept { return _header; }
+		[[nodiscard]] auto &header() noexcept { return _header; }
+		[[nodiscard]] const auto &header() const noexcept { return _header; }
 	};
 } // namespace mangrove::elf
 
