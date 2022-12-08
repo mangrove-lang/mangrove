@@ -247,23 +247,22 @@ void Tokeniser::readCharToken() noexcept
 
 void Tokeniser::readDivToken() noexcept
 {
-	_token.set(TokenType::mulOp);
+	_token.set(TokenType::mulOp, currentChar);
 	String token{nextChar()};
 	if (isEquals(currentChar))
 	{
-		token += nextChar();
+		token += currentChar;
 		finaliseToken(TokenType::assignOp, std::move(token));
+		nextChar();
 	}
-	else if (currentChar == '*')
+	else if (currentChar == '*'_u8c)
 	{
 		nextChar();
 		readPartComment();
 	}
-	else if (currentChar == '/')
+	else if (currentChar == '/'_u8c)
 	{
 		nextChar();
 		readLineComment();
 	}
-	else
-		finaliseToken(TokenType::mulOp, std::move(token));
 }
