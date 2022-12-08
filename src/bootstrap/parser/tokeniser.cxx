@@ -121,3 +121,51 @@ void Tokeniser::readLineComment() noexcept
 		comment += nextChar();
 	finaliseToken(TokenType::comment, std::move(comment));
 }
+
+Char Tokeniser::readUnicode(const Char &normalQuote, const Char &escapedQuote) noexcept
+{
+	Char result{};
+	if (isNormalAlpha(currentChar) || currentChar == normalQuote)
+		result = currentChar;
+	else if (currentChar == '\\')
+	{
+		nextChar();
+		switch (currentChar.toCodePoint())
+		{
+			case '\\':
+				result = currentChar;
+				break;
+			case 'b':
+				result.fromCodePoint(8U);
+				break;
+			case 'r':
+				result.fromCodePoint(13U);
+				break;
+			case 'n':
+				result.fromCodePoint(10U);
+				break;
+			case 't':
+				result.fromCodePoint(9U);
+				break;
+			case 'v':
+				result.fromCodePoint(11U);
+				break;
+			case 'f':
+				result.fromCodePoint(12U);
+				break;
+			case 'a':
+				result.fromCodePoint(7U);
+				break;
+			case 'u':
+			case 'U':
+				//readHexToken();
+				//return {toInt_t{_token.value.data(), _token.value.byteLength()}.fromHex()};
+				return {};
+		}
+		if (currentChar == escapedQuote)
+			result = escapedQuote;
+	}
+	nextChar();
+	return result;
+}
+
