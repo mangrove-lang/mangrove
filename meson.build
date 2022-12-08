@@ -16,3 +16,9 @@ project(
 )
 
 subdir('src/bootstrap')
+
+runClangTidy = find_program('runClangTidy.py')
+run_target(
+	'clang-tidy',
+	command: [runClangTidy, '-s', meson.current_source_dir(), '-p', meson.current_build_dir()]
+)
