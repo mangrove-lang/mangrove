@@ -4,6 +4,7 @@
 
 #include "char.hxx"
 #include "iterator.hxx"
+#include "stringView.hxx"
 
 namespace mangrove::core::utf8
 {
@@ -130,6 +131,37 @@ namespace mangrove::core::utf8
 			return *this;
 		}
 
+		StringView substr(size_t offset, size_t count = npos) const noexcept
+		{
+			std::string_view str{_data};
+			size_t begin{};
+			// If the starting point is less than the number of characters in the string
+			if (offset < length())
+			{
+				// Figure out the offset for the first character requested
+				for (size_t i = 0; begin < byteLength() && i < offset; ++i)
+					begin += Char{str.substr(begin)}.length();
+			}
+			else
+			{
+				// Otherwise it's just the end of this string
+				offset = length();
+				begin = byteLength();
+			}
+
+			// Bring count into range
+			if (count > length() - offset)
+				count = length() - offset;
+
+			auto end{begin};
+			// Now we have [begin, ) but need to figure out the end offset - so go forward count characters
+			for (size_t i = 0; i < count; ++i)
+				end += Char{str.substr(end)}.length();
+
+			// Finally, we have the substring range and the number of UTF-8 characters in it, make the substring
+			return {str.substr(begin, end), count};
+		}
+
 		String &operator +=(const Char &chr) noexcept
 			{ return append(chr); }
 		String &operator +=(const String &str) noexcept
@@ -139,6 +171,8 @@ namespace mangrove::core::utf8
 			{ return _length == str._length && _data == str._data; }
 		bool operator !=(const String &str) const noexcept
 			{ return _length != str._length || _data != str._data; }
+
+		constexpr static size_t npos{SIZE_MAX};
 	};
 } // namespace mangrove::core::utf8
 
