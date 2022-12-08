@@ -63,4 +63,50 @@ void Tokeniser::finaliseToken(const std::optional<TokenType> type, String &&valu
 
 void Tokeniser::readToken() noexcept
 {
+	switch (currentChar.toCodePoint())
+	{
+		case ' ':
+		case '\t':
+			_token.set(TokenType::whitespace);
+			break;
+			
+		case '\r':
+		case '\n':
+			_token.set(TokenType::newline);
+			break;
+
+		case ';':
+			_token.set(TokenType::semi);
+			break;
+		case '{':
+			_token.set(TokenType::leftBrace);
+			break;
+		case '}':
+			_token.set(TokenType::rightBrace);
+			break;
+		case '(':
+			_token.set(TokenType::leftParen);
+			break;
+		case ')':
+			_token.set(TokenType::rightParen);
+			break;
+		case '[':
+			_token.set(TokenType::leftSquare);
+			break;
+		case ']':
+			_token.set(TokenType::rightSquare);
+			break;
+		case ',':
+			_token.set(TokenType::comma);
+			break;
+		case ':':
+			_token.set(TokenType::colon);
+			break;
+
+		case '~':
+			_token.set(TokenType::invert);
+			break;
+	}
+	finaliseToken();
+	nextChar();
 }
