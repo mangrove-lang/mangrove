@@ -120,6 +120,30 @@ void Tokeniser::readToken() noexcept
 	nextChar();
 }
 
+void Tokeniser::readPartComment() noexcept
+{
+	_token.set(TokenType::comment);
+	auto foundEnd{false};
+	String comment{};
+	while (!foundEnd && !_file.isEOF())
+	{
+		if (currentChar == '*'_u8c)
+		{
+			const auto value{nextChar()};
+			if (currentChar == '/'_u8c)
+			{
+				nextChar();
+				foundEnd = true;
+			}
+			else
+				comment += value;
+		}
+		else
+			comment += nextChar()
+	}
+	finaliseToken(TokenType::comment, std::move(comment));
+}
+
 void Tokeniser::readLineComment() noexcept
 {
 	_token.set(TokenType::comment);

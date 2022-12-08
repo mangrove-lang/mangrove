@@ -27,6 +27,7 @@ namespace mangrove::parser
 		void finaliseToken(std::optional<types::TokenType> type = {}, String &&value = {}) noexcept;
 		void readToken() noexcept;
 
+		void readPartComment() noexcept;
 		void readLineComment() noexcept;
 		void readHexToken() noexcept;
 		[[nodiscard]] Char readUnicode(const Char &normalQuote, const Char &escapedQuote) noexcept;
