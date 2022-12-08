@@ -42,12 +42,23 @@ namespace mangrove::core::utf8
 			}
 		}
 
+		template<typename... Chars>
+			void copyChars(const size_t offset, const Char &chr, const Chars &... chrs) noexcept
+		{
+			copyChar(chr, offset);
+			if constexpr (sizeof...(Chars))
+				copyChars(offset + chr.length(), chrs...);
+		}
+
 	public:
 		constexpr String() noexcept = default;
 		String(const std::string_view &string) noexcept : _data{string}, _length{helpers::countUnits(_data)} { }
-		String(const Char &chr) noexcept : _data(chr.length(), '\0'), _length{1} { copyChar(chr, 0); }
 		String(const StringView &string) noexcept :
 			_data{string.data(), string.byteLength()}, _length{string.length()} { }
+
+		template<typename... Chars, typename = std::enable_if_t<(std::is_same_v<Chars, Char> && ...)>>
+			String(const Chars &... chrs) noexcept : _data((chrs.length() + ...), '\0'), _length{sizeof...(chrs)}
+				{ copyChars(0, chrs...); }
 
 		[[nodiscard]] operator StringView() const noexcept
 			{ return {_data, _length}; }
