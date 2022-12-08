@@ -290,16 +290,13 @@ void Tokeniser::readMulToken() noexcept
 void Tokeniser::readAddToken() noexcept
 {
 	finaliseToken(TokenType::addOp, currentChar);
-	String token{nextChar()};
+	const auto token{nextChar()};
 	if (isEquals(currentChar))
-	{
-		token += currentChar;
-		finaliseToken(TokenType::assignOp, std::move(token));
-	}
-	else if (token == u8"-"_sv && currentChar == '>'_u8c)
+		finaliseToken(TokenType::assignOp, {token, currentChar});
+	else if (token == '-'_u8c && currentChar == '>'_u8c)
 		finaliseToken(TokenType::arrow);
-	else if (currentChar == token[0])
-		finaliseToken(TokenType::incOp, currentChar);
+	else if (currentChar == token)
+		finaliseToken(TokenType::incOp, token);
 	else
 		return;
 	nextChar();
