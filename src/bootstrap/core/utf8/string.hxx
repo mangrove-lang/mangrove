@@ -114,7 +114,7 @@ namespace mangrove::core::utf8
 		auto rend() noexcept { return std::reverse_iterator{begin()}; }
 		const auto rend() const noexcept { return std::reverse_iterator{begin()}; }
 
-		String &operator +=(const Char &chr) noexcept
+		String &append(const Char &chr) noexcept
 		{
 			const auto offset{_data.length()};
 			_data.resize(offset + chr.length());
@@ -123,12 +123,22 @@ namespace mangrove::core::utf8
 			return *this;
 		}
 
-		String &operator +=(const String &str) noexcept
+		String &append(const String &str) noexcept
 		{
 			_data += str._data;
 			_length += str._length;
 			return *this;
 		}
+
+		String &operator +=(const Char &chr) noexcept
+			{ return append(chr); }
+		String &operator +=(const String &str) noexcept
+			{ return append(str); }
+
+		bool operator ==(const String &str) const noexcept
+			{ return _length == str._length && _data == str._data; }
+		bool operator !=(const String &str) const noexcept
+			{ return _length != str._length || _data != str._data; }
 	};
 } // namespace mangrove::core::utf8
 
