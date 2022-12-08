@@ -77,6 +77,11 @@ namespace mangrove::core::utf8
 			return *this;
 		}
 
+		String &operator +=(const Char &chr) noexcept
+			{ return append(chr); }
+		String &operator +=(const String &str) noexcept
+			{ return append(str); }
+
 		StringView substr(size_t offset, size_t count = npos) const noexcept
 		{
 			std::string_view str{_data};
@@ -107,11 +112,6 @@ namespace mangrove::core::utf8
 			// Finally, we have the substring range and the number of UTF-8 characters in it, make the substring
 			return {str.substr(begin, end), count};
 		}
-
-		String &operator +=(const Char &chr) noexcept
-			{ return append(chr); }
-		String &operator +=(const String &str) noexcept
-			{ return append(str); }
 
 		bool beginsWith(const StringView &str) const noexcept
 		{
