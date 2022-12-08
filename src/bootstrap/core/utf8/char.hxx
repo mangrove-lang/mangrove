@@ -10,7 +10,7 @@
 
 namespace mangrove::core::utf8
 {
-	struct Char
+	struct Char final
 	{
 	private:
 		uint32_t _codePoint{invalidCodePoint};

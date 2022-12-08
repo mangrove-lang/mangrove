@@ -9,7 +9,7 @@
 
 namespace mangrove::core::utf8
 {
-	struct String
+	struct String final
 	{
 	private:
 		std::string _data{};

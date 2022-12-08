@@ -8,7 +8,7 @@
 
 namespace mangrove::core::utf8
 {
-	struct StringView
+	struct StringView final
 	{
 	private:
 		std::string_view _data;
