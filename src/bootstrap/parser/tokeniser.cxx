@@ -5,6 +5,12 @@ using namespace mangrove::parser;
 using namespace mangrove::parser::types;
 using mangrove::parser::recognisers::isNewLine;
 
+Tokeniser::Tokeniser(fd_t &&file) noexcept : _file{std::move(file)}
+{
+	_token.endsAt(position);
+	nextChar();
+}
+
 Token &Tokeniser::next() noexcept
 {
 	if (_file.isEOF())
