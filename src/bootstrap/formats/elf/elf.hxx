@@ -18,6 +18,7 @@ namespace mangrove::elf
 		using namespace types;
 
 		using substrate::mmap_t;
+		// NOLINTNEXTLINE(modernize-avoid-c-arrays)
 		using FragmentStorage = std::vector<std::unique_ptr<uint8_t []>>;
 
 		[[nodiscard]] static inline span<uint8_t> toSpan(mmap_t &map) noexcept
@@ -34,6 +35,7 @@ namespace mangrove::elf
 		{
 			auto &storage{std::get<FragmentStorage>(_backingStorage)};
 			const auto size{T::size()};
+			// NOLINTNEXTLINE(modernize-avoid-c-arrays)
 			const auto &allocation{storage.emplace_back(std::make_unique<uint8_t []>(size))};
 			return {span{allocation.get(), size}};
 		}
@@ -48,8 +50,7 @@ namespace mangrove::elf
 				// TODO: Check the validity of ident
 				if (ident.elfClass() == Class::elf32Bit)
 					return elf32::ELFHeader{data};
-				else
-					return elf64::ELFHeader{data};
+				return elf64::ELFHeader{data};
 			}()
 		} { }
 
@@ -58,8 +59,7 @@ namespace mangrove::elf
 			{
 				if (elfClass == Class::elf32Bit)
 					return allocate<elf32::ELFHeader>();
-				else
-					return allocate<elf64::ELFHeader>();
+				return allocate<elf64::ELFHeader>();
 			}(elfClass)
 		} { }
 
