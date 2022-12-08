@@ -126,6 +126,10 @@ void Tokeniser::readToken() noexcept
 		case '-':
 			readAddToken();
 			return;
+		case '&':
+		case '|':
+			readBooleanToken();
+			return;
 	}
 	finaliseToken();
 	nextChar();
@@ -297,6 +301,19 @@ void Tokeniser::readAddToken() noexcept
 		finaliseToken(TokenType::arrow);
 	else if (currentChar == token)
 		finaliseToken(TokenType::incOp, token);
+	else
+		return;
+	nextChar();
+}
+
+void Tokeniser::readBooleanToken() noexcept
+{
+	finaliseToken(TokenType::bitOp, currentChar);
+	Char token{nextChar()};
+	if (isEquals(currentChar))
+		finaliseToken(TokenType::assignOp, {token, currentChar});
+	else if (currentChar == token)
+		finaliseToken(TokenType::logicOp, token);
 	else
 		return;
 	nextChar();
