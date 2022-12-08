@@ -19,21 +19,21 @@ namespace mangrove::core::utf8
 		constexpr StringView(const std::string_view &data, const size_t codeUnits) noexcept :
 			_data{data}, _length{codeUnits} { }
 
-		auto data() noexcept { return _data.data(); }
-		const auto *data() const noexcept { return _data.data(); }
-		auto length() const noexcept { return _length; }
-		auto size() const noexcept { return _length; }
-		auto byteLength() const noexcept { return _data.size(); }
+		constexpr auto data() noexcept { return _data.data(); }
+		constexpr const auto *data() const noexcept { return _data.data(); }
+		constexpr auto length() const noexcept { return _length; }
+		constexpr auto size() const noexcept { return _length; }
+		constexpr auto byteLength() const noexcept { return _data.size(); }
 
-		auto begin() noexcept { return iterator::StringIterator{_data}; }
-		const auto begin() const noexcept { return iterator::StringIterator{_data}; }
-		auto end() noexcept { return iterator::StringIterator{_data, iterator::StartAtEnd{}}; }
-		const auto end() const noexcept { return iterator::StringIterator{_data, iterator::StartAtEnd{}}; }
+		constexpr auto begin() noexcept { return iterator::StringIterator{_data}; }
+		constexpr auto begin() const noexcept { return iterator::StringIterator{_data}; }
+		constexpr auto end() noexcept { return iterator::StringIterator{_data, iterator::StartAtEnd{}}; }
+		constexpr auto end() const noexcept { return iterator::StringIterator{_data, iterator::StartAtEnd{}}; }
 
-		auto rbegin() noexcept { return std::reverse_iterator{end()}; }
-		const auto rbegin() const noexcept { return std::reverse_iterator{end()}; }
-		auto rend() noexcept { return std::reverse_iterator{begin()}; }
-		const auto rend() const noexcept { return std::reverse_iterator{begin()}; }
+		constexpr auto rbegin() noexcept { return std::reverse_iterator{end()}; }
+		constexpr auto rbegin() const noexcept { return std::reverse_iterator{end()}; }
+		constexpr auto rend() noexcept { return std::reverse_iterator{begin()}; }
+		constexpr auto rend() const noexcept { return std::reverse_iterator{begin()}; }
 	};
 } // namespace mangrove::core::utf8
 

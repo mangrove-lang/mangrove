@@ -52,14 +52,14 @@ namespace mangrove::core::utf8
 		auto byteLength() const noexcept { return _data.size(); }
 
 		auto begin() noexcept { return iterator::StringIterator{_data}; }
-		const auto begin() const noexcept { return iterator::StringIterator{_data}; }
+		auto begin() const noexcept { return iterator::StringIterator{_data}; }
 		auto end() noexcept { return iterator::StringIterator{_data, iterator::StartAtEnd{}}; }
-		const auto end() const noexcept { return iterator::StringIterator{_data, iterator::StartAtEnd{}}; }
+		auto end() const noexcept { return iterator::StringIterator{_data, iterator::StartAtEnd{}}; }
 
 		auto rbegin() noexcept { return std::reverse_iterator{end()}; }
-		const auto rbegin() const noexcept { return std::reverse_iterator{end()}; }
+		auto rbegin() const noexcept { return std::reverse_iterator{end()}; }
 		auto rend() noexcept { return std::reverse_iterator{begin()}; }
-		const auto rend() const noexcept { return std::reverse_iterator{begin()}; }
+		auto rend() const noexcept { return std::reverse_iterator{begin()}; }
 
 		String &append(const Char &chr) noexcept
 		{
