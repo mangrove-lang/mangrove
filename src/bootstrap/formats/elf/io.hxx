@@ -28,7 +28,11 @@ namespace mangrove::elf::io
 		 */
 		struct Container final
 		{
+		private:
 			span<uint8_t> _data;
+
+		public:
+			Container(const span<uint8_t> &data) : _data{data} { }
 
 			void fromBytes(void *const value) const noexcept
 				{ std::memcpy(value, _data.data(), _data.size()); }
@@ -131,7 +135,10 @@ namespace mangrove::elf::io
 		 */
 		template<typename T> struct Reader
 		{
+		private:
 			Container _data;
+
+		public:
 			Reader(const span<uint8_t> &data) noexcept : _data{data.subspan(0, sizeof(T))} { }
 
 			[[nodiscard]] auto read() const noexcept
@@ -166,7 +173,10 @@ namespace mangrove::elf::io
 		/** This works similarly to the base reader type, but on std::array<>'s */
 		template<typename T, size_t N> struct Reader<std::array<T, N>>
 		{
+		private:
 			Container _data;
+
+		public:
 			Reader(const span<uint8_t> &data) noexcept : _data{data.subspan(0, sizeof(T) * N)} { }
 
 			[[nodiscard]] auto read() const noexcept
