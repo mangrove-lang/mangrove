@@ -176,7 +176,7 @@ namespace mangrove::core::utf8
 			{ return valid() ? ((_codePoint & lengthMask) >> lengthShift) + 1U : 3U; }
 		[[nodiscard]] constexpr uint32_t toCodePoint() const noexcept
 			{ return valid() ? (_codePoint & codePointMask) : 0xfdffU; }
-		[[nodiscard]] constexpr void fromCodePoint(uint32_t codePoint) noexcept
+		constexpr void fromCodePoint(uint32_t codePoint) noexcept
 			{ _codePoint = encode(codePoint); }
 
 		constexpr bool operator ==(const Char &chr) const noexcept
@@ -212,8 +212,8 @@ namespace mangrove::core::utf8
 
 	inline namespace literals
 	{
-		constexpr static inline Char operator ""_u8c(const char c) noexcept { return {c}; }
-		constexpr static inline Char operator ""_c(const char *const value, const size_t length) noexcept
+		constexpr inline Char operator ""_u8c(const char c) noexcept { return {c}; }
+		constexpr inline Char operator ""_c(const char *const value, const size_t length) noexcept
 			{ return Char{std::string_view{value, length}}; }
 	} // namespace literals
 } // namespace mangrove::core::utf8

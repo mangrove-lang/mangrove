@@ -102,7 +102,7 @@ namespace mangrove::core::utf8
 
 	inline namespace literals
 	{
-		constexpr static inline StringView operator ""_sv(const char *const value, const size_t length) noexcept
+		constexpr inline StringView operator ""_sv(const char *const value, const size_t length) noexcept
 			{ return StringView{std::string_view{value, length}}; }
 	} // namespace literals
 } // namespace mangrove::core::utf8
