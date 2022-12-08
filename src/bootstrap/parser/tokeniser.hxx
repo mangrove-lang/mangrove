@@ -22,6 +22,7 @@ namespace mangrove::parser
 		types::Position position{};
 		types::Token _token{};
 
+		Char nextChar() noexcept;
 		void readToken() noexcept;
 
 	public:
