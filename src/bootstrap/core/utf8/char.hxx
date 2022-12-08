@@ -79,7 +79,7 @@ namespace mangrove::core::utf8
 				return encode(codePoint, 2U);
 			if (codePoint < 0x010000U)
 				return encode(codePoint, 3U);
-			else if (codePoint < 0x110000U)
+			if (codePoint < 0x110000U)
 				return encode(codePoint, 4U);
 			return invalidCodePoint;
 		}
@@ -147,7 +147,8 @@ namespace mangrove::core::utf8
 
 		constexpr Char &operator =(const Char &chr) noexcept
 		{
-			_codePoint = chr._codePoint;
+			if (&chr != this)
+				_codePoint = chr._codePoint;
 			return *this;
 		}
 
