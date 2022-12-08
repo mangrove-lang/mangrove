@@ -3,7 +3,7 @@
 
 using namespace mangrove::parser;
 using namespace mangrove::parser::types;
-using mangrove::parser::recognisers::isNewLine;
+using namespace mangrove::parser::recognisers;
 
 Tokeniser::Tokeniser(fd_t &&file) noexcept : _file{std::move(file)}
 {
@@ -69,7 +69,9 @@ void Tokeniser::readToken() noexcept
 		case '\t':
 			_token.set(TokenType::whitespace);
 			break;
-			
+		case '#':
+			readLineComment();
+			return;
 		case '\r':
 		case '\n':
 			_token.set(TokenType::newline);
@@ -109,4 +111,13 @@ void Tokeniser::readToken() noexcept
 	}
 	finaliseToken();
 	nextChar();
+}
+
+void Tokeniser::readLineComment() noexcept
+{
+	_token.set(TokenType::comment);
+	String comment{};
+	while (!_file.isEOF() && !isNewLine(currentChar))
+		comment += nextChar();
+	finaliseToken(TokenType::comment, std::move(comment));
 }

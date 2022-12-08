@@ -26,6 +26,7 @@ namespace mangrove::parser
 		Char nextChar() noexcept;
 		void finaliseToken(std::optional<types::TokenType> type = {}, String &&value = {}) noexcept;
 		void readToken() noexcept;
+		void readLineComment() noexcept;
 
 	public:
 		Tokeniser(fd_t &&file) noexcept;
