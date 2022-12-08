@@ -142,7 +142,7 @@ void Tokeniser::readPartComment() noexcept
 				comment += value;
 		}
 		else
-			comment += nextChar()
+			comment += nextChar();
 	}
 	finaliseToken(TokenType::comment, std::move(comment));
 }
@@ -265,5 +265,5 @@ void Tokeniser::readDivToken() noexcept
 		readLineComment();
 	}
 	else
-		finaliseToken(TokenType::mulOp, std::move(token))
+		finaliseToken(TokenType::mulOp, std::move(token));
 }
