@@ -146,9 +146,29 @@ void Tokeniser::readToken() noexcept
 		case '=':
 			readEqualityToken();
 			return;
+		default:
+			readExtendedToken();
+			return;
 	}
 	finaliseToken();
 	nextChar();
+}
+
+void Tokeniser::readExtendedToken() noexcept
+{
+	_token.set(TokenType::ident);
+	if (isAlpha(currentChar) || isUnderscore(currentChar))
+	{
+		auto token{readAlphaNumToken()};
+
+		if (!_token.value().length())
+			_token.value(std::move(token));
+	}
+	else
+	{
+		_token.set(TokenType::invalid);
+		nextChar();
+	}
 }
 
 void Tokeniser::readPartComment() noexcept
@@ -400,4 +420,15 @@ void Tokeniser::readEqualityToken() noexcept
 		else
 			_token.set(TokenType::invert, token);
 	}
+}
+
+String Tokeniser::readAlphaNumToken() noexcept
+{
+	String token{};
+	while (isAlphaNum(currentChar) || isUnderscore(currentChar))
+	{
+		finaliseToken();
+		token += nextChar();
+	}
+	return token;
 }
