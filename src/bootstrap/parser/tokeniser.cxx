@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: BSD-3-Clause
 #include <substrate/conversions>
+#include <substrate/console>
 #include "tokeniser.hxx"
 
 using namespace mangrove::parser;
 using namespace mangrove::parser::types;
 using namespace mangrove::parser::recognisers;
 using substrate::toInt_t;
+using substrate::console;
+using namespace std::literals::string_view_literals;
 
 Tokeniser::Tokeniser(fd_t &&file) noexcept : _file{std::move(file)}
 {
@@ -78,7 +81,9 @@ void Tokeniser::readToken() noexcept
 		case '\n':
 			_token.set(TokenType::newline);
 			break;
-
+		case '.':
+			readEllipsisToken();
+			break;
 		case ';':
 			_token.set(TokenType::semi);
 			break;
@@ -177,6 +182,24 @@ void Tokeniser::readLineComment() noexcept
 	while (!_file.isEOF() && !isNewLine(currentChar))
 		comment += nextChar();
 	finaliseToken(TokenType::comment, std::move(comment));
+}
+
+void Tokeniser::readEllipsisToken() noexcept
+{
+	_token.set(TokenType::dot);
+	const auto currentPosition{position};
+	const auto offset{_file.tell()};
+	nextChar();
+	if (nextChar() == '.'_u8c && currentChar == '.'_u8c)
+		_token.set(TokenType::ellipsis);
+	else
+	{
+		// Seek back to where we were, taking into account conditions like EOF occuring
+		if (_file.seek(offset, SEEK_SET) != offset)
+			// We should handle this better, but thought needs to be put into /how/.
+			console.error("File seek failed, tokenisation will now be unreliable"sv);
+		position = currentPosition;
+	}
 }
 
 void Tokeniser::readHexToken() noexcept
