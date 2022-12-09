@@ -37,6 +37,9 @@ namespace mangrove::parser
 		void readMulToken() noexcept;
 		void readAddToken() noexcept;
 		void readBooleanToken() noexcept;
+		void readBitwiseToken() noexcept;
+		void readRelationToken() noexcept;
+		void readEqualityToken() noexcept;
 
 	public:
 		Tokeniser(fd_t &&file) noexcept;

@@ -130,6 +130,17 @@ void Tokeniser::readToken() noexcept
 		case '|':
 			readBooleanToken();
 			return;
+		case '^':
+			readBitwiseToken();
+			return;
+		case '<':
+		case '>':
+			readRelationToken();
+			return;
+		case '!':
+		case '=':
+			readEqualityToken();
+			return;
 	}
 	finaliseToken();
 	nextChar();
@@ -317,4 +328,53 @@ void Tokeniser::readBooleanToken() noexcept
 	else
 		return;
 	nextChar();
+}
+
+void Tokeniser::readBitwiseToken() noexcept
+{
+	finaliseToken(TokenType::bitOp, currentChar);
+	const auto token{nextChar()};
+	if (isEquals(currentChar))
+	{
+		finaliseToken(TokenType::assignOp, {token, currentChar});
+		nextChar();
+	}
+}
+
+void Tokeniser::readRelationToken() noexcept
+{
+	finaliseToken(TokenType::relOp, currentChar);
+	const auto token{nextChar()};
+	if (isEquals(currentChar))
+		finaliseToken(TokenType::assignOp, {token, currentChar});
+	else if (currentChar == token)
+	{
+		finaliseToken(TokenType::shiftOp, {token, currentChar});
+		nextChar();
+		if (isEquals(currentChar))
+			finaliseToken(TokenType::assignOp, {token, token, currentChar});
+		else
+			return;
+	}
+	else
+		return;
+	nextChar();
+}
+
+void Tokeniser::readEqualityToken() noexcept
+{
+	finaliseToken();
+	const auto token{nextChar()};
+	if (isEquals(currentChar))
+	{
+		finaliseToken(TokenType::equOp, {token, currentChar});
+		nextChar();
+	}
+	else
+	{
+		if (isEquals(token))
+			_token.set(TokenType::assignOp, token);
+		else
+			_token.set(TokenType::invert, token);
+	}
 }
