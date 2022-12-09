@@ -320,7 +320,7 @@ void Tokeniser::readAddToken() noexcept
 void Tokeniser::readBooleanToken() noexcept
 {
 	finaliseToken(TokenType::bitOp, currentChar);
-	Char token{nextChar()};
+	const auto token{nextChar()};
 	if (isEquals(currentChar))
 		finaliseToken(TokenType::assignOp, {token, currentChar});
 	else if (currentChar == token)
