@@ -160,8 +160,64 @@ void Tokeniser::readExtendedToken() noexcept
 	if (isAlpha(currentChar) || isUnderscore(currentChar))
 	{
 		auto token{readAlphaNumToken()};
+		if (token.isEmpty() || _file.isEOF())
+			return;
+		if (isTrue(token) || isFalse(token))
+			_token.set(TokenType::boolLit);
+		else if (isNull(token))
+			_token.set(TokenType::nullptrLit);
+		else if (token == u8"and"_sv)
+			_token.set(TokenType::logicOp, '&'_u8c);
+		else if (token == u8"or"_sv)
+			_token.set(TokenType::logicOp, '|'_u8c);
+		else if (token == u8"not"_sv)
+			_token.set(TokenType::logicOp, '!'_u8c);
+		else if (isLocationSpec(token))
+			_token.set(TokenType::locationSpec);
+		else if (isStorageSpec(token))
+			_token.set(TokenType::storageSpec);
+		else if (isNew(token))
+			_token.set(TokenType::newStmt);
+		else if (isDelete(token))
+			_token.set(TokenType::deleteStmt);
+		else if (isFrom(token))
+			_token.set(TokenType::fromStmt);
+		else if (isImport(token))
+			_token.set(TokenType::importStmt);
+		else if (isAs(token))
+			_token.set(TokenType::asStmt);
+		else if (isReturn(token))
+			_token.set(TokenType::returnStmt);
+		else if (isIfStmt(token))
+			_token.set(TokenType::ifStmt);
+		else if (isElifStmt(token))
+			_token.set(TokenType::elifStmt);
+		else if (isElseStmt(token))
+			_token.set(TokenType::elseStmt);
+		else if (isForStmt(token))
+			_token.set(TokenType::forStmt);
+		else if (isWhileStmt(token))
+			_token.set(TokenType::whileStmt);
+		else if (isDoStmt(token))
+			_token.set(TokenType::doStmt);
 
-		if (!_token.value().length())
+		else if (isNone(token))
+			_token.set(TokenType::noneType);
+		else if (isClass(token))
+			_token.set(TokenType::classDef);
+		else if (isEnum(token))
+			_token.set(TokenType::enumDef);
+		else if (isFunctionDef(token))
+			_token.set(TokenType::functionDef);
+		else if (isOperatorDef(token))
+			_token.set(TokenType::operatorDef);
+		else if (isVisibility(token))
+			_token.set(TokenType::visibility);
+		else if (isUnsafe(token))
+			_token.set(TokenType::unsafe);
+
+		// Make sure the token's value is set to the identifier string now we've classified the type
+		if (_token.value().isEmpty())
 			_token.value(std::move(token));
 	}
 	else
