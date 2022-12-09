@@ -24,6 +24,7 @@ namespace mangrove::core::utf8
 		[[nodiscard]] constexpr auto length() const noexcept { return _length; }
 		[[nodiscard]] constexpr auto size() const noexcept { return _length; }
 		[[nodiscard]] constexpr auto byteLength() const noexcept { return _data.size(); }
+		[[nodiscard]] auto isEmpty() const noexcept { return _length == 0; }
 
 		[[nodiscard]] constexpr auto begin() noexcept { return iterator::StringIterator{_data}; }
 		[[nodiscard]] constexpr auto begin() const noexcept { return iterator::StringIterator{_data}; }
