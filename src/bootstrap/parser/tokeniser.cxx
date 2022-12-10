@@ -320,11 +320,10 @@ void Tokeniser::readIntToken() noexcept
 		nextChar();
 		if (isBeginBin(currentChar))
 			return readBinToken();
+		if (isBeginOct(currentChar))
+			return readOctToken();
 		if (isBeginHex(currentChar))
 			return readHexToken();
-		// TODO: Revisit this.. check that we really want to implement octal this way
-		if (isOct(currentChar))
-			return readOctToken();
 		literal += firstDigit;
 	}
 	while (isDigit(currentChar))

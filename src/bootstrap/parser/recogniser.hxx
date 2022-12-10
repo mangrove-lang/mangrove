@@ -39,6 +39,8 @@ namespace mangrove::parser::recognisers
 		{ return chr == '_'_u8c; }
 	static inline bool isBeginBin(const Char &chr) noexcept
 		{ return chr == 'b'_u8c || chr == 'B'_u8c; }
+	static inline bool isBeginOct(const Char &chr) noexcept
+		{ return chr == 'c'_u8c || chr == 'C'_u8c; }
 	static inline bool isBeginHex(const Char &chr) noexcept
 		{ return chr == 'x'_u8c || chr == 'X'_u8c; }
 	static inline bool isBin(const Char &chr) noexcept
