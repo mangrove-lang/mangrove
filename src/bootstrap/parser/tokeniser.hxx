@@ -31,7 +31,10 @@ namespace mangrove::parser
 		void readPartComment() noexcept;
 		void readLineComment() noexcept;
 		void readEllipsisToken() noexcept;
+		void readBinToken() noexcept;
+		void readOctToken() noexcept;
 		void readHexToken() noexcept;
+		void readIntToken() noexcept;
 		[[nodiscard]] Char readUnicode(const Char &normalQuote, const Char &escapedQuote) noexcept;
 		void readStringToken() noexcept;
 		void readCharToken() noexcept;

@@ -220,6 +220,8 @@ void Tokeniser::readExtendedToken() noexcept
 		if (_token.value().isEmpty())
 			_token.value(std::move(token));
 	}
+	else if (isDigit(currentChar))
+		readIntToken();
 	else
 	{
 		_token.set(TokenType::invalid);
@@ -278,6 +280,26 @@ void Tokeniser::readEllipsisToken() noexcept
 	}
 }
 
+void Tokeniser::readBinToken() noexcept
+{
+	String literal{};
+	_token.set(TokenType::binLit);
+	nextChar();
+	while (isBin(currentChar))
+		literal += nextChar();
+	_token.value(std::move(literal));
+}
+
+void Tokeniser::readOctToken() noexcept
+{
+	String literal{};
+	_token.set(TokenType::binLit);
+	nextChar();
+	while (isOct(currentChar))
+		literal += nextChar();
+	_token.value(std::move(literal));
+}
+
 void Tokeniser::readHexToken() noexcept
 {
 	String literal{};
@@ -286,6 +308,28 @@ void Tokeniser::readHexToken() noexcept
 	while (isHex(currentChar))
 		literal += nextChar();
 	_token.value(std::move(literal));
+}
+
+void Tokeniser::readIntToken() noexcept
+{
+	String literal{};
+	Char firstDigit{currentChar};
+	_token.set(TokenType::intLit);
+	if (firstDigit == '0'_u8c)
+	{
+		nextChar();
+		if (isBeginBin(currentChar))
+			return readBinToken();
+		if (isBeginHex(currentChar))
+			return readHexToken();
+		// TODO: Revisit this.. check that we really want to implement octal this way
+		if (isOct(currentChar))
+			return readOctToken();
+		literal += firstDigit;
+	}
+	while (isDigit(currentChar))
+		literal += nextChar();
+	_token.set(TokenType::intLit, std::move(literal));
 }
 
 Char Tokeniser::readUnicode(const Char &normalQuote, const Char &escapedQuote) noexcept
