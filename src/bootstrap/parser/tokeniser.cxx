@@ -46,7 +46,7 @@ Char Tokeniser::nextChar() noexcept
 	{
 		// If the CR or LF character is on its own of the first part of the windows sequence, update position
 		// If this is the LF of a CR-LF sequence, ignore it so windows line endings don't screw up compiler messages.
-		if ((value != '\r' && currentChar == '\n') || currentChar == '\r')
+		if ((value != '\r'_u8c && currentChar == '\n'_u8c) || currentChar == '\r'_u8c)
 		{
 			++position.line;
 			position.character = 0;
