@@ -166,7 +166,7 @@ namespace mangrove::core::utf8
 		void swap(Char &chr) noexcept { std::swap(_codePoint, chr._codePoint); }
 		[[nodiscard]] constexpr bool valid() const noexcept
 			{ return !(_codePoint & validMask);}
-		constexpr void indvalidate() noexcept { _codePoint |= validMask; }
+		constexpr void invalidate() noexcept { _codePoint |= validMask; }
 
 		[[nodiscard]] constexpr bool revalidate() noexcept
 		{
