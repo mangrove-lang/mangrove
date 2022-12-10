@@ -7,6 +7,12 @@
 #include <utility>
 #include "../core/utf8/string.hxx"
 
+namespace mangrove::parser
+{
+	using mangrove::core::utf8::String;
+	using mangrove::core::utf8::StringView;
+} // namespace mangrove::parser
+
 namespace mangrove::parser::types
 {
 	enum class TokenType : uint16_t
