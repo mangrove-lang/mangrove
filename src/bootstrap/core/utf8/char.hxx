@@ -7,6 +7,7 @@
 #include <string_view>
 #include <utility>
 #include <substrate/fd>
+#include "helpers.hxx"
 
 namespace mangrove::core::utf8
 {
@@ -23,22 +24,15 @@ namespace mangrove::core::utf8
 		[[nodiscard]] constexpr static uint32_t encode(const uint32_t codePoint, const size_t length)
 			{ return (codePoint & codePointMask) | (uint32_t(length - 1U) << lengthShift); }
 
-		[[nodiscard]] constexpr static inline uint8_t safeIndex(std::string_view str, const size_t index) noexcept
-		{
-			if (index > str.size())
-				return UINT8_MAX;
-			return uint8_t(str[index]);
-		}
-
 		[[nodiscard]] constexpr static uint32_t encode(const std::string_view &data) noexcept
 		{
 			// To encode a UTF-8 character as a code point, start by reading a byte
-			const auto byteA{safeIndex(data, 0)};
+			const auto byteA{helpers::safeIndex(data, 0)};
 			// If the high bit is set, it should be a multi-byte sequence
 			if (byteA & 0x80U)
 			{
 				// Read the next byte
-				const auto byteB{safeIndex(data, 1)};
+				const auto byteB{helpers::safeIndex(data, 1)};
 				// If the bits are in the pattern 0bx10xxxxx and 0b10xxxxxx, it's a 2-byte character
 				if ((byteA & 0x60U) == 0x40U && (byteB & 0xc0U) == 0x80U)
 					return encode((uint32_t(byteA & 0x1fU) << 6U) | uint32_t(byteB & 0x3fU), 2);
@@ -46,7 +40,7 @@ namespace mangrove::core::utf8
 				if ((byteB & 0xc0U) == 0x80U)
 				{
 					// Read the next byte
-					const auto byteC{safeIndex(data, 2)};
+					const auto byteC{helpers::safeIndex(data, 2)};
 					// If the bits of bytes 1 and 3 are in the pattern 0bx110xxxx and 0b10xxxxxx, it's a 3-byte character
 					if ((byteA & 0x70U) == 0x60U && (byteC & 0xc0U) == 0x80U)
 						return encode(
@@ -56,7 +50,7 @@ namespace mangrove::core::utf8
 					if ((byteA & 0x78U) == 0x70U && (byteC & 0xc0U) == 0x80U)
 					{
 						// Read the final byte
-						const auto byteD{safeIndex(data, 3)};
+						const auto byteD{helpers::safeIndex(data, 3)};
 						// Validate it has the pattern 0b10xxxxxx
 						if ((byteD & 0xc0) == 0x80U)
 							return  encode(
