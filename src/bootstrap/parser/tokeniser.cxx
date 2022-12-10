@@ -63,7 +63,6 @@ void Tokeniser::finaliseToken(const std::optional<TokenType> type, String &&valu
 	if (type)
 		_token.set(*type, std::move(value));
 	_token.endsAt(position);
-	//_token.calcLength();
 }
 
 void Tokeniser::readToken() noexcept
