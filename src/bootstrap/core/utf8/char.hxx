@@ -35,7 +35,10 @@ namespace mangrove::core::utf8
 				const auto byteB{helpers::safeIndex(data, 1)};
 				// If the bits are in the pattern 0bx10xxxxx and 0b10xxxxxx, it's a 2-byte character
 				if ((byteA & 0x60U) == 0x40U && (byteB & 0xc0U) == 0x80U)
-					return encode((uint32_t(byteA & 0x1fU) << 6U) | uint32_t(byteB & 0x3fU), 2);
+					return encode(
+						(uint32_t(byteA & 0x1fU) << 6U) |
+						uint32_t(byteB & 0x3fU), 2
+					);
 				// If the second byte read at least has 0b10xxxxxx as the pattern, it should be valid
 				if ((byteB & 0xc0U) == 0x80U)
 				{
@@ -44,7 +47,9 @@ namespace mangrove::core::utf8
 					// If the bits of bytes 1 and 3 are in the pattern 0bx110xxxx and 0b10xxxxxx, it's a 3-byte character
 					if ((byteA & 0x70U) == 0x60U && (byteC & 0xc0U) == 0x80U)
 						return encode(
-							(uint32_t(byteA & 0x0fU) << 12U) | (uint32_t(byteB & 0x3fU) << 6U) | (byteC & 0x3fU), 3U
+							(uint32_t(byteA & 0x0fU) << 12U) |
+							(uint32_t(byteB & 0x3fU) << 6U) |
+							(byteC & 0x3fU), 3U
 						);
 					// If the bits are instead in the pattern 0bx1110xxx and 0b10xxxxxx, we should have a 4-byte character
 					if ((byteA & 0x78U) == 0x70U && (byteC & 0xc0U) == 0x80U)
@@ -54,7 +59,10 @@ namespace mangrove::core::utf8
 						// Validate it has the pattern 0b10xxxxxx
 						if ((byteD & 0xc0) == 0x80U)
 							return  encode(
-								(uint32_t(byteA & 0x07U) << 18U) | (uint32_t(byteB & 0x3fU) << 12U) | (uint32_t(byteC & 0x3fU) << 6U) | (byteD & 0x3fU), 4U
+								(uint32_t(byteA & 0x07U) << 18U) |
+								(uint32_t(byteB & 0x3fU) << 12U) |
+								(uint32_t(byteC & 0x3fU) << 6U) |
+								(byteD & 0x3fU), 4U
 							);
 					}
 				}
