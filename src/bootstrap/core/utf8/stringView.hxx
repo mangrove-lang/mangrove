@@ -6,6 +6,7 @@
 #include <string_view>
 #include <substrate/index_sequence>
 #include "helpers.hxx"
+#include "iterator.hxx"
 
 namespace mangrove::core::utf8
 {

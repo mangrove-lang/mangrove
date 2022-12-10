@@ -46,7 +46,7 @@ namespace mangrove::core::utf8
 			void copyChars(const size_t offset, const Char &chr, const Chars &... chrs) noexcept
 		{
 			copyChar(chr, offset);
-			if constexpr (sizeof...(Chars))
+			if constexpr (sizeof...(Chars) != 0)
 				copyChars(offset + chr.length(), chrs...);
 		}
 

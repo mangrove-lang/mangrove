@@ -8,7 +8,6 @@ namespace mangrove::parser
 {
 	using mangrove::core::utf8::Char;
 	using mangrove::core::utf8::String;
-	using mangrove::core::utf8::StringView;
 	using namespace mangrove::core::utf8::literals;
 } // namespace mangrove::parser
 
