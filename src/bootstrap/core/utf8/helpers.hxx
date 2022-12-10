@@ -15,10 +15,12 @@ namespace mangrove::core::utf8::helpers
 		return uint8_t(str[index]);
 	}
 
-	[[nodiscard]] constexpr inline bool isMultiValid() noexcept { return true; }
-	template<typename... values_t> [[nodiscard]] constexpr inline bool isMultiValid(
-			const uint8_t c, values_t ...values) noexcept
-		{ return (c & 0xc0U) == 0x80U && isMultiValid(values...); }
+	constexpr inline bool checkValid(uint8_t c) noexcept
+		{ return (c & 0xc0U) == 0x80U; }
+
+	template<typename... values_t> [[nodiscard]] constexpr inline std::enable_if_t<(std::is_same_v<values_t, uint8_t> && ...), bool>
+		isMultiValid(values_t ...values) noexcept
+			{ return (checkValid(values) && ...); }
 
 	[[nodiscard]] constexpr static inline size_t countUnits(const std::string_view &str) noexcept
 	{
