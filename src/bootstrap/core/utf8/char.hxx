@@ -66,7 +66,7 @@ namespace mangrove::core::utf8
 							);
 					}
 				}
-				// If any of the previous checks failed, we read a guf character
+				// If any of the previous checks failed, we read an invalid character
 				return invalidCodePoint;
 			}
 			// We got a single byte character
@@ -132,7 +132,7 @@ namespace mangrove::core::utf8
 							return invalidCodePoint; // fast-return if the seek fails
 					}
 				}
-				// Either we read a guf character, or one that was truncated.. either way..
+				// Either we read an invalid character, or one that was truncated.. either way..
 				return invalidCodePoint;
 			}
 			return encode(byteA, 1);
