@@ -42,7 +42,7 @@ namespace mangrove::core::utf8::iterator
 			if (!_offset)
 				return *this;
 			auto offset{_offset - 1U};
-			while (offset > 0 && (_data[offset] & 0xc0U) == 0x80U)
+			while (offset > 0 && (uint8_t(_data[offset]) & 0xc0U) == 0x80U)
 				--offset;
 			_offset = offset;
 			return *this;

@@ -164,7 +164,7 @@ namespace mangrove::core::utf8
 			const auto *const begin{str.data()};
 			const auto *const end{begin + str.byteLength()};
 			// And bytewise compare for equality, rewinding from the end of this string
-			return std::equal(begin, end, _data.cend() - str.byteLength());
+			return std::equal(begin, end, _data.data() + _data.size() - str.byteLength());
 		}
 
 		[[nodiscard]] bool startsWith(const StringView &str) const noexcept

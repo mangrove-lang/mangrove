@@ -32,7 +32,7 @@ extended_warnings = [
 	'-Wcast-function-type',
 	'-Wconversion',
 	'-Wdangling-else',
-	# '-Wsign-conversion',
+	'-Wsign-conversion',
 	'-Wfloat-conversion',
 	'-Wpacked',
 #	'-Wpadded',
