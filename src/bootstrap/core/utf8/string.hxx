@@ -107,7 +107,7 @@ namespace mangrove::core::utf8
 				throw std::out_of_range{"String index is out of range"};
 			std::string_view str{_data};
 			size_t offset{};
-			for (size_t i = 0; i < index; ++i)
+			for ([[maybe_unused]] const auto _ : substrate::indexSequence_t{index})
 				offset += Char{str.substr(offset)}.length();
 			return {str.substr(offset)};
 		}
@@ -120,7 +120,7 @@ namespace mangrove::core::utf8
 			if (offset < _length)
 			{
 				// Figure out the offset for the first character requested
-				for (size_t i = 0; i < offset; ++i)
+				for ([[maybe_unused]] const auto _ : substrate::indexSequence_t{offset})
 					begin += Char{str.substr(begin)}.length();
 			}
 			else
@@ -136,7 +136,7 @@ namespace mangrove::core::utf8
 
 			auto end{begin};
 			// Now we have [begin, ) but need to figure out the end offset - so go forward count characters
-			for (size_t i = 0; i < count; ++i)
+			for ([[maybe_unused]] const auto _ : substrate::indexSequence_t{count})
 				end += Char{str.substr(end)}.length();
 
 			// Finally, we have the substring range and the number of UTF-8 characters in it, make the substring
