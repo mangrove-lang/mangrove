@@ -20,6 +20,12 @@ class testTokeniser final : public testsuite
 private:
 	path casesPath{canonical(current_path() / ".." / ".." / "cases" / "tokenisation")};
 
+	Tokeniser tokeniserFor(const std::string_view &file)
+	{
+		const auto fileName{casesPath / file};
+		return {fd_t{fileName.c_str(), O_RDONLY | O_NOCTTY}};
+	}
+
 	void readNewline(Tokeniser &tokeniser)
 	{
 		const auto &token{tokeniser.next()};
@@ -63,9 +69,7 @@ private:
 
 	void testIntegralLiterals()
 	{
-		const auto fileName{casesPath / "integralLiterals.case"};
-		Tokeniser tokeniser{fd_t{fileName.c_str(), O_RDONLY | O_NOCTTY}};
-
+		auto tokeniser{tokeniserFor("integralLiterals.case"sv)};
 		// Check that the tokeniser start off in an invalid state
 		const auto &token{tokeniser.token()};
 		assertFalse(token.valid());
