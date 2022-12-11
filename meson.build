@@ -15,7 +15,10 @@ project(
 	subproject_dir: 'deps'
 )
 
+isWindows = target_machine.system() == 'windows'
+
 subdir('src/bootstrap')
+subdir('test/bootstrap')
 
 runClangTidy = find_program('runClangTidy.py')
 run_target(

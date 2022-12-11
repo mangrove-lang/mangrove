@@ -66,7 +66,7 @@ mangroveSrc = [
 subdir('parser')
 subdir('formats')
 
-executable(
+mangrove = executable(
 	'mangrove',
 	mangroveSrc,
 	cpp_args: ['-D_FORTIFY_SOURCE=2'],
