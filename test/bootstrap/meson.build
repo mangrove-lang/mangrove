@@ -9,6 +9,8 @@ crunchProject = subproject(
 crunchMake = crunchProject.get_variable('crunchMake')
 crunchpp = crunchProject.get_variable('crunchpp')
 
+libSubstrate = substrate.get_variable('link_args')
+
 command = [
 	crunchMake,
 	'-s',
@@ -16,7 +18,8 @@ command = [
 	'-o', '@OUTPUT@',
 	'-std=@0@'.format(get_option('cpp_std')),
 	'-I@0@/../../src/bootstrap'.format(meson.current_source_dir()),
-	'-z', 'defs'
+	'-z', 'defs',
+	libSubstrate
 ]
 
 if not isWindows
