@@ -292,7 +292,7 @@ void Tokeniser::readBinToken() noexcept
 void Tokeniser::readOctToken() noexcept
 {
 	String literal{};
-	_token.set(TokenType::binLit);
+	_token.set(TokenType::octLit);
 	nextChar();
 	while (isOct(currentChar))
 		literal += nextChar();
