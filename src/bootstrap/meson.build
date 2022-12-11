@@ -53,6 +53,7 @@ substrate = subproject(
 	'substrate',
 	default_options: [
 		'build_tests=false',
+		'default_library=static'
 	],
 ).get_variable(
 	'substrate_dep'
@@ -69,6 +70,6 @@ executable(
 	'mangrove',
 	mangroveSrc,
 	cpp_args: ['-D_FORTIFY_SOURCE=2'],
-	dependencies:[substrate],
+	dependencies: [substrate],
 	gnu_symbol_visibility: 'inlineshidden',
 )
