@@ -286,7 +286,10 @@ void Tokeniser::readBinToken() noexcept
 	nextChar();
 	while (isBin(currentChar))
 		literal += nextChar();
-	_token.value(std::move(literal));
+	if (literal.isEmpty())
+		_token.set(TokenType::invalid);
+	else
+		_token.value(std::move(literal));
 }
 
 void Tokeniser::readOctToken() noexcept
@@ -296,7 +299,10 @@ void Tokeniser::readOctToken() noexcept
 	nextChar();
 	while (isOct(currentChar))
 		literal += nextChar();
-	_token.value(std::move(literal));
+	if (literal.isEmpty())
+		_token.set(TokenType::invalid);
+	else
+		_token.value(std::move(literal));
 }
 
 void Tokeniser::readHexToken() noexcept
@@ -306,7 +312,10 @@ void Tokeniser::readHexToken() noexcept
 	nextChar();
 	while (isHex(currentChar))
 		literal += nextChar();
-	_token.value(std::move(literal));
+	if (literal.isEmpty())
+		_token.set(TokenType::invalid);
+	else
+		_token.value(std::move(literal));
 }
 
 void Tokeniser::readIntToken() noexcept
