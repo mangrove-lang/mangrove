@@ -181,7 +181,7 @@ namespace mangrove::core::utf8
 		[[nodiscard]] constexpr size_t length() const noexcept
 			{ return valid() ? ((_codePoint & lengthMask) >> lengthShift) + 1U : 3U; }
 		[[nodiscard]] constexpr uint32_t toCodePoint() const noexcept
-			{ return valid() ? (_codePoint & codePointMask) : 0xfdffU; }
+			{ return valid() ? (_codePoint & codePointMask) : 0xfffdU; }
 		constexpr void fromCodePoint(uint32_t codePoint) noexcept
 			{ _codePoint = encode(codePoint); }
 
