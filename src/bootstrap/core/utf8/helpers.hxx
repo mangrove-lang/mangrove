@@ -52,7 +52,6 @@ namespace mangrove::core::utf8::helpers
 					if (!isMultiValid(byteB, safeIndex(str, i + 1), safeIndex(str, i + 2)))
 						return 0;
 					i += 2;
-					++count;
 				}
 				else
 					return 0;
