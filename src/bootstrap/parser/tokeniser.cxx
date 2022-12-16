@@ -413,6 +413,11 @@ void Tokeniser::readCharToken() noexcept
 {
 	_token.set(TokenType::charLit);
 	nextChar();
+	if (isSingleQuote(currentChar))
+	{
+		_token.set(TokenType::invalid);
+		return;
+	}
 	const auto literal{readUnicode('"'_u8c, '\''_u8c)};
 	if (!literal.valid() || !isSingleQuote(currentChar))
 	{
