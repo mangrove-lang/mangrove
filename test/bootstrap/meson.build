@@ -32,3 +32,4 @@ else
 endif
 
 subdir('parser')
+subdir('core/utf8')
