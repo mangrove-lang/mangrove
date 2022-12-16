@@ -26,6 +26,14 @@ private:
 		return {fd_t{fileName.c_str(), O_RDONLY | O_NOCTTY}};
 	}
 
+	void readInvalid(Tokeniser &tokeniser)
+	{
+		const auto &token{tokeniser.next()};
+		assertFalse(token.valid());
+		assertEqual(token.type(), TokenType::invalid);
+		assertTrue(token.value().isEmpty());
+	}
+
 	void readNewline(Tokeniser &tokeniser)
 	{
 		const auto &token{tokeniser.next()};
@@ -89,19 +97,19 @@ private:
 		readValue(tokeniser, TokenType::binLit, u8"1001"_sv);
 		readNewline(tokeniser);
 		console.info("Checking tokenisation of '0b'"sv);
-		readEmptyValue(tokeniser, TokenType::binLit);
+		readInvalid(tokeniser);
 		readNewline(tokeniser);
 		console.info("Checking tokenisation of '0c11'"sv);
 		readValue(tokeniser, TokenType::octLit, u8"11"_sv);
 		readNewline(tokeniser);
 		console.info("Checking tokenisation of '0c'"sv);
-		readEmptyValue(tokeniser, TokenType::octLit);
+		readInvalid(tokeniser);
 		readNewline(tokeniser);
 		console.info("Checking tokenisation of '0x95'"sv);
 		readValue(tokeniser, TokenType::hexLit, u8"95"_sv);
 		readNewline(tokeniser);
 		console.info("Checking tokenisation of '0x'"sv);
-		readEmptyValue(tokeniser, TokenType::hexLit);
+		readInvalid(tokeniser);
 		readNewline(tokeniser);
 		console.info("Checking tokenisation of '100'"sv);
 		readValue(tokeniser, TokenType::intLit, u8"100"_sv);
