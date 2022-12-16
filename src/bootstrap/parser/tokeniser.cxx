@@ -374,11 +374,15 @@ Char Tokeniser::readUnicode(const Char &normalQuote, const Char &escapedQuote) n
 				result.fromCodePoint(7U);
 				break;
 			case 'u':
-			case 'U':
+			case 'U': {
+				const auto type{_token.type()};
 				readHexToken();
 				// We get to abuse the StringView abstraction here as we're guaranteed ASCII-only
 				// values being present in _token.value() by readHexToken(), so this is safe.
-				return {toInt_t<uint32_t>{_token.value().data(), _token.value().byteLength()}.fromHex()};
+				result = {toInt_t<uint32_t>{_token.value().data(), _token.value().byteLength()}.fromHex()};
+				_token.set(type);
+				return result;
+			}
 		}
 		if (currentChar == escapedQuote)
 			result = escapedQuote;
