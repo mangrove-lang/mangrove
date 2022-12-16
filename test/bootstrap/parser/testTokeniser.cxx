@@ -152,14 +152,17 @@ private:
 		console.info("Checking tokenisation of \"🎉 unicode literals 🎊\""sv);
 		readValue(tokeniser, TokenType::stringLit, u8"🎉 unicode literals 🎊"_sv);
 		readNewline(tokeniser);
-		// console.info("Checking tokenisation of ''"sv);
-		// readValue(tokeniser, TokenType::charLit, u8""_sv);
-		// readNewline(tokeniser);
-		// console.info("Checking tokenisation of '🍑'"sv);
-		// readValue(tokeniser, TokenType::charLit, u8"🍑"_sv);
-		// readNewline(tokeniser);
+		console.info("Checking tokenisation of ''"sv);
+		readInvalid(tokeniser);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of '🍑'"sv);
+		readValue(tokeniser, TokenType::charLit, u8"🍑"_sv);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of '⛏'"sv);
+		readValue(tokeniser, TokenType::charLit, u8"⛏"_sv);
+		readNewline(tokeniser);
 		// Finally, consume one last token and make sure it's the EOF token
-		//readEOF(tokeniser);
+		readEOF(tokeniser);
 	}
 
 public:
