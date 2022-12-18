@@ -42,9 +42,27 @@ private:
 		assertTrue(token.value().isEmpty());
 	}
 
+	void readWhitespace(Tokeniser &tokeniser)
+	{
+		const auto &token{tokeniser.next()};
+		assertTrue(token.valid());
+		assertEqual(token.type(), TokenType::whitespace);
+		if (token.value() == u8" "sv || token.value() == u8"\t"sv)
+			assertFalse(token.value().isEmpty());
+	}
+
 	void readValue(Tokeniser &tokeniser, const TokenType expectedType, const StringView &expectedValue)
 	{
 		const auto &token{tokeniser.next()};
+		if (expectedType == TokenType::equOp)
+		{
+			console.debug("Token"sv);
+			console.debug("-> valid? "sv, token.valid());
+			console.debug("-> type: "sv, token.type());
+			console.debug("-> value: "sv, std::string_view{token.value().data(), token.value().byteLength()});
+			console.debug("-> expected type: "sv, expectedType);
+			console.debug("-> expected value: "sv, std::string_view{expectedValue.data(), expectedValue.byteLength()});
+		}
 		assertTrue(token.valid());
 		assertEqual(token.type(), expectedType);
 		assertTrue(token.value() == expectedValue);
@@ -64,6 +82,17 @@ private:
 		assertTrue(token.valid());
 		assertEqual(token.type(), TokenType::eof);
 		assertTrue(token.value().isEmpty());
+	}
+
+	void readAssignment(Tokeniser &tokeniser, const StringView &identValue, const StringView &assignOpValue,
+		const StringView &literalValue)
+	{
+		readValue(tokeniser, TokenType::ident, identValue);
+		readWhitespace(tokeniser);
+		readValue(tokeniser, TokenType::assignOp, assignOpValue);
+		readWhitespace(tokeniser);
+		readValue(tokeniser, TokenType::intLit, literalValue);
+		readNewline(tokeniser);
 	}
 
 	void testBadFileConstruction()
@@ -165,6 +194,41 @@ private:
 		readEOF(tokeniser);
 	}
 
+	void testAssignments()
+	{
+		auto tokeniser{tokeniserFor("assignments.case"sv)};
+		// Check that the tokeniser start off in an invalid state
+		const auto &token{tokeniser.token()};
+		assertFalse(token.valid());
+
+		// It is assumed after each test value that a single Linux-style new line follows
+		// Consume the first token from the input and start testing tokenisation
+		console.info("Checking tokenisation of \"a = 1\""sv);
+		readAssignment(tokeniser, u8"a"_sv, u8"="_sv, u8"1"_sv);
+		console.info("Checking tokenisation of \"b += 2\""sv);
+		readAssignment(tokeniser, u8"b"_sv, u8"+="_sv, u8"2"_sv);
+		console.info("Checking tokenisation of \"c -= 3\""sv);
+		readAssignment(tokeniser, u8"c"_sv, u8"-="_sv, u8"3"_sv);
+		console.info("Checking tokenisation of \"d *= 4\""sv);
+		readAssignment(tokeniser, u8"d"_sv, u8"*="_sv, u8"4"_sv);
+		console.info("Checking tokenisation of \"e /= 5\""sv);
+		readAssignment(tokeniser, u8"e"_sv, u8"/="_sv, u8"5"_sv);
+		console.info("Checking tokenisation of \"f %= 6\""sv);
+		readAssignment(tokeniser, u8"f"_sv, u8"%="_sv, u8"6"_sv);
+		console.info("Checking tokenisation of \"g &= 7\""sv);
+		readAssignment(tokeniser, u8"g"_sv, u8"&="_sv, u8"7"_sv);
+		console.info("Checking tokenisation of \"h |= 8\""sv);
+		readAssignment(tokeniser, u8"h"_sv, u8"|="_sv, u8"8"_sv);
+		console.info("Checking tokenisation of \"i ^= 9\""sv);
+		readAssignment(tokeniser, u8"i"_sv, u8"^="_sv, u8"9"_sv);
+		console.info("Checking tokenisation of \"j >>= 10\""sv);
+		readAssignment(tokeniser, u8"j"_sv, u8"<<="_sv, u8"10"_sv);
+		console.info("Checking tokenisation of \"k <<= 11\""sv);
+		readAssignment(tokeniser, u8"k"_sv, u8">>="_sv, u8"11"_sv);
+		// Finally, consume one last token and make sure it's the EOF token
+		//readEOF(tokeniser);
+	}
+
 public:
 	void registerTests() final
 	{
@@ -172,6 +236,7 @@ public:
 		CRUNCHpp_TEST(testBadFileConstruction)
 		CRUNCHpp_TEST(testIntegralLiterals)
 		CRUNCHpp_TEST(testStringLiterals)
+		CRUNCHpp_TEST(testAssignments)
 	}
 };
 
