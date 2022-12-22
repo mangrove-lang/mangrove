@@ -1,0 +1,20 @@
+.
+..
+...
+....
+# Line comment
+// Other line comment
+/**/
+/* Partial line comment */
+[]
+{}
+()
+,
+:
+;
+<
+<=
+>
+>=
+!=
+==

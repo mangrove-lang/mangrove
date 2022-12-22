@@ -341,6 +341,84 @@ private:
 		readEOF(tokeniser);
 	}
 
+	void testPunctuation()
+	{
+		auto tokeniser{tokeniserFor("punctuation.case"sv)};
+		// Check that the tokeniser start off in an invalid state
+		const auto &token{tokeniser.token()};
+		assertFalse(token.valid());
+
+		// It is assumed after each test value that a single Linux-style new line follows
+		// Consume the first token from the input and start testing tokenisation
+		console.info("Checking tokenisation of '.'"sv);
+		readEmptyValue(tokeniser, TokenType::dot);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of '..'"sv);
+		readEmptyValue(tokeniser, TokenType::dot);
+		readEmptyValue(tokeniser, TokenType::dot);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of '...'"sv);
+		readEmptyValue(tokeniser, TokenType::ellipsis);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of '...'"sv);
+		readEmptyValue(tokeniser, TokenType::ellipsis);
+		readEmptyValue(tokeniser, TokenType::dot);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of '# Line comment'"sv);
+		readValue(tokeniser, TokenType::comment, u8" Line comment"_sv);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of '// Other line comment'"sv);
+		readValue(tokeniser, TokenType::comment, u8" Other line comment"_sv);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of '/**/'"sv);
+		readEmptyValue(tokeniser, TokenType::comment);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of '/* Partial line comment */'"sv);
+		readValue(tokeniser, TokenType::comment, u8" Partial line comment "_sv);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of '[]'"sv);
+		readEmptyValue(tokeniser, TokenType::leftSquare);
+		readEmptyValue(tokeniser, TokenType::rightSquare);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of '{}'"sv);
+		readEmptyValue(tokeniser, TokenType::leftBrace);
+		readEmptyValue(tokeniser, TokenType::rightBrace);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of '()'"sv);
+		readEmptyValue(tokeniser, TokenType::leftParen);
+		readEmptyValue(tokeniser, TokenType::rightParen);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of ','"sv);
+		readEmptyValue(tokeniser, TokenType::comma);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of ':'"sv);
+		readEmptyValue(tokeniser, TokenType::colon);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of ';'"sv);
+		readEmptyValue(tokeniser, TokenType::semi);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of '<'"sv);
+		readValue(tokeniser, TokenType::relOp, u8"<"_sv);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of '<='"sv);
+		readValue(tokeniser, TokenType::relOp, u8"<="_sv);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of '>'"sv);
+		readValue(tokeniser, TokenType::relOp, u8">"_sv);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of '>='"sv);
+		readValue(tokeniser, TokenType::relOp, u8">="_sv);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of '!='"sv);
+		readValue(tokeniser, TokenType::equOp, u8"!="_sv);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of '=='"sv);
+		readValue(tokeniser, TokenType::equOp, u8"=="_sv);
+		readNewline(tokeniser);
+		// Finally, consume one last token and make sure it's the EOF token
+		readEOF(tokeniser);
+	}
+
 public:
 	void registerTests() final
 	{
@@ -350,6 +428,7 @@ public:
 		CRUNCHpp_TEST(testStringLiterals)
 		CRUNCHpp_TEST(testAssignments)
 		CRUNCHpp_TEST(testKeywords)
+		CRUNCHpp_TEST(testPunctuation)
 	}
 };
 

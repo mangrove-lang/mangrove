@@ -6,6 +6,7 @@ caseSrcs = [
 	'cases/tokenisation/integralLiterals.case',
 	'cases/tokenisation/assignments.case',
 	'cases/tokenisation/keywords.case',
+	'cases/tokenisation/punctuation.case',
 ]
 
 caseFiles = custom_target(
