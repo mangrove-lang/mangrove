@@ -506,7 +506,7 @@ void Tokeniser::readRelationToken() noexcept
 	finaliseToken(TokenType::relOp, currentChar);
 	const auto token{nextChar()};
 	if (isEquals(currentChar))
-		finaliseToken(TokenType::assignOp, {token, currentChar});
+		finaliseToken(TokenType::relOp, {token, currentChar});
 	else if (currentChar == token)
 	{
 		finaliseToken(TokenType::shiftOp, {token, currentChar});
