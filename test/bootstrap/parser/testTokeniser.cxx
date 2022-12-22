@@ -203,30 +203,30 @@ private:
 
 		// It is assumed after each test value that a single Linux-style new line follows
 		// Consume the first token from the input and start testing tokenisation
-		console.info("Checking tokenisation of \"a = 1\""sv);
+		console.info("Checking tokenisation of 'a = 1'"sv);
 		readAssignment(tokeniser, u8"a"_sv, u8"="_sv, u8"1"_sv);
-		console.info("Checking tokenisation of \"b += 2\""sv);
+		console.info("Checking tokenisation of 'b += 2'"sv);
 		readAssignment(tokeniser, u8"b"_sv, u8"+="_sv, u8"2"_sv);
-		console.info("Checking tokenisation of \"c -= 3\""sv);
+		console.info("Checking tokenisation of 'c -= 3'"sv);
 		readAssignment(tokeniser, u8"c"_sv, u8"-="_sv, u8"3"_sv);
-		console.info("Checking tokenisation of \"d *= 4\""sv);
+		console.info("Checking tokenisation of 'd *= 4'"sv);
 		readAssignment(tokeniser, u8"d"_sv, u8"*="_sv, u8"4"_sv);
-		console.info("Checking tokenisation of \"e /= 5\""sv);
+		console.info("Checking tokenisation of 'e /= 5'"sv);
 		readAssignment(tokeniser, u8"e"_sv, u8"/="_sv, u8"5"_sv);
-		console.info("Checking tokenisation of \"f %= 6\""sv);
+		console.info("Checking tokenisation of 'f %= 6'"sv);
 		readAssignment(tokeniser, u8"f"_sv, u8"%="_sv, u8"6"_sv);
-		console.info("Checking tokenisation of \"g &= 7\""sv);
+		console.info("Checking tokenisation of 'g &= 7'"sv);
 		readAssignment(tokeniser, u8"g"_sv, u8"&="_sv, u8"7"_sv);
-		console.info("Checking tokenisation of \"h |= 8\""sv);
+		console.info("Checking tokenisation of 'h |= 8'"sv);
 		readAssignment(tokeniser, u8"h"_sv, u8"|="_sv, u8"8"_sv);
-		console.info("Checking tokenisation of \"i ^= 9\""sv);
+		console.info("Checking tokenisation of 'i ^= 9'"sv);
 		readAssignment(tokeniser, u8"i"_sv, u8"^="_sv, u8"9"_sv);
-		console.info("Checking tokenisation of \"j >>= 10\""sv);
+		console.info("Checking tokenisation of 'j >>= 10'"sv);
 		readAssignment(tokeniser, u8"j"_sv, u8"<<="_sv, u8"10"_sv);
-		console.info("Checking tokenisation of \"k <<= 11\""sv);
+		console.info("Checking tokenisation of 'k <<= 11'"sv);
 		readAssignment(tokeniser, u8"k"_sv, u8">>="_sv, u8"11"_sv);
 		// Finally, consume one last token and make sure it's the EOF token
-		//readEOF(tokeniser);
+		readEOF(tokeniser);
 	}
 
 public:
