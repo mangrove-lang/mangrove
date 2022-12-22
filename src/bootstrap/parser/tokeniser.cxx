@@ -74,6 +74,7 @@ void Tokeniser::readToken() noexcept
 			_token.set(TokenType::whitespace);
 			break;
 		case '#':
+			nextChar();
 			readLineComment();
 			return;
 		case '\r':
