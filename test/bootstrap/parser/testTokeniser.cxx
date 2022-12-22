@@ -54,15 +54,6 @@ private:
 	void readValue(Tokeniser &tokeniser, const TokenType expectedType, const StringView &expectedValue)
 	{
 		const auto &token{tokeniser.next()};
-		if (expectedType == TokenType::equOp)
-		{
-			console.debug("Token"sv);
-			console.debug("-> valid? "sv, token.valid());
-			console.debug("-> type: "sv, token.type());
-			console.debug("-> value: "sv, std::string_view{token.value().data(), token.value().byteLength()});
-			console.debug("-> expected type: "sv, expectedType);
-			console.debug("-> expected value: "sv, std::string_view{expectedValue.data(), expectedValue.byteLength()});
-		}
 		assertTrue(token.valid());
 		assertEqual(token.type(), expectedType);
 		assertTrue(token.value() == expectedValue);
