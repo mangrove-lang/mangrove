@@ -49,6 +49,16 @@ add_project_arguments(
 	language: 'cpp'
 )
 
+picArgs = cxx.get_supported_arguments(['-fPIC', '-DPIC'])
+add_global_arguments(
+	picArgs,
+	language: ['c', 'cpp']
+)
+add_global_link_arguments(
+	picArgs,
+	language: ['c', 'cpp']
+)
+
 substrate = subproject(
 	'substrate',
 	default_options: [
