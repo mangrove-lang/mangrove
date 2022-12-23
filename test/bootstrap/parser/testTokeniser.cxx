@@ -217,6 +217,15 @@ private:
 		console.info("Checking tokenisation of '\\f'"sv);
 		readValue(tokeniser, TokenType::charLit, u8"\f"_sv);
 		readNewline(tokeniser);
+		console.info("Checking tokenisation of \"\\'\""sv);
+		readInvalid(tokeniser);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of '\\\"'"sv);
+		readInvalid(tokeniser);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of '\\/'"sv);
+		readInvalid(tokeniser);
+		readNewline(tokeniser);
 		// Finally, consume one last token and make sure it's the EOF token
 		readEOF(tokeniser);
 	}
