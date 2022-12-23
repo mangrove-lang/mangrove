@@ -364,8 +364,8 @@ private:
 		console.info("Checking tokenisation of '/**/'"sv);
 		readEmptyValue(tokeniser, TokenType::comment);
 		readNewline(tokeniser);
-		console.info("Checking tokenisation of '/* Partial line comment */'"sv);
-		readValue(tokeniser, TokenType::comment, u8" Partial line comment "_sv);
+		console.info("Checking tokenisation of '/* Partial * line comment */'"sv);
+		readValue(tokeniser, TokenType::comment, u8" Partial * line comment "_sv);
 		readNewline(tokeniser);
 		console.info("Checking tokenisation of '[]'"sv);
 		readEmptyValue(tokeniser, TokenType::leftSquare);
