@@ -433,6 +433,9 @@ private:
 		console.info("Checking tokenisation of '|'"sv);
 		readValue(tokeniser, TokenType::bitOp, u8"|"_sv);
 		readNewline(tokeniser);
+		console.info("Checking tokenisation of '^'"sv);
+		readValue(tokeniser, TokenType::bitOp, u8"^"_sv);
+		readNewline(tokeniser);
 		console.info("Checking tokenisation of '&&'"sv);
 		readValue(tokeniser, TokenType::logicOp, u8"&"_sv);
 		readNewline(tokeniser);
