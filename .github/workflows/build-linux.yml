@@ -113,7 +113,7 @@ jobs:
           echo "GITHUB_WORKSPACE=`pwd`" >> $GITHUB_ENV
       - name: Coverage environment
         run: |
-          echo "BUILD_OPTS=-Db_coverage=true -Db_lto=false --buildtype=debug" >> $GITHUB_ENV
+          echo "BUILD_OPTS=-Db_coverage=true -Db_lto=false -Db_pie=true --buildtype=debug" >> $GITHUB_ENV
       - name: Setup GCC
         if: startsWith(matrix.compiler, 'gcc')
         shell: bash
