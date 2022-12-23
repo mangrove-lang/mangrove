@@ -449,6 +449,15 @@ private:
 		console.info("Checking tokenisation of '<<'"sv);
 		readValue(tokeniser, TokenType::shiftOp, u8"<<"_sv);
 		readNewline(tokeniser);
+		console.info("Checking tokenisation of '++'"sv);
+		readValue(tokeniser, TokenType::incOp, u8"+"_sv);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of '--'"sv);
+		readValue(tokeniser, TokenType::incOp, u8"-"_sv);
+		readNewline(tokeniser);
+		console.info("Checking tokenisation of '->'"sv);
+		readEmptyValue(tokeniser, TokenType::arrow);
+		readNewline(tokeniser);
 		// Finally, consume one last token and make sure it's the EOF token
 		readEOF(tokeniser);
 	}
