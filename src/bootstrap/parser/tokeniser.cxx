@@ -118,7 +118,7 @@ void Tokeniser::readToken() noexcept
 			readCharToken();
 			break;
 		case '~':
-			_token.set(TokenType::invert);
+			_token.set(TokenType::invert, '~'_u8c);
 			break;
 		case '/':
 			readDivToken();
