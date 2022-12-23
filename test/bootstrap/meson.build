@@ -25,6 +25,29 @@ command = [
 	substrate.get_variable('link_args')
 ]
 
+if coverage
+	command += ['--coverage']
+endif
+if debug
+	command += ['--debug']
+endif
+if sanitizer != 'none'
+	command += ['-fsanitize=' + sanitizer]
+endif
+if not isWindows and cxx.get_linker_id() != 'ld64' and noUndefined
+	command += ['-z', 'defs']
+endif
+
+if isWindows
+	command += ['-DWIN32', '-D_WINDOWS']
+
+	# Substrate API needs Windows 10
+	# https://docs.microsoft.com/en-us/cpp/porting/modifying-winver-and-win32-winnt?view=msvc-160
+	if cxx.get_id() == 'gcc' or cxx.get_id() == 'clang'
+		command += ['-DWINVER=NTDDI_WIN10_RS5', '-D_WIN32_WINNT=NTDDI_WIN10_RS5', '-DNTDDI_VERSION=NTDDI_WIN10_RS5']
+	endif
+endif
+
 if not isWindows
 	testExt = '.so'
 else

@@ -15,6 +15,10 @@ project(
 	subproject_dir: 'deps'
 )
 
+sanitizer = get_option('b_sanitize')
+coverage = get_option('b_coverage')
+noUndefined = get_option('b_lundef')
+debug = get_option('debug')
 isWindows = target_machine.system() == 'windows'
 
 subdir('src/bootstrap')
