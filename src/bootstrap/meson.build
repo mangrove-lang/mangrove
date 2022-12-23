@@ -72,4 +72,5 @@ mangrove = executable(
 	cpp_args: ['-D_FORTIFY_SOURCE=2'],
 	dependencies: [substrate],
 	gnu_symbol_visibility: 'inlineshidden',
+	pie: true
 )
