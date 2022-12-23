@@ -218,6 +218,7 @@ private:
 		readAssignment(tokeniser, u8"k"_sv, u8">>="_sv, u8"11"_sv);
 		// Finally, consume one last token and make sure it's the EOF token
 		readEOF(tokeniser);
+		readEOF(tokeniser);
 	}
 
 	void testKeywords()
