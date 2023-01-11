@@ -9,7 +9,7 @@ static const auto builtinTypes
 {
 	substrate::make_array<Symbol>
 	({
-		{{u8"type"_sv}, {{SymbolTypes::type}}},
+		{{u8"type"_sv}, {SymbolTypes::type}},
 		{{u8"none"_sv}, {{SymbolTypes::type, SymbolTypes::none}}},
 		{{u8"auto"_sv}, {{SymbolTypes::type, SymbolTypes::autoVal}}},
 		{{u8"Bool"_sv}, {{SymbolTypes::type, SymbolTypes::boolVal}}},
