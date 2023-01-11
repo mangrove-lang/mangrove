@@ -46,7 +46,7 @@ namespace mangrove::core
 			constexpr void set(const Values ...flags) noexcept { value |= (flagAsBit(flags) | ...); }
 
 		template<typename... Values, typename = std::enable_if_t<(std::is_same_v<Values, Enum> && ...)>>
-			constexpr void clear(const Values ...flags) noexcept { value &= ~(flagAsBit(flags) | ...); }
+			constexpr void clear(const Values ...flags) noexcept { value &= T(~(flagAsBit(flags) | ...)); }
 
 		template<typename... Values, typename = std::enable_if_t<(std::is_same_v<Values, Enum> && ...)>>
 			constexpr bool includes(const Values ...flags) const noexcept
@@ -58,12 +58,17 @@ namespace mangrove::core
 		template<typename... Values, typename = std::enable_if_t<(std::is_same_v<Values, Enum> && ...)>>
 			constexpr BitFlags without(const Values ...flags) const noexcept
 		{
-			const T bits{(flagAsBit(flags) | ...)};
-			return {T(value & ~bits)};
+			const auto bits{(flagAsBit(flags) | ...)};
+			const auto newValue{value & ~bits};
+			return {T(newValue)};
 		}
+
+		constexpr T toRaw() const noexcept { return value; }
 
 		constexpr bool operator ==(const BitFlags &flags) const noexcept { return value == flags.value; }
 		constexpr bool operator ==(const Enum flag) const noexcept { return value == flagAsBit(flag); }
+		constexpr bool operator !=(const BitFlags &flags) const noexcept { return value != flags.value; }
+		constexpr bool operator !=(const Enum flag) const noexcept { return value != flagAsBit(flag); }
 	};
 } // namespace mangrove::core
 
