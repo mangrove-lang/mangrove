@@ -161,6 +161,30 @@ namespace mangrove::ast::symbolTable
 			return fmt::format("{}{}{}"sv, kind, signdness, type);
 		}
 	};
+
+	struct Symbol
+	{
+	private:
+		String _ident;
+		SymbolType _type{};
+		// std::optional<SymbolStruct> _struct{};
+
+	public:
+		Symbol(String &&ident) noexcept : _ident{std::move(ident)} { }
+		Symbol(String &&ident, SymbolType &&type) noexcept : _ident{std::move(ident)}, _type{std::move(type)} { }
+
+		bool operator ==(const Symbol &symbol) const noexcept
+			{ return _ident == symbol._ident && _type == symbol._type; }
+
+		[[nodiscard]] StringView value() const noexcept { return _ident; }
+		void type(const SymbolType &type) noexcept { _type = type; }
+		[[nodiscard]] auto type() const noexcept { return _type; }
+		[[nodiscard]] auto isType() { return _type.includes(SymbolTypes::type); }
+		[[nodiscard]] Symbol clone() const noexcept { return *this; }
+
+		[[nodiscard]] std::string toString() const noexcept
+			{ return fmt::format("<Symbol {} -> {}>"sv, _ident, _type.toString()); }
+	};
 } // namespace mangrove::ast::symbolTable
 
 #endif /*AST_SYMBOL_TABLE_HXX*/
