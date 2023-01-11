@@ -118,7 +118,7 @@ template<> struct fmt::formatter<mangrove::ast::symbolTable::TypeFlags>
 
 namespace mangrove::ast::symbolTable
 {
-	struct SymbolType
+	struct SymbolType final
 	{
 	private:
 		TypeFlags _type{};
@@ -170,7 +170,7 @@ namespace mangrove::ast::symbolTable
 		}
 	};
 
-	struct Symbol
+	struct Symbol final
 	{
 	private:
 		String _ident;
@@ -194,7 +194,7 @@ namespace mangrove::ast::symbolTable
 			{ return fmt::format("<Symbol {} -> {}>"sv, _ident, _type.toString()); }
 	};
 
-	struct SymbolTable
+	struct SymbolTable final
 	{
 	private:
 		std::weak_ptr<SymbolTable> _parentTable{};
@@ -202,12 +202,17 @@ namespace mangrove::ast::symbolTable
 
 	public:
 		SymbolTable(const Parser &parser) noexcept;
+		void pop(Parser &parser) const noexcept;
 
 		[[nodiscard]] auto isEmpty() const noexcept { return _table.empty(); }
 		[[nodiscard]] auto entryCount() const noexcept { return _table.size(); }
 
 		// This intentionally duplicates `ident` on calling to simplify memory management
 		[[nodiscard]] Symbol *add(String ident) noexcept;
+		[[nodiscard]] bool insert(const Symbol &symbol) noexcept;
+
+		[[nodiscard]] Symbol *findLocal(const StringView &ident) const noexcept;
+		[[nodiscard]] Symbol *find(const StringView &ident) const noexcept;
 	};
 } // namespace mangrove::ast::symbolTable
 

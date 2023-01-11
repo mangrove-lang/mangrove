@@ -24,6 +24,7 @@ namespace mangrove::parser
 		Parser(path fileName);
 
 		[[nodiscard]] std::weak_ptr<SymbolTable> symbolTable() const noexcept { return _symbolTable; }
+		void symbolTable(std::shared_ptr<SymbolTable> &&table) noexcept { _symbolTable = std::move(table); }
 	};
 } // namespace mangrove::parser
 
