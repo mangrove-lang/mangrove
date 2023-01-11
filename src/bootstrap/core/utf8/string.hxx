@@ -52,6 +52,8 @@ namespace mangrove::core::utf8
 
 	public:
 		constexpr String() noexcept = default;
+		String(const String &str) = default;
+		String(String &&str) noexcept = default;
 		String(const std::string_view &string) noexcept : _data{string}, _length{helpers::countUnits(_data)} { }
 		String(const StringView &string) noexcept :
 			_data{string.data(), string.byteLength()}, _length{string.length()} { }
@@ -59,6 +61,10 @@ namespace mangrove::core::utf8
 		template<typename... Chars, typename = std::enable_if_t<(std::is_same_v<Chars, Char> && ...)>>
 			String(const Chars &... chrs) noexcept : _data((chrs.length() + ...), '\0'), _length{sizeof...(chrs)}
 				{ copyChars(0, chrs...); }
+
+		~String() noexcept = default;
+		String &operator =(const String &str) = default;
+		String &operator =(String &&str) noexcept = default;
 
 		[[nodiscard]] operator StringView() const noexcept
 			{ return {_data, _length}; }
