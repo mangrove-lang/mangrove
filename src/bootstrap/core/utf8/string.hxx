@@ -3,6 +3,7 @@
 #define CORE_UTF8_STRING_HXX
 
 #include <stdexcept>
+#include <fmt/format.h>
 #include "char.hxx"
 #include "iterator.hxx"
 #include "helpers.hxx"
@@ -194,5 +195,16 @@ namespace mangrove::core::utf8
 			{ return String{std::string_view{value, length}}; }
 	} // namespace literals
 } // namespace mangrove::core::utf8
+
+template<> struct fmt::formatter<mangrove::core::utf8::String> : formatter<std::string_view>
+{
+	using String = mangrove::core::utf8::String;
+
+	template<typename FormatContext> auto format(const String &str, FormatContext &ctx) const
+	{
+		const std::string_view data{str.data(), str.byteLength()};
+		return formatter<std::string_view>::format(data, ctx);
+	}
+};
 
 #endif /*CORE_UTF8_STRING_HXX*/
