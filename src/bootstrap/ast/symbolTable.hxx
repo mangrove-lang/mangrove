@@ -27,12 +27,11 @@ namespace mangrove::ast::symbolTable
 	enum class SymbolTypes : uint16_t
 	{
 		// Flags for integral types
-		integerVal = 0U,
 		// Integer kind flags
-		signedVal = 0U, // Alias integerVal for signed
+		signedVal = 0U,
 		unsignedVal = 1U,
 		// Integer width flags
-		int8Bit = 0U, // Alias integerVal for 8-bit
+		int8Bit = 0U, // Alias signedVal for 8-bit
 		int16Bit = 2U,
 		int32Bit = 3U,
 		int64Bit = 4U,
@@ -41,8 +40,8 @@ namespace mangrove::ast::symbolTable
 		list = 9U,
 		// strings are character | list
 		structVal = 10U,
-		// dictionaries are structVal | list
 		array = 11U,
+		// dictionaries are structVal | list
 		// sets are structVal | array
 		boolVal = 12U,
 		function = 13U,
@@ -179,7 +178,7 @@ namespace mangrove::ast::symbolTable
 
 	public:
 		Symbol(String &&ident) noexcept : _ident{std::move(ident)} { }
-		Symbol(String &&ident, SymbolType &&type) noexcept : _ident{std::move(ident)}, _type{std::move(type)} { }
+		Symbol(String &&ident, const SymbolType &type) noexcept : _ident{std::move(ident)}, _type{type} { }
 
 		bool operator ==(const Symbol &symbol) const noexcept
 			{ return _ident == symbol._ident && _type == symbol._type; }
@@ -214,6 +213,8 @@ namespace mangrove::ast::symbolTable
 		[[nodiscard]] Symbol *findLocal(const StringView &ident) const noexcept;
 		[[nodiscard]] Symbol *find(const StringView &ident) const noexcept;
 	};
+
+	[[nodiscard]] bool addBuiltinTypesTo(SymbolTable &symbolTable) noexcept;
 } // namespace mangrove::ast::symbolTable
 
 #endif /*AST_SYMBOL_TABLE_HXX*/

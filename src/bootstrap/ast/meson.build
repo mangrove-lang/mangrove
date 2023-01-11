@@ -1,4 +1,4 @@
 # SPDX-License-Identifier: BSD-3-Clause
 mangroveSrc += files(
-	'symbolTable.cxx'
+	'symbolTable.cxx', 'builtins.cxx'
 )
