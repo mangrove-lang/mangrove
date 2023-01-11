@@ -83,6 +83,7 @@ mangroveSrc = [
 ]
 
 subdir('parser')
+subdir('ast')
 subdir('formats')
 
 mangrove = executable(

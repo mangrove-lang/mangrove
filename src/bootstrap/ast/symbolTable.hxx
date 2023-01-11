@@ -3,6 +3,8 @@
 #define AST_SYMBOL_TABLE_HXX
 
 #include <cstdint>
+#include <map>
+#include <memory>
 #include <fmt/core.h>
 #include "../core/flags.hxx"
 #include "../core/utf8/string.hxx"
@@ -10,11 +12,17 @@
 // This isn't great practice, but we don't get much choice here.
 using namespace std::literals::string_view_literals;
 
+namespace mangrove::parser
+{
+	struct Parser;
+} // namespace mangrove::parser
+
 namespace mangrove::ast::symbolTable
 {
 	using mangrove::core::BitFlags;
 	using mangrove::core::utf8::String;
 	using mangrove::core::utf8::StringView;
+	using mangrove::parser::Parser;
 
 	enum class SymbolTypes : uint16_t
 	{
@@ -184,6 +192,22 @@ namespace mangrove::ast::symbolTable
 
 		[[nodiscard]] std::string toString() const noexcept
 			{ return fmt::format("<Symbol {} -> {}>"sv, _ident, _type.toString()); }
+	};
+
+	struct SymbolTable
+	{
+	private:
+		std::weak_ptr<SymbolTable> _parentTable{};
+		std::map<StringView, std::unique_ptr<Symbol>> _table{};
+
+	public:
+		SymbolTable(const Parser &parser) noexcept;
+
+		[[nodiscard]] auto isEmpty() const noexcept { return _table.empty(); }
+		[[nodiscard]] auto entryCount() const noexcept { return _table.size(); }
+
+		// This intentionally duplicates `ident` on calling to simplify memory management
+		[[nodiscard]] Symbol *add(String ident) noexcept;
 	};
 } // namespace mangrove::ast::symbolTable
 
