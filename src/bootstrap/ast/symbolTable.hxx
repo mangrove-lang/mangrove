@@ -108,4 +108,59 @@ template<> struct fmt::formatter<mangrove::ast::symbolTable::TypeFlags>
 		{ return fmt::format_to(ctx.out(), "{}"sv, flagsToValue(flags)); }
 };
 
+namespace mangrove::ast::symbolTable
+{
+	struct SymbolType
+	{
+	private:
+		TypeFlags _type{};
+
+	public:
+		constexpr SymbolType() noexcept = default;
+		constexpr SymbolType(const SymbolTypes symbolType) : _type{symbolType} { }
+		constexpr SymbolType(const TypeFlags &symbolType) : _type{symbolType} { }
+
+		// NOLINTNEXTLINE(misc-unconventional-assign-operator)
+		constexpr void operator =(const SymbolTypes symbolType) { _type = symbolType; }
+
+		[[nodiscard]] constexpr SymbolType forValue() const noexcept
+		{
+			if (_type == SymbolTypes::type)
+				return *this;
+			return {_type.without(SymbolTypes::type)};
+		}
+
+		constexpr bool operator ==(const SymbolType &symbolType) const noexcept
+			{ return _type == symbolType._type; }
+		constexpr bool operator ==(const SymbolTypes &symbolType) const noexcept
+			{ return _type == symbolType; }
+
+		[[nodiscard]] constexpr auto isInvalid() const noexcept { return _type == TypeFlags{}; }
+		[[nodiscard]] constexpr SymbolType clone() const noexcept { return *this; }
+
+		template<typename... SymbolTypes>
+		[[nodiscard]] constexpr auto includes(SymbolTypes ...types) const noexcept
+			{ return _type.includes(types...); }
+		template<typename... SymbolTypes>
+		[[nodiscard]] constexpr SymbolType without(SymbolTypes ...types) const noexcept
+			{ return {_type.without(types...)}; }
+
+		[[nodiscard]] std::string toString() const noexcept
+		{
+			const auto reference{_type.includes(SymbolTypes::reference) ? "reference "sv : ""sv};
+			const auto pointer{_type.includes(SymbolTypes::pointer) ? "pointer "sv : ""sv};
+			const auto kind{reference.empty() ? pointer : reference};
+			const auto signdness{_type.includes(SymbolTypes::unsignedVal) ? "u"sv : ""sv};
+			const auto isType{_type != SymbolTypes::type && _type.includes(SymbolTypes::type)};
+			auto type{_type.without(SymbolTypes::reference, SymbolTypes::pointer, SymbolTypes::unsignedVal)};
+			if (isType)
+			{
+				type.clear(SymbolTypes::type);
+				return fmt::format("type {}'{}{}'"sv, kind, signdness, type);
+			}
+			return fmt::format("{}{}{}"sv, kind, signdness, type);
+		}
+	};
+} // namespace mangrove::ast::symbolTable
+
 #endif /*AST_SYMBOL_TABLE_HXX*/
