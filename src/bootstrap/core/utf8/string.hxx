@@ -186,6 +186,16 @@ namespace mangrove::core::utf8
 		bool operator !=(const StringView &str) const noexcept
 			{ return StringView{_data, _length} != str; }
 
+		bool operator <(const String &str) const noexcept
+		{
+			if (_length != str._length)
+				return _length < str._length;
+			return _data.compare(str._data) < 0;
+		}
+
+		bool operator <(const StringView &str) const noexcept
+			{ return StringView{_data, _length} < str; }
+
 		constexpr static size_t npos{SIZE_MAX};
 	};
 
