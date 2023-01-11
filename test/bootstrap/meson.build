@@ -22,7 +22,9 @@ command = [
 	'-I@0@/../../src/bootstrap'.format(meson.current_source_dir()),
 	'-z', 'defs',
 	substrate.get_variable('compile_args'),
-	substrate.get_variable('link_args')
+	substrate.get_variable('link_args'),
+	fmt.get_variable('compile_args'),
+	fmt.get_variable('link_args'),
 ]
 
 if coverage
