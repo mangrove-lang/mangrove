@@ -18,10 +18,10 @@ namespace mangrove::parser
 	{
 	private:
 		Tokeniser lexer;
-		std::shared_ptr<SymbolTable> _symbolTable;
+		std::shared_ptr<SymbolTable> _symbolTable{std::make_shared<SymbolTable>(*this)};
 
 	public:
-		Parser(path fileName);
+		Parser(const path &fileName);
 
 		[[nodiscard]] std::weak_ptr<SymbolTable> symbolTable() const noexcept { return _symbolTable; }
 		void symbolTable(std::shared_ptr<SymbolTable> &&table) noexcept { _symbolTable = std::move(table); }

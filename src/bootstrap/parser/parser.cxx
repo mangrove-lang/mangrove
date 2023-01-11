@@ -3,4 +3,8 @@
 
 using namespace mangrove::parser;
 
-Parser::Parser(path fileName) : lexer{fd_t{fileName.c_str(), O_RDONLY | O_NOCTTY}} { }
+Parser::Parser(const path &fileName) : lexer{fd_t{fileName.c_str(), O_RDONLY | O_NOCTTY}}
+{
+	if (!addBuiltinTypesTo(*_symbolTable))
+		throw std::exception{};
+}
