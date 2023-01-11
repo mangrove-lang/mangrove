@@ -63,7 +63,8 @@ substrate = subproject(
 	'substrate',
 	default_options: [
 		'build_tests=false',
-		'default_library=static'
+		'default_library=static',
+		'cpp_std=c++17',
 	],
 ).get_variable(
 	'substrate_dep'
@@ -72,7 +73,7 @@ substrate = subproject(
 fmt = subproject(
 	'fmt',
 	default_options: [
-		'default_library=static'
+		'default_library=static',
 	],
 ).get_variable(
 	'fmt_dep'
