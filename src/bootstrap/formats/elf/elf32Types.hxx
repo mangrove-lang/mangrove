@@ -37,6 +37,25 @@ namespace mangrove::elf::types::elf32
 
 		[[nodiscard]] constexpr static size_t size() noexcept { return ELFIdent::size() + 36; }
 	};
+
+	struct ProgramHeader final
+	{
+	private:
+		Memory _storage;
+		Endian _endian;
+
+	public:
+		ProgramHeader(const Memory &storage, const Endian &endian) : _storage{storage}, _endian{endian} { }
+
+		[[nodiscard]] auto type() const noexcept { return _storage.read<ProgramHeaderType>(0, _endian); }
+		[[nodiscard]] auto offset() const noexcept { return _storage.read<uint32_t>(4, _endian); }
+		[[nodiscard]] auto virtualAddress() const noexcept { return _storage.read<uint32_t>(8, _endian); }
+		[[nodiscard]] auto physicalAddress() const noexcept { return _storage.read<uint32_t>(12, _endian); }
+		[[nodiscard]] auto fileLength() const noexcept { return _storage.read<uint32_t>(16, _endian); }
+		[[nodiscard]] auto memoryLength() const noexcept { return _storage.read<uint32_t>(20, _endian); }
+		[[nodiscard]] auto flags() const noexcept { return _storage.read<uint32_t>(24, _endian); }
+		[[nodiscard]] auto alignment() const noexcept { return _storage.read<uint32_t>(28, _endian); }
+	};
 } // namespace mangrove::elf::types::elf32
 
 #endif /*FORMATS_ELF32_TYPES_HXX*/

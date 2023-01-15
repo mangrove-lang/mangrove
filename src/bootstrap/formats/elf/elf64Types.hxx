@@ -8,7 +8,7 @@
 
 namespace mangrove::elf::types::elf64
 {
-	struct ELFHeader : ELFIdent
+	struct ELFHeader final : ELFIdent
 	{
 	public:
 		ELFHeader(const Memory &storage) : ELFIdent{storage} { }
@@ -36,6 +36,25 @@ namespace mangrove::elf::types::elf64
 				headerSize() == size();
 		}
 		[[nodiscard]] constexpr static size_t size() noexcept { return ELFIdent::size() + 48; }
+	};
+
+	struct ProgramHeader final
+	{
+	private:
+		Memory _storage;
+		Endian _endian;
+
+	public:
+		ProgramHeader(const Memory &storage, const Endian &endian) : _storage{storage}, _endian{endian} { }
+
+		[[nodiscard]] auto type() const noexcept { return _storage.read<ProgramHeaderType>(0, _endian); }
+		[[nodiscard]] auto flags() const noexcept { return _storage.read<uint32_t>(4, _endian); }
+		[[nodiscard]] auto offset() const noexcept { return _storage.read<uint64_t>(8, _endian); }
+		[[nodiscard]] auto virtualAddress() const noexcept { return _storage.read<uint64_t>(16, _endian); }
+		[[nodiscard]] auto physicalAddress() const noexcept { return _storage.read<uint64_t>(24, _endian); }
+		[[nodiscard]] auto fileLength() const noexcept { return _storage.read<uint64_t>(32, _endian); }
+		[[nodiscard]] auto memoryLength() const noexcept { return _storage.read<uint64_t>(40, _endian); }
+		[[nodiscard]] auto alignment() const noexcept { return _storage.read<uint64_t>(48, _endian); }
 	};
 } // namespace mangrove::elf::types::elf64
 
