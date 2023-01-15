@@ -16,7 +16,7 @@
 
 namespace mangrove::elf::types
 {
-	struct ELFHeader
+	struct ELFHeader final
 	{
 	private:
 		std::variant<elf32::ELFHeader, elf64::ELFHeader> _header;
@@ -41,6 +41,25 @@ namespace mangrove::elf::types
 		[[nodiscard]] uint16_t sectionHeaderSize() const noexcept;
 		[[nodiscard]] uint16_t sectionHeaderCount() const noexcept;
 		[[nodiscard]] uint16_t sectionNamesIndex() const noexcept;
+	};
+
+	struct ProgramHeader final
+	{
+	private:
+		std::variant<elf32::ProgramHeader, elf64::ProgramHeader> _header;
+
+	public:
+		template<typename T> ProgramHeader(T header) noexcept : _header{header} { }
+
+		[[nodiscard]] ProgramHeaderType type() const noexcept;
+		[[nodiscard]] uint32_t flags() const noexcept;
+		[[nodiscard]] uint64_t offset() const noexcept;
+		[[nodiscard]] uint64_t virtualAddress() const noexcept;
+		[[nodiscard]] uint64_t physicalAddress() const noexcept;
+		[[nodiscard]] uint64_t fileLength() const noexcept;
+		[[nodiscard]] uint64_t memoryLength() const noexcept;
+		[[nodiscard]] uint64_t alignment() const noexcept;
+
 	};
 } // namespace mangrove::elf::types
 

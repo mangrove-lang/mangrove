@@ -38,3 +38,20 @@ uint16_t ELFHeader::sectionHeaderCount() const noexcept
 	{ return std::visit([](const auto &header) { return header.sectionHeaderCount(); }, _header); }
 uint16_t ELFHeader::sectionNamesIndex() const noexcept
 	{ return std::visit([](const auto &header) { return header.sectionNamesIndex(); }, _header); }
+
+ProgramHeaderType ProgramHeader::type() const noexcept
+	{ return std::visit([](const auto &header) { return header.type(); }, _header); }
+uint32_t ProgramHeader::flags() const noexcept
+	{ return std::visit([](const auto &header) { return header.flags(); }, _header); }
+uint64_t ProgramHeader::offset() const noexcept
+	{ return std::visit([](const auto &header) -> uint64_t { return header.offset(); }, _header); }
+uint64_t ProgramHeader::virtualAddress() const noexcept
+	{ return std::visit([](const auto &header) -> uint64_t { return header.virtualAddress(); }, _header); }
+uint64_t ProgramHeader::physicalAddress() const noexcept
+	{ return std::visit([](const auto &header) -> uint64_t { return header.physicalAddress(); }, _header); }
+uint64_t ProgramHeader::fileLength() const noexcept
+	{ return std::visit([](const auto &header) -> uint64_t { return header.fileLength(); }, _header); }
+uint64_t ProgramHeader::memoryLength() const noexcept
+	{ return std::visit([](const auto &header) -> uint64_t { return header.memoryLength(); }, _header); }
+uint64_t ProgramHeader::alignment() const noexcept
+	{ return std::visit([](const auto &header) -> uint64_t { return header.alignment(); }, _header); }
