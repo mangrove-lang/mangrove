@@ -10,6 +10,7 @@ namespace mangrove::elf::types::elf32
 {
 	struct ELFHeader final : ELFIdent
 	{
+	public:
 		ELFHeader(const Memory &storage) : ELFIdent{storage} { }
 
 		[[nodiscard]] auto type() const noexcept { return _storage.read<Type>(16, _endian); }

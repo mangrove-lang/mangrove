@@ -25,7 +25,7 @@ namespace mangrove::elf
 			{ return {map.address<uint8_t>(), map.length()}; }
 	} // namespace internal
 
-	struct ELF
+	struct ELF final
 	{
 	private:
 		std::variant<mmap_t, FragmentStorage> _backingStorage;

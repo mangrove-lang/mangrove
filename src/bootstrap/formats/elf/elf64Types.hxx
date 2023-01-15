@@ -35,6 +35,7 @@ namespace mangrove::elf::types::elf64
 				version() == Version::current &&
 				headerSize() == size();
 		}
+
 		[[nodiscard]] constexpr static size_t size() noexcept { return ELFIdent::size() + 48; }
 	};
 
