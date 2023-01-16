@@ -36,7 +36,7 @@ namespace mangrove::elf::types::elf32
 				headerSize() == size();
 		}
 
-		[[nodiscard]] constexpr static size_t size() noexcept { return ELFIdent::size() + 36; }
+		[[nodiscard]] constexpr static size_t size() noexcept { return ELFIdent::size() + 36U; }
 	};
 
 	struct ProgramHeader final
@@ -56,6 +56,8 @@ namespace mangrove::elf::types::elf32
 		[[nodiscard]] auto memoryLength() const noexcept { return _storage.read<uint32_t>(20, _endian); }
 		[[nodiscard]] auto flags() const noexcept { return _storage.read<uint32_t>(24, _endian); }
 		[[nodiscard]] auto alignment() const noexcept { return _storage.read<uint32_t>(28, _endian); }
+
+		[[nodiscard]] constexpr static size_t size() noexcept { return 32U; }
 	};
 } // namespace mangrove::elf::types::elf32
 
