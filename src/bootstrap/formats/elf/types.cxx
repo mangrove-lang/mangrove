@@ -55,3 +55,24 @@ uint64_t ProgramHeader::memoryLength() const noexcept
 	{ return std::visit([](const auto &header) -> uint64_t { return header.memoryLength(); }, _header); }
 uint64_t ProgramHeader::alignment() const noexcept
 	{ return std::visit([](const auto &header) -> uint64_t { return header.alignment(); }, _header); }
+
+uint32_t SectionHeader::nameOffset() const noexcept
+	{ return std::visit([](const auto &header) { return header.nameOffset(); }, _header); }
+SectionHeaderType SectionHeader::type() const noexcept
+	{ return std::visit([](const auto &header) { return header.type(); }, _header); }
+Flags<SectionFlag> SectionHeader::flags() const noexcept
+	{ return std::visit([](const auto &header) { return header.flags(); }, _header); }
+uint64_t SectionHeader::address() const noexcept
+	{ return std::visit([](const auto &header) -> uint64_t { return header.address(); }, _header); }
+uint64_t SectionHeader::fileOffset() const noexcept
+	{ return std::visit([](const auto &header) -> uint64_t { return header.fileOffset(); }, _header); }
+uint64_t SectionHeader::fileLength() const noexcept
+	{ return std::visit([](const auto &header) -> uint64_t { return header.fileLength(); }, _header); }
+uint32_t SectionHeader::link() const noexcept
+	{ return std::visit([](const auto &header) { return header.link(); }, _header); }
+uint32_t SectionHeader::info() const noexcept
+	{ return std::visit([](const auto &header) { return header.info(); }, _header); }
+uint64_t SectionHeader::alignment() const noexcept
+	{ return std::visit([](const auto &header) -> uint64_t { return header.alignment(); }, _header); }
+uint64_t SectionHeader::entityLength() const noexcept
+	{ return std::visit([](const auto &header) -> uint64_t { return header.entityLength(); }, _header); }

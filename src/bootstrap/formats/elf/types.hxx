@@ -16,6 +16,8 @@
 
 namespace mangrove::elf::types
 {
+	using mangrove::core::Flags;
+
 	struct ELFHeader final
 	{
 	private:
@@ -59,6 +61,27 @@ namespace mangrove::elf::types
 		[[nodiscard]] uint64_t fileLength() const noexcept;
 		[[nodiscard]] uint64_t memoryLength() const noexcept;
 		[[nodiscard]] uint64_t alignment() const noexcept;
+
+	};
+
+	struct SectionHeader final
+	{
+	private:
+		std::variant<elf32::SectionHeader, elf64::SectionHeader> _header;
+
+	public:
+		template<typename T> SectionHeader(T header) noexcept : _header{header} { }
+
+		[[nodiscard]] uint32_t nameOffset() const noexcept;
+		[[nodiscard]] SectionHeaderType type() const noexcept;
+		[[nodiscard]] Flags<SectionFlag> flags() const noexcept;
+		[[nodiscard]] uint64_t address() const noexcept;
+		[[nodiscard]] uint64_t fileOffset() const noexcept;
+		[[nodiscard]] uint64_t fileLength() const noexcept;
+		[[nodiscard]] uint32_t link() const noexcept;
+		[[nodiscard]] uint32_t info() const noexcept;
+		[[nodiscard]] uint64_t alignment() const noexcept;
+		[[nodiscard]] uint64_t entityLength() const noexcept;
 
 	};
 } // namespace mangrove::elf::types
