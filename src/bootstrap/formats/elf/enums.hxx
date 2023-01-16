@@ -13,153 +13,131 @@ namespace mangrove::elf::enums
 {
 	enum class Class : uint8_t
 	{
-		elf32Bit = 1,
-		elf64Bit = 2
+		elf32Bit = 1U,
+		elf64Bit = 2U,
 	};
 
 	enum class IdentVersion : uint8_t
 	{
-		current = 1
+		current = 1U,
 	};
 
 	enum class Endian : uint8_t
 	{
-		little = 1,
-		big = 2
+		little = 1U,
+		big = 2U,
 	};
 
 	enum class ABI : uint8_t
 	{
-		systemV = 0x00,
-		hpUX = 0x01,
-		netBSD = 0x02,
-		linux = 0x03,
-		gnuHurd = 0x04,
-		solaris = 0x06,
-		aix = 0x07,
-		irix = 0x08,
-		freeBSD = 0x09,
-		tru64 = 0x0A,
-		novelModesto = 0x0B,
-		openBSD = 0x0C,
-		openVMS = 0x0D,
-		nonStopKernel = 0x0E,
-		aros = 0x0F,
-		fenixOS = 0x10,
-		cloudABI = 0x11,
-		sortix = 0x53,
-		pic = 0x82
+		systemV = 0x00U,
+		hpUX = 0x01U,
+		netBSD = 0x02U,
+		linux = 0x03U,
+		gnuHurd = 0x04U,
+		solaris = 0x06U,
+		aix = 0x07U,
+		irix = 0x08U,
+		freeBSD = 0x09U,
+		tru64 = 0x0aU,
+		novelModesto = 0x0bU,
+		openBSD = 0x0cU,
+		openVMS = 0x0dU,
+		nonStopKernel = 0x0eU,
+		aros = 0x0fU,
+		fenixOS = 0x10U,
+		cloudABI = 0x11U,
+		sortix = 0x53U,
+		pic = 0x82U,
 	};
 
 	enum class Type : uint16_t
 	{
-		unknown = 0,
-		relocatable = 1,
-		executable = 2,
-		shared = 3,
-		core = 4
+		unknown = 0U,
+		relocatable = 1U,
+		executable = 2U,
+		shared = 3U,
+		core = 4U,
 	};
 
 	enum class Machine : uint16_t
 	{
-		nonSpecific = 0x0000,
-		sparc = 0x0002,
-		x86 = 0x0003,
-		mips = 0x0008,
-		powerPC = 0x0014,
-		s390 = 0x0016,
-		arm = 0x0028,
-		superH = 0x002A,
-		ia64 = 0x0032,
-		x86_64 = 0x003E,
-		aarch64 = 0x00B7,
-		pic = 0x00CC,
-		riscV = 0x00F3
+		nonSpecific = 0x0000U,
+		sparc = 0x0002U,
+		x86 = 0x0003U,
+		mips = 0x0008U,
+		powerPC = 0x0014U,
+		s390 = 0x0016U,
+		arm = 0x0028U,
+		superH = 0x002aU,
+		ia64 = 0x0032U,
+		x86_64 = 0x003eU,
+		aarch64 = 0x00b7U,
+		pic = 0x00ccU,
+		riscV = 0x00f3U,
 	};
 
 	enum class Version : uint32_t
 	{
-		current = 1
+		current = 1U,
 	};
 
 	enum class ProgramHeaderType : uint32_t
 	{
-		empty = 0x00000000, // PT_NULL
-		load = 0x00000001, // PT_LOAD
-		dynamic = 0x00000002, // PT_DYNAMIC
-		interp = 0x00000003, // PT_INTERP
-		note = 0x00000004, // PT_NOTE
-		shlib = 0x00000005, // PT_SHLIB
-		phdr = 0x00000006 // PT_PHDR
+		empty = 0x00000000U, // PT_NULL
+		load = 0x00000001U, // PT_LOAD
+		dynamic = 0x00000002U, // PT_DYNAMIC
+		interp = 0x00000003U, // PT_INTERP
+		note = 0x00000004U, // PT_NOTE
+		shlib = 0x00000005U, // PT_SHLIB
+		phdr = 0x00000006U, // PT_PHDR
 #if 0
-		lowOS = 0x60000000, // PT_LOOS
-		highOS = 0x6FFFFFFF, // PT_HIOS
-		lowProc = 0x70000000, // PT_LOPROC
-		highProc = 0x7FFFFFFF // PT_HIPROC
+		lowOS = 0x60000000U, // PT_LOOS
+		highOS = 0x6fffffffU, // PT_HIOS
+		lowProc = 0x70000000U, // PT_LOPROC
+		highProc = 0x7fffffffU, // PT_HIPROC
 #endif
 	};
 
 	enum class SectionHeaderType : uint32_t
 	{
-		empty = 0x00000000, // SHT_NULL
-		program = 0x00000001, // SHT_PROGBITS
-		symbolTable = 0x00000002, // SHT_SYMTAB
-		stringTable = 0x00000003, // SHT_STRTAB
-		relocAddend = 0x00000004, // SHT_RELA
-		symbolHash = 0x00000005, // SHT_HASH
-		dynamic = 0x00000006, // SHT_DYNAMIC
-		note = 0x00000007, // SHT_NOTE
-		bss = 0x00000008, // SHT_NOBITS
-		reloc = 0x00000009, // SHT_REL
-		reserved = 0x0000000A, // SHT_SHLIB
-		dynamicSymbols = 0x0000000B, // SHT_DYNSYM
-		initArray = 0x0000000E, // SHT_INIT_ARRAY
-		finiArray = 0x0000000F, // SHT_FINI_ARRAY
-		preInitArray = 0x00000010, // SHT_PREINIT_ARRAY
-		group = 0x00000011, // SHT_GROUP
-		symbolTableIndex = 0x00000012, // SHT_SYMTAB_SHNDX
-		numberOfTypes = 0x00000013 // SHT_NUM
+		empty = 0U, // SHT_NULL
+		program = 1U, // SHT_PROGBITS
+		symbolTable = 2U, // SHT_SYMTAB
+		stringTable = 3U, // SHT_STRTAB
+		relocAddend = 4U, // SHT_RELA
+		symbolHash = 5U, // SHT_HASH
+		dynamic = 6U, // SHT_DYNAMIC
+		note = 7U, // SHT_NOTE
+		bss = 8U, // SHT_NOBITS
+		reloc = 9U, // SHT_REL
+		reserved = 10U, // SHT_SHLIB
+		dynamicSymbols = 11U, // SHT_DYNSYM
+		initArray = 14U, // SHT_INIT_ARRAY
+		finiArray = 15U, // SHT_FINI_ARRAY
+		preInitArray = 16U, // SHT_PREINIT_ARRAY
+		group = 17U, // SHT_GROUP
+		symbolTableIndex = 18U, // SHT_SYMTAB_SHNDX
+		numberOfTypes = 19U, // SHT_NUM
 	};
 
 	enum class SectionFlag : uint64_t
 	{
-		writeable = 0x00000001, // SHF_WRITE
-		allocate = 0x00000002, // SHF_ALLOC
-		execuable = 0x00000004, // SHF_EXECINSTR
-		merge = 0x00000010, // SHF_MERGE
-		strings = 0x00000020, // SHF_STRINGS
-		infoLink = 0x00000040, // SHF_INFO_LINK
-		linkOrder = 0x00000080, // SHF_LINK_ORDER,
-		osNonConforming = 0x00000100, // SHF_OS_NONCONFORMING
-		group = 0x00000200, // SHF_GROUP
-		tls = 0x00000400, // SHF_TLS
-		osMask = 0x0FF00000, // SHF_MASKOS
-		processorMask = 0xF0000000, // SHF_MASKPROC
-		solOrdered = 0x04000000, // SHF_ORDERED
-		solExclude = 0x08000000 // SHF_EXCLUDE
+		writeable = 0x00000001U, // SHF_WRITE
+		allocate = 0x00000002U, // SHF_ALLOC
+		execuable = 0x00000004U, // SHF_EXECINSTR
+		merge = 0x00000010U, // SHF_MERGE
+		strings = 0x00000020U, // SHF_STRINGS
+		infoLink = 0x00000040U, // SHF_INFO_LINK
+		linkOrder = 0x00000080U, // SHF_LINK_ORDER,
+		osNonConforming = 0x00000100U, // SHF_OS_NONCONFORMING
+		group = 0x00000200U, // SHF_GROUP
+		tls = 0x00000400U, // SHF_TLS
+		osMask = 0x0ff00000U, // SHF_MASKOS
+		processorMask = 0xf0000000U, // SHF_MASKPROC
+		solOrdered = 0x04000000U, // SHF_ORDERED
+		solExclude = 0x08000000U, // SHF_EXCLUDE
 	};
-
-/*
-	struct SectionFlags final
-	{
-	private:
-		uint64_t flags_;
-
-	public:
-		constexpr SectionFlags() noexcept : flags_{0} { }
-		constexpr SectionFlags(const uint64_t flags) noexcept : flags_{flags} { }
-		constexpr SectionFlags(const SectionFlag flag) noexcept : flags_{uint64_t(flag)} { }
-		void operator =(const SectionFlags flags) noexcept { flags_ = flags; }
-		void operator |=(const SectionFlag flag) noexcept { flags_ |= uint64_t(flag); }
-		constexpr SectionFlags operator |(const SectionFlag flag) const noexcept { return flags_ | uint64_t(flag); }
-		constexpr uint64_t operator &(const SectionFlag flag) const noexcept { return flags_ & uint64_t(flag); }
-		constexpr operator uint64_t() const noexcept { return flags_; }
-		constexpr bool has(const SectionFlag flag) noexcept { return *this & flag; }
-	};
-
-	struct types32_t { using offset_t = uint32_t; };
-	struct types64_t { using offset_t = uint64_t; };
-*/
 } // namespace mangrove::elf::enums
 
 #endif /*FORMATS_ELF_ENUMS_HXX*/
