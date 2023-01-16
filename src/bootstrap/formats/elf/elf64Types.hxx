@@ -5,9 +5,12 @@
 #include "io.hxx"
 #include "enums.hxx"
 #include "commonTypes.hxx"
+#include "../../core/flags.hxx"
 
 namespace mangrove::elf::types::elf64
 {
+	using mangrove::core::Flags;
+
 	struct ELFHeader final : ELFIdent
 	{
 	public:
@@ -58,6 +61,29 @@ namespace mangrove::elf::types::elf64
 		[[nodiscard]] auto alignment() const noexcept { return _storage.read<uint64_t>(48, _endian); }
 
 		[[nodiscard]] constexpr static size_t size() noexcept { return 56U; }
+	};
+
+	struct SectionHeader final
+	{
+	private:
+		Memory _storage;
+		Endian _endian;
+
+	public:
+		SectionHeader(const Memory &storage, const Endian &endian) : _storage{storage}, _endian{endian} { }
+
+		[[nodiscard]] auto nameOffset() const noexcept { return _storage.read<uint32_t>(0, _endian); }
+		[[nodiscard]] auto type() const noexcept { return _storage.read<SectionHeaderType>(4, _endian); }
+		[[nodiscard]] Flags<SectionFlag> flags() const noexcept { return {_storage.read<uint64_t>(8, _endian)}; }
+		[[nodiscard]] auto address() const noexcept { return _storage.read<uint64_t>(16, _endian); }
+		[[nodiscard]] auto fileOffset() const noexcept { return _storage.read<uint64_t>(24, _endian); }
+		[[nodiscard]] auto fileLength() const noexcept { return _storage.read<uint64_t>(32, _endian); }
+		[[nodiscard]] auto link() const noexcept { return _storage.read<uint32_t>(40, _endian); }
+		[[nodiscard]] auto info() const noexcept { return _storage.read<uint32_t>(44, _endian); }
+		[[nodiscard]] auto alignment() const noexcept { return _storage.read<uint64_t>(48, _endian); }
+		[[nodiscard]] auto entityLength() const noexcept { return _storage.read<uint64_t>(56, _endian); }
+
+		[[nodiscard]] constexpr static size_t size() noexcept { return 64U; }
 	};
 } // namespace mangrove::elf::types::elf64
 
