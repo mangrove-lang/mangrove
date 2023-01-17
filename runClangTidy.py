@@ -29,7 +29,11 @@ def gatherFiles():
 		for file in fileGlob:
 			yield file
 
-extraArgs = []
+extraArgs = [
+	f'--extra-arg={arg}' for arg in (
+		'-std=c++17',
+	)
+]
 
 futures = []
 returncode = 0

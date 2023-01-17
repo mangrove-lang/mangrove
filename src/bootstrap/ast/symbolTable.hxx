@@ -63,7 +63,7 @@ template<> struct fmt::formatter<mangrove::ast::symbolTable::TypeFlags>
 	using SymbolTypes = mangrove::ast::symbolTable::SymbolTypes;
 	using TypeFlags = mangrove::ast::symbolTable::TypeFlags;
 
-	constexpr auto flagsToValue(const TypeFlags &flags) const noexcept
+	[[nodiscard]] constexpr auto flagsToValue(const TypeFlags &flags) const noexcept
 	{
 		switch (flags.toRaw())
 		{

@@ -200,7 +200,7 @@ namespace mangrove::elf::io
 	public:
 		Memory(span<uint8_t> storage) : _data{storage} { }
 
-		[[nodiscard]] size_t length() const noexcept { return _data.size(); }
+		[[nodiscard]] auto length() const noexcept { return _data.size(); }
 
 		template<typename T> [[nodiscard]] auto read(const size_t offset) const noexcept
 			{ return Reader<T>{_data.subspan(offset)}.read(); }

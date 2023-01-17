@@ -49,14 +49,14 @@ namespace mangrove::core
 			constexpr void clear(const Values ...flags) noexcept { value &= T(~(flagAsBit(flags) | ...)); }
 
 		template<typename... Values, typename = std::enable_if_t<(std::is_same_v<Values, Enum> && ...)>>
-			constexpr bool includes(const Values ...flags) const noexcept
+			[[nodiscard]] constexpr bool includes(const Values ...flags) const noexcept
 		{
 			const T bits{(flagAsBit(flags) | ...)};
 			return value & bits;
 		}
 
 		template<typename... Values, typename = std::enable_if_t<(std::is_same_v<Values, Enum> && ...)>>
-			constexpr BitFlags without(const Values ...flags) const noexcept
+			[[nodiscard]] constexpr BitFlags without(const Values ...flags) const noexcept
 		{
 			const auto bits{(flagAsBit(flags) | ...)};
 			const auto newValue{value & ~bits};
@@ -110,14 +110,14 @@ namespace mangrove::core
 			constexpr void clear(const Values ...flags) noexcept { value &= EnumInt(~(EnumInt(flags) | ...)); }
 
 		template<typename... Values, typename = std::enable_if_t<(std::is_same_v<Values, Enum> && ...)>>
-			constexpr bool includes(const Values ...flags) const noexcept
+			[[nodiscard]] constexpr bool includes(const Values ...flags) const noexcept
 		{
 			const auto bits{(EnumInt(flags) | ...)};
 			return value & bits;
 		}
 
 		template<typename... Values, typename = std::enable_if_t<(std::is_same_v<Values, Enum> && ...)>>
-			constexpr Flags without(const Values ...flags) const noexcept
+			[[nodiscard]] constexpr Flags without(const Values ...flags) const noexcept
 		{
 			const auto bits{(EnumInt(flags) | ...)};
 			const auto newValue{value & ~bits};
