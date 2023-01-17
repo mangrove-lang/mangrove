@@ -48,6 +48,31 @@ namespace mangrove::elf
 			offset += programHeaderSize;
 		}
 
+		const auto sectionHeaderSize{_header.sectionHeaderSize()};
+		offset = _header.shdrOffset();
+		// Now loop through and pull out all the section headers.
+		for ([[maybe_unused]] const auto index : substrate::indexSequence_t{_header.sectionHeaderCount()})
+		{
+			if (elfClass == Class::elf32Bit)
+				_sectionHeaders.emplace_back
+				(
+					elf32::SectionHeader
+					{
+						data.subspan(offset, elf32::SectionHeader::size()),
+						endian
+					}
+				);
+			else
+				_sectionHeaders.emplace_back
+				(
+					elf64::SectionHeader
+					{
+						data.subspan(offset, elf64::SectionHeader::size()),
+						endian
+					}
+				);
+			offset += sectionHeaderSize;
+		}
 	}
 
 	ELF::ELF(const Class elfClass) : _backingStorage{FragmentStorage{}}, _header

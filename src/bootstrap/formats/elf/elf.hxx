@@ -32,6 +32,7 @@ namespace mangrove::elf
 		std::variant<mmap_t, FragmentStorage> _backingStorage;
 		ELFHeader _header;
 		std::vector<ProgramHeader> _programHeaders{};
+		std::vector<SectionHeader> _sectionHeaders{};
 
 		template<typename T> T allocate()
 		{
@@ -50,6 +51,8 @@ namespace mangrove::elf
 		[[nodiscard]] const auto &header() const noexcept { return _header; }
 		[[nodiscard]] auto &programHeaders() noexcept { return _programHeaders; }
 		[[nodiscard]] const auto &programHeaders() const noexcept { return _programHeaders; }
+		[[nodiscard]] auto &sectionHeaders() noexcept { return _sectionHeaders; }
+		[[nodiscard]] const auto &sectionHeaders() const noexcept { return _sectionHeaders; }
 	};
 } // namespace mangrove::elf
 
