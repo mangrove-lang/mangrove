@@ -3,6 +3,7 @@
 #define FORMATS_ELF_HXX
 
 #include <variant>
+#include <vector>
 #include <memory>
 #include <substrate/fd>
 #include <substrate/mmap>
@@ -30,6 +31,7 @@ namespace mangrove::elf
 	private:
 		std::variant<mmap_t, FragmentStorage> _backingStorage;
 		ELFHeader _header;
+		std::vector<ProgramHeader> _programHeaders{};
 
 		template<typename T> T allocate()
 		{
@@ -46,6 +48,8 @@ namespace mangrove::elf
 
 		[[nodiscard]] auto &header() noexcept { return _header; }
 		[[nodiscard]] const auto &header() const noexcept { return _header; }
+		[[nodiscard]] auto &programHeaders() noexcept { return _programHeaders; }
+		[[nodiscard]] const auto &programHeaders() const noexcept { return _programHeaders; }
 	};
 } // namespace mangrove::elf
 

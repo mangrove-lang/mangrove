@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: BSD-3-Clause
+#include <substrate/index_sequence>
 #include "elf.hxx"
 
 namespace mangrove::elf
@@ -15,7 +16,39 @@ namespace mangrove::elf
 				return elf32::ELFHeader{data};
 			return elf64::ELFHeader{data};
 		}()
-	} { }
+	} // This initially allows the vectors for the headers to be default constructed.
+	{
+		const auto data{toSpan(std::get<mmap_t>(_backingStorage))};
+		const auto elfClass{_header.elfClass()};
+		const auto endian{_header.endian()};
+		const auto programHeaderSize{_header.programHeaderSize()};
+
+		size_t offset{_header.phdrOffset()};
+		// Once the ELFHeader has been read and handled, we then loop through pulling out the program headers.
+		for ([[maybe_unused]] const auto index : substrate::indexSequence_t{_header.programHeaderCount()})
+		{
+			if (elfClass == Class::elf32Bit)
+				_programHeaders.emplace_back
+				(
+					elf32::ProgramHeader
+					{
+						data.subspan(offset, elf32::ProgramHeader::size()),
+						endian
+					}
+				);
+			else
+				_programHeaders.emplace_back
+				(
+					elf64::ProgramHeader
+					{
+						data.subspan(offset, elf64::ProgramHeader::size()),
+						endian
+					}
+				);
+			offset += programHeaderSize;
+		}
+
+	}
 
 	ELF::ELF(const Class elfClass) : _backingStorage{FragmentStorage{}}, _header
 	{
