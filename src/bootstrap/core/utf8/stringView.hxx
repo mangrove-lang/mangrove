@@ -4,6 +4,7 @@
 
 #include <cstddef>
 #include <string_view>
+#include <fmt/format.h>
 #include <substrate/index_sequence>
 #include "helpers.hxx"
 #include "iterator.hxx"
@@ -116,5 +117,16 @@ namespace mangrove::core::utf8
 			{ return StringView{std::string_view{value, length}}; }
 	} // namespace literals
 } // namespace mangrove::core::utf8
+
+template<> struct fmt::formatter<mangrove::core::utf8::StringView> : formatter<std::string_view>
+{
+	using StringView = mangrove::core::utf8::StringView;
+
+	template<typename FormatContext> auto format(const StringView &str, FormatContext &ctx) const
+	{
+		const std::string_view data{str.data(), str.byteLength()};
+		return formatter<std::string_view>::format(data, ctx);
+	}
+};
 
 #endif /*CORE_UTF8_STRING_VIEW_HXX*/
