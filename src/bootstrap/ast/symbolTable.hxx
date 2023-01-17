@@ -207,8 +207,8 @@ namespace mangrove::ast::symbolTable
 		[[nodiscard]] auto entryCount() const noexcept { return _table.size(); }
 
 		// This intentionally duplicates `ident` on calling to simplify memory management
-		[[nodiscard]] Symbol *add(String ident) noexcept;
-		[[nodiscard]] bool insert(const Symbol &symbol) noexcept;
+		[[nodiscard]] Symbol *add(String ident);
+		[[nodiscard]] bool insert(const Symbol &symbol);
 
 		[[nodiscard]] Symbol *findLocal(const StringView &ident) const noexcept;
 		[[nodiscard]] Symbol *find(const StringView &ident) const noexcept;

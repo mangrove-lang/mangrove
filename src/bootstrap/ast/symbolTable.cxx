@@ -17,7 +17,7 @@ void SymbolTable::pop(Parser &parser) const noexcept
 		parser.symbolTable(std::move(table));
 }
 
-[[nodiscard]] Symbol *SymbolTable::add(String ident) noexcept
+Symbol *SymbolTable::add(String ident)
 {
 	// Check if the ident is already in the table, if it is this must fail.
 	if (_table.find(ident) != _table.end())
@@ -38,7 +38,7 @@ void SymbolTable::pop(Parser &parser) const noexcept
 	return entry.first->second.get();
 }
 
-bool SymbolTable::insert(const Symbol &symbol) noexcept
+bool SymbolTable::insert(const Symbol &symbol)
 {
 	auto entry{std::make_unique<Symbol>(symbol)};
 	const auto result{_table.emplace(entry->value(), std::move(entry))};
