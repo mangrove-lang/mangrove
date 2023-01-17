@@ -79,4 +79,17 @@ uint64_t SectionHeader::alignment() const noexcept
 uint64_t SectionHeader::entityLength() const noexcept
 	{ return std::visit([](const auto &header) -> uint64_t { return header.entityLength(); }, _header); }
 
+uint32_t ELFSymbol::nameOffset() const noexcept
+	{ return std::visit([](const auto &header) { return header.nameOffset(); }, _header); }
+uint64_t ELFSymbol::value() const noexcept
+	{ return std::visit([](const auto &header) -> uint64_t { return header.value(); }, _header); }
+uint64_t ELFSymbol::symbolLength() const noexcept
+	{ return std::visit([](const auto &header) -> uint64_t { return header.symbolLength(); }, _header); }
+uint8_t ELFSymbol::info() const noexcept
+	{ return std::visit([](const auto &header) { return header.info(); }, _header); }
+uint8_t ELFSymbol::other() const noexcept
+	{ return std::visit([](const auto &header) { return header.other(); }, _header); }
+uint16_t ELFSymbol::sectionIndex() const noexcept
+	{ return std::visit([](const auto &header) { return header.sectionIndex(); }, _header); }
+
 // NOLINTEND(bugprone-exception-escape)

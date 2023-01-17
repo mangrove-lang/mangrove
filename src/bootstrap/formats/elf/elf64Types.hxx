@@ -85,6 +85,25 @@ namespace mangrove::elf::types::elf64
 
 		[[nodiscard]] constexpr static size_t size() noexcept { return 64U; }
 	};
+
+	struct ELFSymbol final
+	{
+	private:
+		Memory _storage;
+		Endian _endian;
+
+	public:
+		ELFSymbol(const Memory &storage, const Endian &endian) : _storage{storage}, _endian{endian} { }
+
+		[[nodiscard]] auto nameOffset() const noexcept { return _storage.read<uint32_t>(0, _endian); }
+		[[nodiscard]] auto info() const noexcept { return _storage.read<uint8_t>(4); }
+		[[nodiscard]] auto other() const noexcept { return _storage.read<uint8_t>(5); }
+		[[nodiscard]] auto sectionIndex() const noexcept { return _storage.read<uint16_t>(6, _endian); }
+		[[nodiscard]] auto value() const noexcept { return _storage.read<uint64_t>(8, _endian); }
+		[[nodiscard]] auto symbolLength() const noexcept { return _storage.read<uint64_t>(16, _endian); }
+
+		[[nodiscard]] constexpr static size_t size() noexcept { return 24U; }
+	};
 } // namespace mangrove::elf::types::elf64
 
 #endif /*FORMATS_ELF64_TYPES_HXX*/

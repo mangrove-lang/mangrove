@@ -61,7 +61,6 @@ namespace mangrove::elf::types
 		[[nodiscard]] uint64_t fileLength() const noexcept;
 		[[nodiscard]] uint64_t memoryLength() const noexcept;
 		[[nodiscard]] uint64_t alignment() const noexcept;
-
 	};
 
 	struct SectionHeader final
@@ -82,7 +81,22 @@ namespace mangrove::elf::types
 		[[nodiscard]] uint32_t info() const noexcept;
 		[[nodiscard]] uint64_t alignment() const noexcept;
 		[[nodiscard]] uint64_t entityLength() const noexcept;
+	};
 
+	struct ELFSymbol final
+	{
+	private:
+		std::variant<elf32::ELFSymbol, elf64::ELFSymbol> _header;
+
+	public:
+		template<typename T> ELFSymbol(T header) noexcept : _header{header} { }
+
+		[[nodiscard]] uint32_t nameOffset() const noexcept;
+		[[nodiscard]] uint64_t value() const noexcept;
+		[[nodiscard]] uint64_t symbolLength() const noexcept;
+		[[nodiscard]] uint8_t info() const noexcept;
+		[[nodiscard]] uint8_t other() const noexcept;
+		[[nodiscard]] uint16_t sectionIndex() const noexcept;
 	};
 } // namespace mangrove::elf::types
 
