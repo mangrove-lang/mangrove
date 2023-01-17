@@ -4,6 +4,8 @@
 using namespace mangrove::elf::types;
 using mangrove::elf::io::Match;
 
+// NOLINTBEGIN(bugprone-exception-escape)
+
 std::array<uint8_t, 4> ELFHeader::magic() const noexcept
 	{ return std::visit([](const auto &header) { return header.magic(); }, _header); }
 Class ELFHeader::elfClass() const noexcept
@@ -76,3 +78,5 @@ uint64_t SectionHeader::alignment() const noexcept
 	{ return std::visit([](const auto &header) -> uint64_t { return header.alignment(); }, _header); }
 uint64_t SectionHeader::entityLength() const noexcept
 	{ return std::visit([](const auto &header) -> uint64_t { return header.entityLength(); }, _header); }
+
+// NOLINTEND(bugprone-exception-escape)
