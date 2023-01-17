@@ -15,8 +15,8 @@ namespace mangrove::core::utf8::helpers
 		return uint8_t(str[index]);
 	}
 
-	constexpr inline bool checkValid(uint8_t c) noexcept
-		{ return (c & 0xc0U) == 0x80U; }
+	constexpr inline bool checkValid(uint8_t chr) noexcept
+		{ return (chr & 0xc0U) == 0x80U; }
 
 	template<typename... values_t> [[nodiscard]] constexpr inline std::enable_if_t<(std::is_same_v<values_t, uint8_t> && ...), bool>
 		isMultiValid(values_t ...values) noexcept

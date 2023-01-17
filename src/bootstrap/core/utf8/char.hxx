@@ -144,7 +144,7 @@ namespace mangrove::core::utf8
 		constexpr Char() noexcept = default;
 		constexpr Char(const Char &chr) noexcept = default;
 		Char(Char &&chr) noexcept : Char{} { swap(chr); }
-		constexpr Char(const char c) noexcept : _codePoint{encode(uint32_t(c))} { }
+		constexpr Char(const char chr) noexcept : _codePoint{encode(uint32_t(chr))} { }
 		constexpr Char(const uint32_t codePoint) noexcept : _codePoint{encode(codePoint)} { }
 		constexpr Char(const std::string_view &value) noexcept : _codePoint{encode(value)} { }
 
@@ -218,7 +218,7 @@ namespace mangrove::core::utf8
 
 	inline namespace literals
 	{
-		constexpr inline Char operator ""_u8c(const char c) noexcept { return {c}; }
+		constexpr inline Char operator ""_u8c(const char chr) noexcept { return {chr}; }
 		constexpr inline Char operator ""_c(const char *const value, const size_t length) noexcept
 			{ return Char{std::string_view{value, length}}; }
 	} // namespace literals

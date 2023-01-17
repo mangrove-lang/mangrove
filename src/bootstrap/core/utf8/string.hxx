@@ -112,7 +112,7 @@ namespace mangrove::core::utf8
 		{
 			if (index >= _length)
 				throw std::out_of_range{"String index is out of range"};
-			std::string_view str{_data};
+			const std::string_view str{_data};
 			size_t offset{};
 			for ([[maybe_unused]] const auto _ : substrate::indexSequence_t{index})
 				offset += Char{str.substr(offset)}.length();
@@ -121,7 +121,7 @@ namespace mangrove::core::utf8
 
 		[[nodiscard]] StringView substr(size_t offset, size_t count = npos) const noexcept
 		{
-			std::string_view str{_data};
+			const std::string_view str{_data};
 			size_t begin{};
 			// If the starting point is less than the number of characters in the string
 			if (offset < _length)
