@@ -41,7 +41,7 @@ namespace mangrove::elf
 		}
 
 	public:
-		ELF(const int32_t fd) : _backingStorage{mmap_t{fd, 0, PROT_READ}}, _header{
+		ELF(fd_t &&file) : _backingStorage{file.map(PROT_READ)}, _header{
 			[this]() -> ELFHeader
 			{
 				auto &map{std::get<mmap_t>(_backingStorage)};
