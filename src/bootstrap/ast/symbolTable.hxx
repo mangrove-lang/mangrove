@@ -124,11 +124,11 @@ namespace mangrove::ast::symbolTable
 
 	public:
 		constexpr SymbolType() noexcept = default;
-		constexpr SymbolType(const SymbolTypes symbolType) : _type{symbolType} { }
-		constexpr SymbolType(const TypeFlags &symbolType) : _type{symbolType} { }
+		constexpr SymbolType(const SymbolTypes symbolType) noexcept : _type{symbolType} { }
+		constexpr SymbolType(const TypeFlags &symbolType) noexcept : _type{symbolType} { }
 
 		// NOLINTNEXTLINE(misc-unconventional-assign-operator)
-		constexpr void operator =(const SymbolTypes symbolType) { _type = symbolType; }
+		constexpr void operator =(const SymbolTypes symbolType) noexcept { _type = symbolType; }
 
 		[[nodiscard]] constexpr SymbolType forValue() const noexcept
 		{
