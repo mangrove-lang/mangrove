@@ -25,8 +25,8 @@ void SymbolTable::pop(Parser &parser) const noexcept
 		console.error("Symbol already defined in current scope"sv);
 		return nullptr;
 	}
-	auto symbol{std::make_unique<Symbol>(std::move(ident))};
-	const auto entry{_table.emplace(symbol->value(), std::move(symbol))};
+	auto symbol{std::make_unique<Symbol>(ident)};
+	const auto entry{_table.emplace(std::move(ident), std::move(symbol))};
 	// Validate the insertion succeeded
 	if (!entry.second)
 	{

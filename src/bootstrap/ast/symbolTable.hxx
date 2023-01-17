@@ -172,18 +172,18 @@ namespace mangrove::ast::symbolTable
 	struct Symbol final
 	{
 	private:
-		String _ident;
+		StringView _ident;
 		SymbolType _type{};
 		// std::optional<SymbolStruct> _struct{};
 
 	public:
-		Symbol(String &&ident) noexcept : _ident{std::move(ident)} { }
-		Symbol(String &&ident, const SymbolType &type) noexcept : _ident{std::move(ident)}, _type{type} { }
+		Symbol(const StringView &ident) noexcept : _ident{ident} { }
+		Symbol(const StringView &ident, SymbolType type) noexcept : _ident{ident}, _type{std::move(type)} { }
 
 		bool operator ==(const Symbol &symbol) const noexcept
 			{ return _ident == symbol._ident && _type == symbol._type; }
 
-		[[nodiscard]] StringView value() const noexcept { return _ident; }
+		[[nodiscard]] const auto &value() const noexcept { return _ident; }
 		void type(const SymbolType &type) noexcept { _type = type; }
 		[[nodiscard]] auto type() const noexcept { return _type; }
 		[[nodiscard]] auto isType() { return _type.includes(SymbolTypes::type); }
@@ -197,7 +197,7 @@ namespace mangrove::ast::symbolTable
 	{
 	private:
 		std::weak_ptr<SymbolTable> _parentTable{};
-		std::map<StringView, std::unique_ptr<Symbol>> _table{};
+		std::map<String, std::unique_ptr<Symbol>> _table{};
 
 	public:
 		SymbolTable(const Parser &parser) noexcept;
