@@ -33,6 +33,7 @@ namespace mangrove::elf
 		ELFHeader _header;
 		std::vector<ProgramHeader> _programHeaders{};
 		std::vector<SectionHeader> _sectionHeaders{};
+		StringTable _sectionNames{};
 
 		template<typename T> T allocate()
 		{
@@ -53,6 +54,8 @@ namespace mangrove::elf
 		[[nodiscard]] const auto &programHeaders() const noexcept { return _programHeaders; }
 		[[nodiscard]] auto &sectionHeaders() noexcept { return _sectionHeaders; }
 		[[nodiscard]] const auto &sectionHeaders() const noexcept { return _sectionHeaders; }
+		[[nodiscard]] auto &sectionNames() noexcept { return _sectionNames; }
+		[[nodiscard]] const auto &sectionNames() const noexcept { return _sectionNames; }
 	};
 } // namespace mangrove::elf
 

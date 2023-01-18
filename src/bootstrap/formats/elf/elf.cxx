@@ -73,6 +73,10 @@ namespace mangrove::elf
 				);
 			offset += sectionHeaderSize;
 		}
+
+		// Extract the section names
+		const auto &sectionNamesHeader{_sectionHeaders[_header.sectionNamesIndex()]};
+		_sectionNames = data.subspan(sectionNamesHeader.fileOffset(), sectionNamesHeader.fileLength());
 	}
 
 	ELF::ELF(const Class elfClass) : _backingStorage{FragmentStorage{}}, _header
