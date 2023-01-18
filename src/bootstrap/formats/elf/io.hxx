@@ -198,9 +198,11 @@ namespace mangrove::elf::io
 		span<uint8_t> _data;
 
 	public:
-		Memory(span<uint8_t> storage) : _data{storage} { }
+		constexpr Memory(span<uint8_t> storage) noexcept : _data{storage} { }
 
-		[[nodiscard]] auto length() const noexcept { return _data.size(); }
+		[[nodiscard]] constexpr const auto &dataSpan() const noexcept { return _data; }
+		[[nodiscard]] constexpr const auto *data() const noexcept { return _data.data(); }
+		[[nodiscard]] constexpr auto length() const noexcept { return _data.size(); }
 
 		template<typename T> [[nodiscard]] auto read(const size_t offset) const noexcept
 			{ return Reader<T>{_data.subspan(offset)}.read(); }
