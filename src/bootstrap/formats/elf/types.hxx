@@ -98,6 +98,24 @@ namespace mangrove::elf::types
 		[[nodiscard]] uint8_t other() const noexcept;
 		[[nodiscard]] uint16_t sectionIndex() const noexcept;
 	};
+
+	struct StringTable final
+	{
+	private:
+		Memory _storage{{}};
+
+	public:
+		constexpr StringTable() noexcept = default;
+		constexpr StringTable(const Memory &storage) noexcept : _storage{storage} { }
+
+		constexpr StringTable &operator =(const Memory &storage) noexcept
+		{
+			_storage = storage;
+			return *this;
+		}
+
+		[[nodiscard]] std::string_view stringFromOffset(size_t offset) const noexcept;
+	};
 } // namespace mangrove::elf::types
 
 #endif /*FORMATS_ELF_TYPES_HXX*/

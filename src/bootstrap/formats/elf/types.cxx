@@ -92,4 +92,23 @@ uint8_t ELFSymbol::other() const noexcept
 uint16_t ELFSymbol::sectionIndex() const noexcept
 	{ return std::visit([](const auto &header) { return header.sectionIndex(); }, _header); }
 
+std::string_view StringTable::stringFromOffset(const size_t offset) const noexcept
+{
+	// Start by getting a subspan at the correct offset
+	const auto data{_storage.dataSpan().subspan(offset)};
+	// Now, we need to figure out how long the string is.. we could use strlen(),
+	// but that would introduce a risk of memory unsafety here, so we instead iterate
+	// till we find '\0' or fall off the end of the span, which should mean we
+	// can't accidentally do a memory safety bad here.
+	size_t length{};
+	for (const auto &value : data)
+	{
+		++length;
+		if (value == 0x00U)
+			break;
+	}
+	// Finally, put the whole thing together as a string view
+	return {reinterpret_cast<const char *>(data.data()), length};
+}
+
 // NOLINTEND(bugprone-exception-escape)
