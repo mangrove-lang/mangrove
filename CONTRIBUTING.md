@@ -35,6 +35,11 @@ Except for creating the build environment, the rest of these steps expect to be 
 
 ## Submitting a pull request
 
+**Note**: All commits must be signed/verified. This is an additional security measure to verify
+the source of every commit.
+
+You can read more about commit signature verification from [Github Docs](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification).
+
 ### If contributing for the first time
 
 1. [Fork](https://github.com/mangrove-lang/mangrove) and clone the repository

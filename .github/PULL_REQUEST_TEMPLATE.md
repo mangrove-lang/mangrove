@@ -18,6 +18,7 @@ Information embedded in the description part of the commits doesn't count.
 * [ ] It builds and lints cleanly (`ninja` in the bootstrap build directory is cleanly successful, clang-tidy does not warn about new issues)
 * [ ] I've tested it to the best of my ability
 * [ ] My commit messages provide a useful short description of what the commits do
+* [ ] I've made sure that my commits are [signed/verified](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification)
 
 ## Closing issues
 
