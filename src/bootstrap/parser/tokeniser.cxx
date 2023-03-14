@@ -171,7 +171,7 @@ void Tokeniser::readExtendedToken() noexcept
 		else if (token == u8"or"_sv)
 			_token.set(TokenType::logicOp, '|'_u8c);
 		else if (token == u8"not"_sv)
-			_token.set(TokenType::logicOp, '!'_u8c);
+			_token.set(TokenType::invert, '!'_u8c);
 		else if (isLocationSpec(token))
 			_token.set(TokenType::locationSpec);
 		else if (isStorageSpec(token))
