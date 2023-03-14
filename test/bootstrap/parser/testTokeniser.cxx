@@ -291,7 +291,7 @@ private:
 		readValue(tokeniser, TokenType::logicOp, u8"|"_sv);
 		readNewline(tokeniser);
 		console.info("Checking tokenisation of 'not'"sv);
-		readValue(tokeniser, TokenType::logicOp, u8"!"_sv);
+		readValue(tokeniser, TokenType::invert, u8"!"_sv);
 		readNewline(tokeniser);
 		console.info("Checking tokenisation of 'eeprom'"sv);
 		readValue(tokeniser, TokenType::locationSpec, u8"eeprom"_sv);
