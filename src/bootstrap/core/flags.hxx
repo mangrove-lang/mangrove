@@ -2,6 +2,7 @@
 #ifndef CORE_FLAGS_HXX
 #define CORE_FLAGS_HXX
 
+#include <cstdint>
 #include <type_traits>
 
 namespace mangrove::core
@@ -14,7 +15,7 @@ namespace mangrove::core
 		T value{};
 
 		using EnumInt = std::underlying_type_t<Enum>;
-		constexpr static T flagAsBit(const Enum flag) noexcept { return T(1U << EnumInt(flag)); }
+		constexpr static T flagAsBit(const Enum flag) noexcept { return T(UINT64_C(1) << EnumInt(flag)); }
 
 		// Internal value constructor to make .without() work
 		constexpr BitFlags(const T &flags) noexcept : value{flags} { }
