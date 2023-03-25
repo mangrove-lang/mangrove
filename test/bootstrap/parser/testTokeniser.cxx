@@ -397,7 +397,7 @@ private:
 		console.info("Checking tokenisation of '...'"sv);
 		readEmptyValue(tokeniser, TokenType::ellipsis);
 		readNewline(tokeniser);
-		console.info("Checking tokenisation of '...'"sv);
+		console.info("Checking tokenisation of '....'"sv);
 		readEmptyValue(tokeniser, TokenType::ellipsis);
 		readEmptyValue(tokeniser, TokenType::dot);
 		readNewline(tokeniser);
