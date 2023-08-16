@@ -58,3 +58,4 @@ endif
 
 subdir('parser')
 subdir('core/utf8')
+subdir('formats/elf')
