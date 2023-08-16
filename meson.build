@@ -11,7 +11,7 @@ project(
 		'b_lto=true'
 	],
 	version: '0.0.1',
-	meson_version: '>= 0.58',
+	meson_version: '>= 0.63',
 	subproject_dir: 'deps'
 )
 

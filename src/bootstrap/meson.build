@@ -83,6 +83,7 @@ mangroveSrc = [
 	'mangrove.cxx'
 ]
 
+subdir('core')
 subdir('parser')
 subdir('ast')
 subdir('formats')

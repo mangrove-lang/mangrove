@@ -1,0 +1,26 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// SPDX-FileCopyrightText: 2023 The Mangrove Language
+// SPDX-FileContributor: Written by Rachel Mant <git@dragonmux.network>
+@AUTOGEN_HEADER@
+#ifndef CORE_VERSION_HXX
+#define CORE_VERSION_HXX
+
+#include <string_view>
+
+namespace mangrove::core::versioning
+{
+	using namespace std::literals::string_view_literals;
+
+	constexpr static auto version{"@VERSION@"sv};
+	constexpr static auto compiler{"@COMPILER@"sv};
+	constexpr static auto compilerVersion{"@COMPILER_VERSION@"sv};
+	constexpr static auto system{"@TARGET_SYSTEM@"sv};
+	constexpr static auto arch{"@TARGET_ARCH@"sv};
+} // namespace mangrove::core::versioning
+
+namespace mangrove::core
+{
+	constexpr static auto versionString{"@VERSION@ (@COMPILER@ @COMPILER_VERSION@ @TARGET_SYSTEM@-@TARGET_ARCH@)"};
+} // namespace mangrove::core
+
+#endif /*CORE_VERSION_HXX*/
