@@ -2,6 +2,7 @@
 #include <filesystem>
 #include <substrate/fd>
 #include <substrate/console>
+#include <substrate/indexed_iterator>
 #include <substrate/command_line/options>
 #include <substrate/command_line/arguments>
 #include <fmt/format.h>
@@ -164,6 +165,58 @@ template<> struct fmt::formatter<ELFHeader>
 	}
 };
 
+template<> struct fmt::formatter<ProgramHeaderType> : formatter<std::string_view>
+{
+	template<typename FormatContext> auto format(const ProgramHeaderType &type, FormatContext &ctx) const
+	{
+		switch (type)
+		{
+			case ProgramHeaderType::empty:
+				return formatter<std::string_view>::format("empty"sv, ctx);
+			case ProgramHeaderType::load:
+				return formatter<std::string_view>::format("load"sv, ctx);
+			case ProgramHeaderType::dynamic:
+				return formatter<std::string_view>::format("dynamic"sv, ctx);
+			case ProgramHeaderType::interp:
+				return formatter<std::string_view>::format("interpreter"sv, ctx);
+			case ProgramHeaderType::note:
+				return formatter<std::string_view>::format("note"sv, ctx);
+			case ProgramHeaderType::shlib:
+				return formatter<std::string_view>::format("shared library"sv, ctx);
+			case ProgramHeaderType::phdr:
+				return formatter<std::string_view>::format("program header table"sv, ctx);
+			default:
+				return fmt::format_to(ctx.out(), "<invalid program header type ({:x})>"sv, uint32_t(type));
+		}
+	}
+};
+
+template<> struct fmt::formatter<ProgramHeader>
+{
+	constexpr auto parse(format_parse_context &ctx)
+	{
+		if (ctx.begin() != ctx.end())
+			throw format_error{"invalid format"};
+		return ctx.end();
+	}
+
+	template<typename FormatContext> auto format(const ProgramHeader &header, FormatContext &ctx) const
+	{
+		ctx.advance_to(fmt::format_to(ctx.out(), "Type '{}'\n"sv, header.type()));
+		//ctx.advance_to(fmt::format_to(ctx.out(), "-> Chunk is {}\n"sv, header.flags()));
+		ctx.advance_to(fmt::format_to(ctx.out(), "-> Chunk data at offset {} (+{:x})\n"sv,
+			header.offset(), header.offset()));
+		ctx.advance_to(fmt::format_to(ctx.out(), "-> Loaded at +0x{:x} from loading base address\n"sv,
+			header.physicalAddress()));
+		ctx.advance_to(fmt::format_to(ctx.out(), "-> Mapped to +0x{:x} from virtual base address\n"sv,
+			header.virtualAddress()));
+		ctx.advance_to(fmt::format_to(ctx.out(), "-> Chunk is {} bytes long in the file\n"sv, header.fileLength()));
+		ctx.advance_to(fmt::format_to(ctx.out(), "-> Chunk is {} bytes long when loaded\n"sv, header.memoryLength()));
+		ctx.advance_to(fmt::format_to(ctx.out(), "-> Aligned to {} bytes\n"sv, header.alignment()));
+		return ctx.out();
+	}
+};
+
 int main(int argCount, char **argList)
 {
 	console = {stdout, stderr};
@@ -205,5 +258,8 @@ int main(int argCount, char **argList)
 
 	console.info("Read ELF file '"sv, fileName.u8string(), "'"sv);
 	fmt::print("{}"sv, elfFile.header());
+	console.info("Program headers:"sv);
+	for (const auto &[index, header] : substrate::indexedIterator_t{elfFile.programHeaders()})
+		fmt::print("{}: {}"sv, index, header);
 	return 0;
 }
