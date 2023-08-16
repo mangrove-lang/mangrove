@@ -217,6 +217,71 @@ template<> struct fmt::formatter<ProgramHeader>
 	}
 };
 
+template<> struct fmt::formatter<SectionHeaderType> : formatter<std::string_view>
+{
+	template<typename FormatContext> auto format(const SectionHeaderType &type, FormatContext &ctx) const
+	{
+		switch (type)
+		{
+			case SectionHeaderType::empty:
+				return formatter<std::string_view>::format("empty"sv, ctx);
+			case SectionHeaderType::program:
+				return formatter<std::string_view>::format("program"sv, ctx);
+			case SectionHeaderType::symbolTable:
+				return formatter<std::string_view>::format("symbol table"sv, ctx);
+			case SectionHeaderType::stringTable:
+				return formatter<std::string_view>::format("string table"sv, ctx);
+			case SectionHeaderType::relocAddend:
+				return formatter<std::string_view>::format("relocations with addends"sv, ctx);
+			case SectionHeaderType::symbolHash:
+				return formatter<std::string_view>::format("symbol hash"sv, ctx);
+			case SectionHeaderType::dynamic:
+				return formatter<std::string_view>::format("dynamic"sv, ctx);
+			case SectionHeaderType::note:
+				return formatter<std::string_view>::format("note"sv, ctx);
+			case SectionHeaderType::bss:
+				return formatter<std::string_view>::format("bss"sv, ctx);
+			case SectionHeaderType::reloc:
+				return formatter<std::string_view>::format("relocations"sv, ctx);
+			case SectionHeaderType::dynamicSymbols:
+				return formatter<std::string_view>::format("dynamic symbols"sv, ctx);
+			case SectionHeaderType::initArray:
+				return formatter<std::string_view>::format("initialisation array"sv, ctx);
+			case SectionHeaderType::finiArray:
+				return formatter<std::string_view>::format("finalisation array"sv, ctx);
+			case SectionHeaderType::preInitArray:
+				return formatter<std::string_view>::format("pre-initialisation array"sv, ctx);
+			case SectionHeaderType::group:
+				return formatter<std::string_view>::format("group"sv, ctx);
+			case SectionHeaderType::symbolTableIndex:
+				return formatter<std::string_view>::format("symbol table index"sv, ctx);
+			default:
+				return fmt::format_to(ctx.out(), "<invalid section header type ({:x})>"sv, uint32_t(type));
+		}
+	}
+};
+
+template<> struct fmt::formatter<SectionHeader>
+{
+	constexpr auto parse(format_parse_context &ctx)
+	{
+		if (ctx.begin() != ctx.end())
+			throw format_error{"invalid format"};
+		return ctx.end();
+	}
+
+	template<typename FormatContext> auto format(const SectionHeader &header, FormatContext &ctx) const
+	{
+		ctx.advance_to(fmt::format_to(ctx.out(), "-> Type '{}'\n"sv, header.type()));
+		//ctx.advance_to(fmt::format_to(ctx.out(), "-> Chunk is {}\n"sv, header.flags()));
+		ctx.advance_to(fmt::format_to(ctx.out(), "-> Loaded at +0x{:x} from loading base address\n"sv, header.address()));
+		ctx.advance_to(fmt::format_to(ctx.out(), "-> Section data at offset {} (+{:x})\n"sv,
+			header.fileOffset(), header.fileOffset()));
+		ctx.advance_to(fmt::format_to(ctx.out(), "-> Section is {} bytes long\n"sv, header.fileLength()));
+		return ctx.out();
+	}
+};
+
 int main(int argCount, char **argList)
 {
 	console = {stdout, stderr};
@@ -261,5 +326,11 @@ int main(int argCount, char **argList)
 	console.info("Program headers:"sv);
 	for (const auto &[index, header] : substrate::indexedIterator_t{elfFile.programHeaders()})
 		fmt::print("{}: {}"sv, index, header);
+	console.info("Section headers:"sv);
+	for (const auto &[index, header] : substrate::indexedIterator_t{elfFile.sectionHeaders()})
+	{
+		fmt::print("{}: {}\n"sv, index, elfFile.sectionNames().stringFromOffset(header.nameOffset()));
+		fmt::print("{}"sv, header);
+	}
 	return 0;
 }
