@@ -108,6 +108,7 @@ std::string_view StringTable::stringFromOffset(const size_t offset) const noexce
 			break;
 	}
 	// Finally, put the whole thing together as a string view
+	// NOTLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
 	return {reinterpret_cast<const char *>(data.data()), length};
 }
 
