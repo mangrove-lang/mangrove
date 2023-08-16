@@ -23,7 +23,7 @@ private:
 	Tokeniser tokeniserFor(const std::string_view &file)
 	{
 		const auto fileName{casesPath / file};
-		return {fd_t{fileName.c_str(), O_RDONLY | O_NOCTTY}};
+		return {fd_t{fileName, O_RDONLY | O_NOCTTY}};
 	}
 
 	void readInvalid(Tokeniser &tokeniser)
