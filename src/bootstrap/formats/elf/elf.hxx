@@ -61,6 +61,8 @@ namespace mangrove::elf
 
 		[[nodiscard]] span<uint8_t> dataFor(const ProgramHeader &header) noexcept;
 		[[nodiscard]] span<const uint8_t> dataFor(const ProgramHeader &header) const noexcept;
+		[[nodiscard]] span<uint8_t> dataFor(const SectionHeader &header) noexcept;
+		[[nodiscard]] span<const uint8_t> dataFor(const SectionHeader &header) const noexcept;
 	};
 } // namespace mangrove::elf
 
