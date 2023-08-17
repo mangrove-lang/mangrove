@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 readELFSrcs = [
 	'../../../../src/bootstrap/formats/elf/elf.cxx', '../../../../src/bootstrap/formats/elf/types.cxx',
-	'readELF.cxx',
+	'readELF.cxx', versionHeader
 ]
 
 executable(

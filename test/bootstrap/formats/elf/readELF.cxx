@@ -7,6 +7,7 @@
 #include <substrate/command_line/arguments>
 #include <fmt/format.h>
 #include <formats/elf/elf.hxx>
+#include <core/version.hxx>
 
 using namespace std::literals::string_view_literals;
 using substrate::fd_t;
@@ -45,6 +46,8 @@ void displayHelp() noexcept
 	console.writeln("This utility is licensed under BSD-3-Clause"sv);
 	console.writeln("Please report bugs to https://github.com/mangrove-lang/mangrove/issues"sv);
 }
+
+void displayVersion() noexcept { console.info("readELF "sv, mangrove::core::versionString); }
 
 template<> struct fmt::formatter<Class>
 {
@@ -301,6 +304,11 @@ int main(int argCount, char **argList)
 	{
 		console.error("Can only specify one of --help or --version, not both"sv);
 		return 1;;
+	}
+	if (version)
+	{
+		displayVersion();
+		return 0;
 	}
 	if (help || args.count() == 0U)
 	{
