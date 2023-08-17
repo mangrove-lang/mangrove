@@ -24,6 +24,8 @@ namespace mangrove::elf
 
 		[[nodiscard]] static inline span<uint8_t> toSpan(mmap_t &map) noexcept
 			{ return {map.address<uint8_t>(), map.length()}; }
+		[[nodiscard]] static inline span<const uint8_t> toSpan(const mmap_t &map) noexcept
+			{ return {map.address<uint8_t>(), map.length()}; }
 	} // namespace internal
 
 	struct ELF final
