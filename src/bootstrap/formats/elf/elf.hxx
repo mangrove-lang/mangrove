@@ -58,6 +58,9 @@ namespace mangrove::elf
 		[[nodiscard]] const auto &sectionHeaders() const noexcept { return _sectionHeaders; }
 		[[nodiscard]] auto &sectionNames() noexcept { return _sectionNames; }
 		[[nodiscard]] const auto &sectionNames() const noexcept { return _sectionNames; }
+
+		[[nodiscard]] span<uint8_t> dataFor(const ProgramHeader &header) noexcept;
+		[[nodiscard]] span<const uint8_t> dataFor(const ProgramHeader &header) const noexcept;
 	};
 } // namespace mangrove::elf
 

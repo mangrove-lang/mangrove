@@ -2,6 +2,8 @@
 #include <substrate/index_sequence>
 #include "elf.hxx"
 
+using mangrove::elf::io::Match;
+
 namespace mangrove::elf
 {
 	ELF::ELF(fd_t &&file) : _backingStorage{file.map(PROT_READ)}, _header
@@ -88,4 +90,38 @@ namespace mangrove::elf
 			return allocate<elf64::ELFHeader>();
 		}(elfClass)
 	} { }
+
+	[[nodiscard]] span<uint8_t> ELF::dataFor(const ProgramHeader &header) noexcept try
+	{
+		return std::visit(Match
+		{
+			[&](mmap_t &storage)
+			{
+				const auto &data{toSpan(storage)};
+				return data.subspan(header.offset(), header.fileLength());
+			},
+			[&](const FragmentStorage &) -> span<uint8_t> { return {}; },
+		}, _backingStorage);
+	}
+	catch (const std::out_of_range &)
+		{ return {}; }
+	catch (const std::bad_variant_access &)
+		{ return {}; }
+
+	[[nodiscard]] span<const uint8_t> ELF::dataFor(const ProgramHeader &header) const noexcept try
+	{
+		return std::visit(Match
+		{
+			[&](const mmap_t &storage)
+			{
+				const auto &data{toSpan(storage)};
+				return data.subspan(header.offset(), header.fileLength());
+			},
+			[&](const FragmentStorage &) -> span<const uint8_t> { return {}; },
+		}, _backingStorage);
+	}
+	catch (const std::out_of_range &)
+		{ return {}; }
+	catch (const std::bad_variant_access &)
+		{ return {}; }
 } // namespace mangrove::elf
