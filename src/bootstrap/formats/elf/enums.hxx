@@ -138,6 +138,52 @@ namespace mangrove::elf::enums
 		solOrdered = 0x04000000U, // SHF_ORDERED
 		solExclude = 0x08000000U, // SHF_EXCLUDE
 	};
+
+	enum class SymbolBinding : uint8_t
+	{
+		local = 0U, // STB_LOCAL
+		global = 1U, // STB_GLOBAL
+		weak = 2U, // STB_WEAK
+#if 0
+		lowOS = 10U, // STB_LOOS
+		highOS = 12U, // STB_HIOS
+		lowProc = 13U, // STB_LOPROC
+		highProc = 15U, // STB_HIPROC
+#endif
+	};
+
+	enum class SymbolType : uint8_t
+	{
+		none = 0U, // STT_NOTYPE
+		object = 1U, // STT_OBJECT
+		function = 2U, // STT_FUNC
+		section = 3U, // STT_SECTION
+		file = 4U, // STT_FILE
+		common = 5U, // STT_COMMON
+		threadLocal = 6U, // STT_TLS
+#if 0
+		lowOS = 10U, // STT_LOOS
+		highOS = 12U, // STT_HIOS
+		lowProc = 13U, // STT_LOPROC
+		highProc = 15U, // STT_HIPROC
+#endif
+	};
+
+	enum class SymbolVisibility : uint8_t
+	{
+		defaultVis = 0U, // STV_DEFAULT
+		internal = 1U, // STV_INTERNAL
+		hidden = 2U, // STV_HIDDEN
+		protectedVis = 3U, // STV_PROTECTED
+	};
+
+	enum class SymbolInfoFlag : uint8_t
+	{
+		directBound = 0x01U,
+		passthrough = 0x02U,
+		copyReloc = 0x04U,
+		lazyLoaded = 0x08U,
+	};
 } // namespace mangrove::elf::enums
 
 #endif /*FORMATS_ELF_ENUMS_HXX*/
