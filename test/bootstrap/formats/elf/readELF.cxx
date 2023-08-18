@@ -39,6 +39,15 @@ constexpr static auto headersOptions
 	)
 };
 
+constexpr static auto symbolsOptions
+{
+	options
+	(
+		option_t{optionFlagPair_t{"-h"sv, "--help"sv}, "Display this help message and exit"sv},
+		elfFileOption
+	)
+};
+
 constexpr static auto actions
 {
 	optionAlternations
@@ -47,6 +56,11 @@ constexpr static auto actions
 			"headers"sv,
 			"Lists the headers from a binary (by default, all headers)"sv,
 			headersOptions,
+		},
+		{
+			"symbols"sv,
+			"Lists the symbols defined by a binary"sv,
+			symbolsOptions,
 		},
 	})
 };
@@ -90,6 +104,17 @@ void displayHeadersHelp() noexcept
 	console.writeln("\treadelf headers [options] elfFile"sv);
 	console.writeln();
 	headersOptions.displayHelp();
+	displayFooter();
+}
+
+void displaySymbolsHelp() noexcept
+{
+	console.info("readELF symbols - Lists the symbols defined by an ELF binary"sv);
+	console.writeln();
+	console.writeln("Usage:"sv);
+	console.writeln("\treadelf symbols [options] elfFile"sv);
+	console.writeln();
+	symbolsOptions.displayHelp();
 	displayFooter();
 }
 
@@ -384,6 +409,17 @@ bool listHeaders(const arguments_t &headersArguments)
 	return true;
 }
 
+bool listSymbols(const arguments_t &symbolsArguments)
+{
+	if (symbolsArguments["help"sv])
+	{
+		displaySymbolsHelp();
+		return true;
+	}
+
+	return false;
+}
+
 int main(int argCount, char **argList)
 {
 	console = {stdout, stderr};
@@ -430,6 +466,8 @@ int main(int argCount, char **argList)
 		{
 			if (action.value() == "headers"sv)
 				return listHeaders(action.arguments());
+			if (action.value() == "symbols"sv)
+				return listSymbols(action.arguments());
 			return false;
 		}()
 	 };
