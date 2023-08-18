@@ -80,19 +80,19 @@ uint64_t SectionHeader::entityLength() const noexcept
 	{ return std::visit([](const auto &header) -> uint64_t { return header.entityLength(); }, _header); }
 
 uint32_t ELFSymbol::nameOffset() const noexcept
-	{ return std::visit([](const auto &header) { return header.nameOffset(); }, _header); }
+	{ return std::visit([](const auto &header) { return header.nameOffset(); }, _symbol); }
 uint64_t ELFSymbol::value() const noexcept
-	{ return std::visit([](const auto &header) -> uint64_t { return header.value(); }, _header); }
+	{ return std::visit([](const auto &header) -> uint64_t { return header.value(); }, _symbol); }
 uint64_t ELFSymbol::symbolLength() const noexcept
-	{ return std::visit([](const auto &header) -> uint64_t { return header.symbolLength(); }, _header); }
+	{ return std::visit([](const auto &header) -> uint64_t { return header.symbolLength(); }, _symbol); }
 uint8_t ELFSymbol::info() const noexcept
-	{ return std::visit([](const auto &header) { return header.info(); }, _header); }
+	{ return std::visit([](const auto &header) { return header.info(); }, _symbol); }
 uint8_t ELFSymbol::other() const noexcept
-	{ return std::visit([](const auto &header) { return header.other(); }, _header); }
+	{ return std::visit([](const auto &header) { return header.other(); }, _symbol); }
 uint16_t ELFSymbol::sectionIndex() const noexcept
-	{ return std::visit([](const auto &header) { return header.sectionIndex(); }, _header); }
+	{ return std::visit([](const auto &header) { return header.sectionIndex(); }, _symbol); }
 size_t ELFSymbol::size() const noexcept
-	{ return std::visit([](const auto &header) { return header.size(); }, _header); }
+	{ return std::visit([](const auto &header) { return header.size(); }, _symbol); }
 
 SymbolBinding ELFSymbol::binding() const noexcept
 {

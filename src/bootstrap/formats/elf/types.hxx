@@ -86,13 +86,13 @@ namespace mangrove::elf::types
 	struct ELFSymbol final
 	{
 	private:
-		std::variant<elf32::ELFSymbol, elf64::ELFSymbol> _header;
+		std::variant<elf32::ELFSymbol, elf64::ELFSymbol> _symbol;
 
 		[[nodiscard]] uint8_t info() const noexcept;
 		[[nodiscard]] uint8_t other() const noexcept;
 
 	public:
-		template<typename T> ELFSymbol(T header) noexcept : _header{header} { }
+		template<typename T> ELFSymbol(T symbol) noexcept : _symbol{symbol} { }
 
 		[[nodiscard]] uint32_t nameOffset() const noexcept;
 		[[nodiscard]] uint64_t value() const noexcept;
