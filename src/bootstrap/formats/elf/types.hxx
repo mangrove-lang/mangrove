@@ -88,14 +88,18 @@ namespace mangrove::elf::types
 	private:
 		std::variant<elf32::ELFSymbol, elf64::ELFSymbol> _header;
 
+		[[nodiscard]] uint8_t info() const noexcept;
+		[[nodiscard]] uint8_t other() const noexcept;
+
 	public:
 		template<typename T> ELFSymbol(T header) noexcept : _header{header} { }
 
 		[[nodiscard]] uint32_t nameOffset() const noexcept;
 		[[nodiscard]] uint64_t value() const noexcept;
 		[[nodiscard]] uint64_t symbolLength() const noexcept;
-		[[nodiscard]] uint8_t info() const noexcept;
-		[[nodiscard]] uint8_t other() const noexcept;
+		[[nodiscard]] SymbolBinding binding() const noexcept;
+		[[nodiscard]] SymbolType type() const noexcept;
+		[[nodiscard]] SymbolVisibility visibility() const noexcept;
 		[[nodiscard]] uint16_t sectionIndex() const noexcept;
 	};
 

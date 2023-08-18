@@ -92,6 +92,24 @@ uint8_t ELFSymbol::other() const noexcept
 uint16_t ELFSymbol::sectionIndex() const noexcept
 	{ return std::visit([](const auto &header) { return header.sectionIndex(); }, _header); }
 
+SymbolBinding ELFSymbol::binding() const noexcept
+{
+	const auto value{info()};
+	return static_cast<SymbolBinding>(value >> 4U);
+}
+
+SymbolType ELFSymbol::type() const noexcept
+{
+	const auto value{info()};
+	return static_cast<SymbolType>(value & 0x0fU);
+}
+
+SymbolVisibility ELFSymbol::visibility() const noexcept
+{
+	const auto value{other()};
+	return static_cast<SymbolVisibility>(value & 0x03U);
+}
+
 std::string_view StringTable::stringFromOffset(const size_t offset) const noexcept
 {
 	// Start by getting a subspan at the correct offset
