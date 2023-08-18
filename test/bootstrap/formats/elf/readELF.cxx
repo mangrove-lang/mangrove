@@ -17,21 +17,58 @@ using namespace mangrove::elf::types;
 using namespace mangrove::elf::enums;
 using namespace substrate::commandLine;
 
+constexpr static auto elfFileOption
+{
+	option_t
+	{
+		optionValue_t{"elfFile"sv},
+		"Read from the given ELF file (including path relative to your working directory)"sv
+	}.takesParameter(optionValueType_t::path)
+};
+
+constexpr static auto headersOptions
+{
+	options
+	(
+		option_t{optionFlagPair_t{"-h"sv, "--help"sv}, "Display this help message and exit"sv},
+		option_t{optionFlagPair_t{"-a"sv, "--all"sv}, "List all headers in the binary"sv},
+		option_t{optionFlagPair_t{"-f"sv, "--file"sv}, "List the file main header"sv},
+		option_t{optionFlagPair_t{"-p"sv, "--program"sv}, "Lists the program headers"sv},
+		option_t{optionFlagPair_t{"-s"sv, "--section"sv}, "Lists the section headers"sv},
+		elfFileOption
+	)
+};
+
+constexpr static auto actions
+{
+	optionAlternations
+	({
+		{
+			"headers"sv,
+			"Lists the headers from a binary (by default, all headers)"sv,
+			headersOptions,
+		},
+	})
+};
+
 constexpr static auto programOptions
 {
 	options
 	(
 		option_t{optionFlagPair_t{"-h"sv, "--help"sv}, "Display this help message and exit"sv},
 		option_t{optionFlagPair_t{"-v"sv, "--version"sv}, "Display the program version information and exit"sv},
-		option_t
-		{
-			optionValue_t{"elfFile"sv},
-			"Read from the given ELF file (including path relative to your working directory)"sv
-		}.takesParameter(optionValueType_t::path)
+		optionSet_t{"action", actions}
 	)
 };
 
 arguments_t args{};
+
+void displayFooter() noexcept
+{
+	console.writeln();
+	console.writeln("This utility is licensed under BSD-3-Clause"sv);
+	console.writeln("Please report bugs to https://github.com/mangrove-lang/mangrove/issues"sv);
+}
 
 void displayHelp() noexcept
 {
@@ -39,12 +76,21 @@ void displayHelp() noexcept
 	console.info("    and displaying information about their contents"sv);
 	console.writeln();
 	console.writeln("Usage:"sv);
-	console.writeln("\treadELF [options] <elfFile>"sv);
+	console.writeln("\treadELF [options] {action}"sv);
 	console.writeln();
 	programOptions.displayHelp();
+	displayFooter();
+}
+
+void displayHeadersHelp() noexcept
+{
+	console.info("readELF headers - Lists the headers from an ELF binary (by default, all headers)"sv);
 	console.writeln();
-	console.writeln("This utility is licensed under BSD-3-Clause"sv);
-	console.writeln("Please report bugs to https://github.com/mangrove-lang/mangrove/issues"sv);
+	console.writeln("Usage:"sv);
+	console.writeln("\treadelf headers [options] elfFile"sv);
+	console.writeln();
+	headersOptions.displayHelp();
+	displayFooter();
 }
 
 void displayVersion() noexcept { console.info("readELF "sv, mangrove::core::versionString); }
@@ -285,6 +331,59 @@ template<> struct fmt::formatter<SectionHeader>
 	}
 };
 
+std::optional<ELF> openFile(const arguments_t &args) noexcept
+{
+	const auto *const fileNameArg{args["elfFile"sv]};
+	if (!fileNameArg)
+	{
+		console.error("You must specify the name of the file to read"sv);
+		return std::nullopt;
+	}
+	const auto fileName{std::any_cast<std::filesystem::path>(std::get<flag_t>(*fileNameArg).value())};
+
+	fd_t underlyingFile{fileName, O_RDONLY | O_NOCTTY};
+	if (!underlyingFile.valid())
+		return std::nullopt;
+	console.info("Read ELF file '"sv, fileName.u8string(), "'"sv);
+	return ELF{std::move(underlyingFile)};
+}
+
+bool listHeaders(const arguments_t &headersArguments)
+{
+	if (headersArguments["help"sv])
+	{
+		displayHeadersHelp();
+		return true;
+	}
+
+	const auto &file{openFile(headersArguments)};
+	if (!file)
+		return false;
+	const auto &elfFile{*file};
+
+	const auto specificsChosen{headersArguments["file"sv] || headersArguments["program"sv] || headersArguments["section"sv]};
+	const auto all{headersArguments["all"sv] || !specificsChosen};
+
+	if (headersArguments["file"sv] || all)
+		fmt::print("{}"sv, elfFile.header());
+	if (headersArguments["program"sv] || all)
+	{
+		console.info("Program headers:"sv);
+		for (const auto &[index, header] : substrate::indexedIterator_t{elfFile.programHeaders()})
+			fmt::print("{}: {}"sv, index, header);
+	}
+	if (headersArguments["section"sv] || all)
+	{
+		console.info("Section headers:"sv);
+		for (const auto &[index, header] : substrate::indexedIterator_t{elfFile.sectionHeaders()})
+		{
+			fmt::print("{}: {}\n"sv, index, elfFile.sectionNames().stringFromOffset(header.nameOffset()));
+			fmt::print("{}"sv, header);
+		}
+	}
+	return true;
+}
+
 int main(int argCount, char **argList)
 {
 	console = {stdout, stderr};
@@ -303,7 +402,7 @@ int main(int argCount, char **argList)
 	if (version && help)
 	{
 		console.error("Can only specify one of --help or --version, not both"sv);
-		return 1;;
+		return 1;
 	}
 	if (version)
 	{
@@ -316,29 +415,23 @@ int main(int argCount, char **argList)
 		return 0;
 	}
 
-	const auto *const fileNameArg{args["elfFile"sv]};
-	if (!fileNameArg)
+	const auto *const actionArg{args["action"sv]};
+	if (!actionArg)
 	{
-		console.error("You must specify the name of the file to read"sv);
+		console.error("The action to perform must be specified"sv);
+		displayHelp();
 		return 1;
 	}
-	const auto fileName{std::any_cast<std::filesystem::path>(std::get<flag_t>(*fileNameArg).value())};
+	const auto &action{std::get<choice_t>(*actionArg)};
 
-	fd_t underlyingFile{fileName, O_RDONLY | O_NOCTTY};
-	if (!underlyingFile.valid())
-		return 1;
-	ELF elfFile{std::move(underlyingFile)};
-
-	console.info("Read ELF file '"sv, fileName.u8string(), "'"sv);
-	fmt::print("{}"sv, elfFile.header());
-	console.info("Program headers:"sv);
-	for (const auto &[index, header] : substrate::indexedIterator_t{elfFile.programHeaders()})
-		fmt::print("{}: {}"sv, index, header);
-	console.info("Section headers:"sv);
-	for (const auto &[index, header] : substrate::indexedIterator_t{elfFile.sectionHeaders()})
+	const auto result
 	{
-		fmt::print("{}: {}\n"sv, index, elfFile.sectionNames().stringFromOffset(header.nameOffset()));
-		fmt::print("{}"sv, header);
-	}
-	return 0;
+		[&]()
+		{
+			if (action.value() == "headers"sv)
+				return listHeaders(action.arguments());
+			return false;
+		}()
+	 };
+	 return result ? 0 : 1;
 }
