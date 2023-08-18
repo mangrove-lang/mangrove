@@ -123,6 +123,18 @@ namespace mangrove::elf::types
 
 		[[nodiscard]] std::string_view stringFromOffset(size_t offset) const noexcept;
 	};
+
+	struct SymbolTable final
+	{
+	private:
+		Memory _storage;
+		Class _class;
+		Endian _endian;
+
+	public:
+		SymbolTable(const Memory &storage, const Class &elfClass, const Endian &endian) :
+			_storage{storage}, _class{elfClass}, _endian{endian} { }
+	};
 } // namespace mangrove::elf::types
 
 #endif /*FORMATS_ELF_TYPES_HXX*/
