@@ -101,6 +101,9 @@ namespace mangrove::elf::types
 		[[nodiscard]] SymbolType type() const noexcept;
 		[[nodiscard]] SymbolVisibility visibility() const noexcept;
 		[[nodiscard]] uint16_t sectionIndex() const noexcept;
+
+		[[nodiscard]] size_t size() const noexcept;
+		[[nodiscard]] static size_t size(Class elfClass) noexcept;
 	};
 
 	struct StringTable final

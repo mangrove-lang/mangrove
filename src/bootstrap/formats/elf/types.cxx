@@ -91,6 +91,8 @@ uint8_t ELFSymbol::other() const noexcept
 	{ return std::visit([](const auto &header) { return header.other(); }, _header); }
 uint16_t ELFSymbol::sectionIndex() const noexcept
 	{ return std::visit([](const auto &header) { return header.sectionIndex(); }, _header); }
+size_t ELFSymbol::size() const noexcept
+	{ return std::visit([](const auto &header) { return header.size(); }, _header); }
 
 SymbolBinding ELFSymbol::binding() const noexcept
 {
@@ -108,6 +110,18 @@ SymbolVisibility ELFSymbol::visibility() const noexcept
 {
 	const auto value{other()};
 	return static_cast<SymbolVisibility>(value & 0x03U);
+}
+
+size_t ELFSymbol::size(Class elfClass) noexcept
+{
+	switch (elfClass)
+	{
+		case Class::elf32Bit:
+			return elf32::ELFSymbol::size();
+		case Class::elf64Bit:
+			return elf64::ELFSymbol::size();
+	}
+	return 0U;
 }
 
 std::string_view StringTable::stringFromOffset(const size_t offset) const noexcept
