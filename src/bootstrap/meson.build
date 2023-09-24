@@ -42,6 +42,11 @@ extended_warnings = [
 	'-Wstack-protector',
 	'-Wunsuffixed-float-constant',
 	'-Wimplicit-fallthrough',
+	'-Wundef',
+	'-Wignored-qualifiers',
+	'-Wshadow',
+	'-Wdeprecated-copy',
+	'-ftrapv',
 ]
 
 add_project_arguments(
