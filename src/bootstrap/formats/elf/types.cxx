@@ -144,4 +144,17 @@ std::string_view StringTable::stringFromOffset(const size_t offset) const noexce
 	return {reinterpret_cast<const char *>(data.data()), length};
 }
 
+std::optional<ELFSymbol> SymbolTable::operator [](const size_t index) const noexcept
+{
+	const auto symbolLength{ELFSymbol::size(_class)};
+	const auto offset{index * symbolLength};
+	if (offset + symbolLength > _storage.length())
+		return std::nullopt;
+
+	const auto data{_storage.dataSpan().subspan(offset, symbolLength)};
+	if (_class == Class::elf32Bit)
+		return elf32::ELFSymbol{data, _endian};
+	return elf64::ELFSymbol{data, _endian};
+}
+
 // NOLINTEND(bugprone-exception-escape)

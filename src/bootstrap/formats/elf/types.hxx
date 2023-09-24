@@ -3,6 +3,7 @@
 #define FORMATS_ELF_TYPES_HXX
 
 #include <variant>
+#include <optional>
 #include "io.hxx"
 #include "enums.hxx"
 #include "commonTypes.hxx"
@@ -134,6 +135,8 @@ namespace mangrove::elf::types
 	public:
 		SymbolTable(const Memory &storage, const Class &elfClass, const Endian &endian) :
 			_storage{storage}, _class{elfClass}, _endian{endian} { }
+
+		std::optional<ELFSymbol> operator [](size_t index) const noexcept;
 	};
 } // namespace mangrove::elf::types
 
