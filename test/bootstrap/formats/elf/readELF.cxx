@@ -5,7 +5,20 @@
 #include <substrate/indexed_iterator>
 #include <substrate/command_line/options>
 #include <substrate/command_line/arguments>
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable: 4061 4365)
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wswitch-enum"
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#endif
 #include <fmt/format.h>
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
 #include <formats/elf/elf.hxx>
 #include <core/version.hxx>
 
