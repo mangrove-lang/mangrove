@@ -144,6 +144,33 @@ std::string_view StringTable::stringFromOffset(const size_t offset) const noexce
 	return {reinterpret_cast<const char *>(data.data()), length};
 }
 
+bool SymbolTable::valid() const noexcept
+{
+	const auto symbolLength{ELFSymbol::size(_class)};
+	const auto symbols{count()};
+	// If there are symbols in the table
+	if (symbols)
+	{
+		// Grab the first
+		const auto maybeEntry0{(*this)[0]};
+		if (!maybeEntry0)
+			return false;
+		// Validate the entry is the special reserved undefined symbol entry
+		const auto &entry0{*maybeEntry0};
+		if (entry0.nameOffset() != 0 ||
+			entry0.value() != 0 ||
+			entry0.symbolLength() != 0 ||
+			entry0.binding() != SymbolBinding::local ||
+			entry0.type() != SymbolType::none ||
+			entry0.visibility() != SymbolVisibility::defaultVis ||
+			entry0.sectionIndex() != 0)
+			return false;
+	}
+	// Finish up validity checking by making sure the table has no left over bytes to it that
+	// would indicate some kind of corruption (eg, wrong ELF class symbols used, incomplete final entry)
+	return symbols * symbolLength == _storage.length();
+}
+
 size_t SymbolTable::count() const noexcept
 {
 	const auto symbolLength{ELFSymbol::size(_class)};
