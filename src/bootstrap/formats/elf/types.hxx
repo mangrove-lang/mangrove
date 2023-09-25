@@ -136,6 +136,8 @@ namespace mangrove::elf::types
 		SymbolTable(const Memory &storage, const Class &elfClass, const Endian &endian) :
 			_storage{storage}, _class{elfClass}, _endian{endian} { }
 
+		[[nodiscard]] size_t count() const noexcept;
+
 		std::optional<ELFSymbol> operator [](size_t index) const noexcept;
 	};
 } // namespace mangrove::elf::types

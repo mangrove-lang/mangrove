@@ -144,6 +144,12 @@ std::string_view StringTable::stringFromOffset(const size_t offset) const noexce
 	return {reinterpret_cast<const char *>(data.data()), length};
 }
 
+size_t SymbolTable::count() const noexcept
+{
+	const auto symbolLength{ELFSymbol::size(_class)};
+	return _storage.length() / symbolLength;
+}
+
 std::optional<ELFSymbol> SymbolTable::operator [](const size_t index) const noexcept
 {
 	const auto symbolLength{ELFSymbol::size(_class)};
