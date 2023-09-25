@@ -369,6 +369,26 @@ template<> struct fmt::formatter<SectionHeader>
 	}
 };
 
+template<> struct fmt::formatter<SymbolVisibility> : formatter<std::string_view>
+{
+	template<typename FormatContext> auto format(const SymbolVisibility &visibility, FormatContext &ctx) const
+	{
+		switch (visibility)
+		{
+			case SymbolVisibility::defaultVis:
+				return formatter<std::string_view>::format("default"sv, ctx);
+			case SymbolVisibility::internal:
+				return formatter<std::string_view>::format("internal"sv, ctx);
+			case SymbolVisibility::hidden:
+				return formatter<std::string_view>::format("hidden"sv, ctx);
+			case SymbolVisibility::protectedVis:
+				return formatter<std::string_view>::format("protected"sv, ctx);
+			default:
+				return fmt::format_to(ctx.out(), "<invalid symbol visibility ({:x})>sv", uint8_t(visibility));
+		}
+	}
+};
+
 std::optional<ELF> openFile(const arguments_t &args) noexcept
 {
 	const auto *const fileNameArg{args["elfFile"sv]};
