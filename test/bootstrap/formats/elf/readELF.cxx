@@ -430,6 +430,28 @@ bool listSymbols(const arguments_t &symbolsArguments)
 		return true;
 	}
 
+	// Open the file, and check that we have a valid ELF
+	auto file{openFile(symbolsArguments)};
+	if (!file)
+		return false;
+	// Try and get the symbol table
+	const auto maybeSymbolTable{file->symbolTable()};
+	if (!maybeSymbolTable)
+	{
+		console.info("ELF file does not contain a symbol table"sv);
+		return true;
+	}
+	// If we have one, validate it
+	const auto &symbolTable{*maybeSymbolTable};
+	if (!symbolTable.valid())
+	{
+		console.info("ELF file contains a symbol table but it is invalid"sv);
+		return true;
+	}
+	// Then display how many symbols are in the table before looping through them to display them
+	console.info("Symbol table in ELF file has "sv, symbolTable.count(), " symbols"sv);
+
+
 	return false;
 }
 
