@@ -454,6 +454,7 @@ bool listSymbols(const arguments_t &symbolsArguments)
 	auto file{openFile(symbolsArguments)};
 	if (!file)
 		return false;
+
 	// Try and get the symbol table
 	const auto maybeSymbolTable{file->symbolTable()};
 	if (!maybeSymbolTable)
@@ -471,6 +472,18 @@ bool listSymbols(const arguments_t &symbolsArguments)
 	// Then display how many symbols are in the table before looping through them to display them
 	console.info("Symbol table in ELF file has "sv, symbolTable.count(), " symbols"sv);
 
+	//  Try and get the string table
+	const auto maybeStringTable{file->stringTable()};
+	if (!maybeStringTable)
+	{
+		console.info("ELF file does not contain a string table"sv);
+		return false;
+	}
+	const auto stringTable{*maybeStringTable};
+
+	console.info("Symbols:"sv);
+	for (const auto symbol : symbolTable)
+		fmt::print("{}\n"sv, stringTable.stringFromOffset(symbol.nameOffset()));
 
 	return false;
 }
