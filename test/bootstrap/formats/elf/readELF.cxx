@@ -387,6 +387,32 @@ template<> struct fmt::formatter<SymbolBinding> : formatter<std::string_view>
 	}
 };
 
+template<> struct fmt::formatter<SymbolType> : formatter<std::string_view>
+{
+	template<typename FormatContext> auto format(const SymbolType &type, FormatContext &ctx) const
+	{
+		switch (type)
+		{
+			case SymbolType::none:
+				return formatter<std::string_view>::format("none"sv, ctx);
+			case SymbolType::object:
+				return formatter<std::string_view>::format("object"sv, ctx);
+			case SymbolType::function:
+				return formatter<std::string_view>::format("function"sv, ctx);
+			case SymbolType::section:
+				return formatter<std::string_view>::format("section"sv, ctx);
+			case SymbolType::file:
+				return formatter<std::string_view>::format("file"sv, ctx);
+			case SymbolType::common:
+				return formatter<std::string_view>::format("common"sv, ctx);
+			case SymbolType::threadLocal:
+				return formatter<std::string_view>::format("thread local"sv, ctx);
+			default:
+				return fmt::format_to(ctx.out(), "<invalid symbol type ({:x})>sv", uint8_t(type));
+		}
+	}
+};
+
 template<> struct fmt::formatter<SymbolVisibility> : formatter<std::string_view>
 {
 	template<typename FormatContext> auto format(const SymbolVisibility &visibility, FormatContext &ctx) const
