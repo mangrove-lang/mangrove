@@ -61,6 +61,7 @@ namespace mangrove::elf
 		[[nodiscard]] const auto &sectionNames() const noexcept { return _sectionNames; }
 
 		[[nodiscard]] std::optional<SymbolTable> symbolTable() noexcept;
+		[[nodiscard]] std::optional<StringTable> stringTable() noexcept;
 
 		[[nodiscard]] span<uint8_t> dataFor(const ProgramHeader &header) noexcept;
 		[[nodiscard]] span<const uint8_t> dataFor(const ProgramHeader &header) const noexcept;

@@ -112,6 +112,27 @@ namespace mangrove::elf
 		return SymbolTable{data, _header.elfClass(), _header.endian()};
 	}
 
+	[[nodiscard]] std::optional<StringTable> ELF::stringTable() noexcept
+	{
+		// Start by looping through the sections, looking for one marked as being a string table
+		const auto section
+		{
+			std::find_if
+			(
+				_sectionHeaders.begin(), _sectionHeaders.end(),
+				[](const SectionHeader &header) noexcept { return header.type() == SectionHeaderType::stringTable; }
+			)
+		};
+		// Check if we got a valid section header
+		if (section == _sectionHeaders.end())
+			return std::nullopt;
+
+		// Now extract the data for that section header
+		const auto data{dataFor(*section)};
+		// Finally, construct the string table holder and return it
+		return StringTable{data};
+	}
+
 	[[nodiscard]] span<uint8_t> ELF::dataFor(const ProgramHeader &header) noexcept try
 	{
 		return std::visit(Match
