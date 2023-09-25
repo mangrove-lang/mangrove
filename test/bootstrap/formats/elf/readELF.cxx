@@ -369,6 +369,24 @@ template<> struct fmt::formatter<SectionHeader>
 	}
 };
 
+template<> struct fmt::formatter<SymbolBinding> : formatter<std::string_view>
+{
+	template<typename FormatContext> auto format(const SymbolBinding &binding, FormatContext &ctx) const
+	{
+		switch (binding)
+		{
+			case SymbolBinding::local:
+				return formatter<std::string_view>::format("local"sv, ctx);
+			case SymbolBinding::global:
+				return formatter<std::string_view>::format("global"sv, ctx);
+			case SymbolBinding::weak:
+				return formatter<std::string_view>::format("weak"sv, ctx);
+			default:
+				return fmt::format_to(ctx.out(), "<invalid symbol binding ({:x})>sv", uint8_t(binding));
+		}
+	}
+};
+
 template<> struct fmt::formatter<SymbolVisibility> : formatter<std::string_view>
 {
 	template<typename FormatContext> auto format(const SymbolVisibility &visibility, FormatContext &ctx) const
