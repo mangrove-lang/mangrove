@@ -2,6 +2,7 @@
 #include <substrate/index_sequence>
 #include "elf.hxx"
 
+using namespace std::literals::string_view_literals;
 using mangrove::elf::io::Match;
 
 namespace mangrove::elf
@@ -120,7 +121,14 @@ namespace mangrove::elf
 			std::find_if
 			(
 				_sectionHeaders.begin(), _sectionHeaders.end(),
-				[](const SectionHeader &header) noexcept { return header.type() == SectionHeaderType::stringTable; }
+				[&](const SectionHeader &header) noexcept
+				{
+					// Checking just the section type is not sufficient, so we have to check for the magic
+					// name string ".strtab" too here - see the following for more information:
+					// https://refspecs.linuxbase.org/elf/gabi4+/ch4.sheader.html#special_sections
+					return header.type() == SectionHeaderType::stringTable &&
+						sectionNames().stringFromOffset(header.nameOffset()) == ".strtab"sv;
+				}
 			)
 		};
 		// Check if we got a valid section header
