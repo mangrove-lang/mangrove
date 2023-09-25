@@ -433,6 +433,26 @@ template<> struct fmt::formatter<SymbolVisibility> : formatter<std::string_view>
 	}
 };
 
+template<> struct fmt::formatter<ELFSymbol>
+{
+	constexpr auto parse(format_parse_context &ctx)
+	{
+		if (ctx.begin() != ctx.end())
+			throw format_error{"invalid format"};
+		return ctx.end();
+	}
+
+	template<typename FormatContext> auto format(const ELFSymbol &symbol, FormatContext &ctx) const
+	{
+		ctx.advance_to(fmt::format_to(ctx.out(), "-> {} bytes @0x{:x}\n"sv, symbol.symbolLength(), symbol.value()));
+		ctx.advance_to(fmt::format_to(ctx.out(), "-> Symbol is in section {} and has {} visibility\n"sv,
+			symbol.sectionIndex(), symbol.visibility()));
+		ctx.advance_to(fmt::format_to(ctx.out(), "-> Symbol is {}ly bound\n", symbol.binding()));
+		ctx.advance_to(fmt::format_to(ctx.out(), "-> Symbol has type {}\n", symbol.type()));
+		return ctx.out();
+	}
+};
+
 std::optional<ELF> openFile(const arguments_t &args) noexcept
 {
 	const auto *const fileNameArg{args["elfFile"sv]};
@@ -527,7 +547,7 @@ bool listSymbols(const arguments_t &symbolsArguments)
 
 	console.info("Symbols:"sv);
 	for (const auto symbol : symbolTable)
-		fmt::print("{}\n"sv, stringTable.stringFromOffset(symbol.nameOffset()));
+		fmt::print("{}\n{}"sv, stringTable.stringFromOffset(symbol.nameOffset()), symbol);
 
 	return false;
 }
