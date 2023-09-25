@@ -144,6 +144,34 @@ std::string_view StringTable::stringFromOffset(const size_t offset) const noexce
 	return {reinterpret_cast<const char *>(data.data()), length};
 }
 
+ELFSymbol SymbolIterator::operator *() const noexcept
+{
+	const auto &symbolTable{*_table};
+	// Index the symbol table and assume the resulting symbol is valid.
+	// This also assumes that _index is not set to the end of the table.
+	return *symbolTable[_index];
+}
+
+SymbolIterator &SymbolIterator::operator ++() noexcept
+{
+	// If we're not yet at the end, allow the increment
+	if (_index < _table->count())
+		++_index;
+	return *this;
+}
+
+SymbolIterator &SymbolIterator::operator --() noexcept
+{
+	// Disallow decrementing past 0
+	if (_index)
+		--_index;
+	return *this;
+}
+
+// Two `SymbolIterator`s are equal if they refer to the same symbol table and have the same index
+bool SymbolIterator::operator ==(const SymbolIterator &other) const noexcept
+	{ return _table == other._table && _index == other._index; }
+
 bool SymbolTable::valid() const noexcept
 {
 	const auto symbolLength{ELFSymbol::size(_class)};

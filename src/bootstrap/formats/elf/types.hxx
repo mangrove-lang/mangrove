@@ -125,6 +125,29 @@ namespace mangrove::elf::types
 		[[nodiscard]] std::string_view stringFromOffset(size_t offset) const noexcept;
 	};
 
+	struct SymbolTable;
+
+	struct SymbolIterator final
+	{
+	private:
+		// We'd make this a reference, but definition order issues prevent that working.
+		const SymbolTable *_table;
+		size_t _index;
+
+	public:
+		SymbolIterator(const SymbolTable &table, const size_t index) noexcept :
+			_table{&table}, _index{index} { }
+
+		[[nodiscard]] ELFSymbol operator *() const noexcept;
+		SymbolIterator &operator ++() noexcept;
+		SymbolIterator &operator --() noexcept;
+
+		[[nodiscard]] bool operator ==(const SymbolIterator &other) const noexcept;
+	};
+
+	[[nodiscard]] inline bool operator !=(const SymbolIterator &a, const SymbolIterator &b) noexcept
+		{ return !(a == b); }
+
 	struct SymbolTable final
 	{
 	private:
@@ -140,6 +163,8 @@ namespace mangrove::elf::types
 		[[nodiscard]] size_t count() const noexcept;
 
 		std::optional<ELFSymbol> operator [](size_t index) const noexcept;
+		SymbolIterator begin() const noexcept { return {*this, 0}; }
+		SymbolIterator end() const noexcept { return {*this, count()}; }
 	};
 } // namespace mangrove::elf::types
 
