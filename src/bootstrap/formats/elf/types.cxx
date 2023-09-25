@@ -135,9 +135,9 @@ std::string_view StringTable::stringFromOffset(const size_t offset) const noexce
 	size_t length{};
 	for (const auto &value : data)
 	{
-		++length;
 		if (value == 0x00U)
 			break;
+		++length;
 	}
 	// Finally, put the whole thing together as a string view
 	// NOTLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
