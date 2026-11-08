@@ -1,0 +1,27 @@
+alpha = {
+	'a'..'z' |
+	'A'..'Z' |
+	'\u{00c0}'..'\u{2000}' |
+	'\u{2070}'..'\u{d7ff}' |
+	'\u{e000}'..'\u{fe4f}' |
+	'\u{fe70}'..'\u{feff}' |
+	'\u{010000}'..'\u{02fa1f}'
+}
+allNormalAlpha = {
+	" " |
+	"!" |
+	'#'..'&' |
+	'('..'[' |
+	']'..'~' |
+	'\u{0080}'..'\u{d7ff}' |
+	'\u{e000}'..'\u{10ffff}'
+}
+digit = { '0'..'9' }
+alphaNum = { alpha | digit }
+hex = { digit | 'a'..'f' | 'A'..'F' }
+oct = { '0'..'7' }
+bin = { "0" | "1" }
+newLine = { ("\u{0a}" | "\u{0d}")+ }
+unicodeSeq = { "\\" ~ ("u" | "U") ~ hex{,6} }
+specialSeq = { "\\" ~ ("\\" | "b" | "r" | "n" | "t" | "v" | "f" | "a") }
+unicode = { allNormalAlpha | unicodeSeq | specialSeq }
