@@ -1,0 +1,20 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// SPDX-FileCopyrightText: 2026 Mangrove Programming Language
+// SPDX-FileContributor: Written by Rachel Mant <git@dragonmux.network>
+{
+	"editor.insertSpaces": false,
+	"files.eol": "\n",
+	"files.insertFinalNewline": true,
+	"rust-analyzer.imports.granularity.group": "preserve",
+	"rust-analyzer.checkOnSave": true,
+	"rust-analyzer.check.command": "clippy",
+	"rust-analyzer.rustfmt.overrideCommand":
+	[
+		"rustfmt",
+		"+nightly",
+	],
+	"[rust]":
+	{
+		"editor.formatOnSave": true,
+	},
+}
