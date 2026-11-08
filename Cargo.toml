@@ -10,3 +10,5 @@ edition = "2024"
 [dependencies]
 anstyle = "1.0.14"
 clap = { version = "4.6.7", features = ["cargo", "derive"] }
+mangrove-compiler = { path = "mangrove-compiler" }
+mangrove-lsp = { path = "mangrove-lsp" }

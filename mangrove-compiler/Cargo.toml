@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# SPDX-FileCopyrightText: 2026 Mangrove Programming Language
+# SPDX-FileContributor: Written by Rachel Mant <git@dragonmux.network>
+
+[package]
+name = "mangrove-compiler"
+version = "0.1.0"
+edition = "2024"
