@@ -6,3 +6,6 @@
 name = "mangrove-compiler"
 version = "0.1.0"
 edition = "2024"
+
+[dependencies]
+mangrove-parser = { path = "../mangrove-parser" }

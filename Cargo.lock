@@ -113,9 +113,19 @@ checksum = "a6cb138bb79a146c1bd460005623e142ef0181e3d0219cb493e02f7d08a35695"
 [[package]]
 name = "mangrove-compiler"
 version = "0.1.0"
+dependencies = [
+ "mangrove-parser",
+]
 
 [[package]]
 name = "mangrove-lsp"
+version = "0.1.0"
+dependencies = [
+ "mangrove-parser",
+]
+
+[[package]]
+name = "mangrove-parser"
 version = "0.1.0"
 
 [[package]]
